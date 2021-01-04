@@ -2,43 +2,27 @@ const ethUtil = require('ethereumjs-util')
 const ethNetProps = require('eth-net-props')
 const {
   ROPSTEN,
-  ROPSTEN_CODE,
-  ROPSTEN_CHAINID,
-  RINKEBY_CODE,
-  RINKEBY_CHAINID,
   RINKEBY,
   KOVAN,
-  KOVAN_CODE,
-  KOVAN_CHAINID,
   MAINNET,
   MAINNET_CODE,
-  MAINNET_CHAINID,
-  ETH_TICK,
   POA_SOKOL,
   POA_CODE,
-  POA_CHAINID,
-  POA_TICK,
   POA,
   DAI,
   DAI_CODE,
-  DAI_CHAINID,
   GOERLI_TESTNET,
-  GOERLI_TESTNET_CODE,
-  GOERLI_TESTNET_CHAINID,
   POA_SOKOL_CODE,
-  POA_SOKOL_CHAINID,
   RSK_CODE,
-  RSK_CHAINID,
   RSK_TESTNET_CODE,
-  RSK_TESTNET_CHAINID,
   LOCALHOST,
   CLASSIC,
   CLASSIC_CODE,
-  CLASSIC_CHAINID,
-  CLASSIC_TICK,
   RSK,
   RSK_TESTNET,
-  RSK_TICK,
+  KARDIA_MAINNET,
+  KARDIA_MAINNET_CHAINID,
+  KARDIA_TICK,
   customDPaths,
 } = require('../../app/scripts/controllers/network/enums')
 
@@ -168,12 +152,11 @@ function numericBalance (balance) {
 // Takes  hex, returns [beforeDecimal, afterDecimal]
 function parseBalance (balance) {
   let afterDecimal
-  const wei = numericBalance(balance)
-  const weiString = wei.toString()
+  const hydroString = balance.toString()
   const trailingZeros = /0+$/
 
-  const beforeDecimal = weiString.length > 18 ? weiString.slice(0, weiString.length - 18) : '0'
-  afterDecimal = ('000000000000000000' + wei).slice(-18).replace(trailingZeros, '')
+  const beforeDecimal = hydroString.length > 18 ? hydroString.slice(0, hydroString.length - 18) : '0'
+  afterDecimal = ('000000000000000000' + balance).slice(-18).replace(trailingZeros, '')
   if (afterDecimal === '') { afterDecimal = '0' }
   return [beforeDecimal, afterDecimal]
 }
@@ -512,61 +495,12 @@ function getNetworkID ({ network }) {
   let chainId
   let netId
   let ticker
+  console.log('getNetworkID ', network)
   switch (network) {
-    case MAINNET:
-      netId = MAINNET_CODE.toString()
-      chainId = MAINNET_CHAINID
-      ticker = ETH_TICK
-      break
-    case ROPSTEN:
-      netId = ROPSTEN_CODE.toString()
-      chainId = ROPSTEN_CHAINID
-      ticker = ETH_TICK
-      break
-    case RINKEBY:
-      netId = RINKEBY_CODE.toString()
-      chainId = RINKEBY_CHAINID
-      ticker = ETH_TICK
-      break
-    case KOVAN:
-      netId = KOVAN_CODE.toString()
-      chainId = KOVAN_CHAINID
-      ticker = ETH_TICK
-      break
-    case GOERLI_TESTNET:
-      netId = GOERLI_TESTNET_CODE.toString()
-      chainId = GOERLI_TESTNET_CHAINID
-      ticker = ETH_TICK
-      break
-    case POA:
-      netId = POA_CODE.toString()
-      chainId = POA_CHAINID
-      ticker = POA_TICK
-      break
-    case DAI:
-      netId = DAI_CODE.toString()
-      chainId = DAI_CHAINID
-      ticker = POA_TICK
-      break
-    case POA_SOKOL:
-      netId = POA_SOKOL_CODE.toString()
-      chainId = POA_SOKOL_CHAINID
-      ticker = POA_TICK
-      break
-    case RSK:
-      netId = RSK_CODE.toString()
-      chainId = RSK_CHAINID
-      ticker = RSK_TICK
-      break
-    case RSK_TESTNET:
-      netId = RSK_TESTNET_CODE.toString()
-      chainId = RSK_TESTNET_CHAINID
-      ticker = RSK_TICK
-      break
-    case CLASSIC:
-      netId = CLASSIC_CODE.toString()
-      chainId = CLASSIC_CHAINID
-      ticker = CLASSIC_TICK
+    case KARDIA_MAINNET:
+      netId = KARDIA_MAINNET.toString()
+      chainId = KARDIA_MAINNET_CHAINID
+      ticker = KARDIA_TICK
       break
     default:
       console.error(`getNetworkID - unknown network "${network}"`)

@@ -83,11 +83,12 @@ class BlacklistController {
    *
    */
   async updatePhishingList () {
-    const response = await fetch('https://api.infura.io/v2/blacklist')
-    const phishing = await response.json()
-    this.store.updateState({ phishing })
-    this._setupPhishingDetector(phishing)
-    return phishing
+    // const response = await fetch('https://api.infura.io/v2/blacklist')
+    // const phishing = await response.json()
+    // this.store.updateState({ phishing })
+    // this._setupPhishingDetector(phishing)
+    // return phishing
+    return {}
   }
 
   /**

@@ -117,110 +117,44 @@ NetworkDropdown.prototype.render = function () {
     h(
       DropdownMenuItem,
       {
-        key: 'main',
+        key: 'kardia_mainnet',
         closeMenu: () => this.props.hideNetworkDropdown(),
-        onClick: () => props.setProviderType('mainnet'),
-        style: { ...dropdownMenuItemStyle, borderColor: '#038789' },
-      },
-      [
-        providerType === 'mainnet' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
-        h(NetworkDropdownIcon, {
-          backgroundColor: '#29B6AF', // $java
-          isSelected: providerType === 'mainnet',
-        }),
-        h('span.network-name-item', {
-          style: {
-            color: providerType === 'mainnet' ? '#ffffff' : '#9b9b9b',
-          },
-        }, this.context.t('mainnet')),
-      ],
-    ),
-
-    h(
-      DropdownMenuItem,
-      {
-        key: 'ropsten',
-        closeMenu: () => this.props.hideNetworkDropdown(),
-        onClick: () => props.setProviderType('ropsten'),
+        onClick: () => props.setProviderType('kardia_mainnet'),
         style: dropdownMenuItemStyle,
       },
       [
-        providerType === 'ropsten' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
+        providerType === 'kardia_mainnet' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
         h(NetworkDropdownIcon, {
           backgroundColor: '#ff4a8d', // $wild-strawberry
-          isSelected: providerType === 'ropsten',
+          isSelected: providerType === 'kardia_mainnet',
         }),
         h('span.network-name-item', {
           style: {
-            color: providerType === 'ropsten' ? '#ffffff' : '#9b9b9b',
+            color: providerType === 'kardia_mainnet' ? '#ffffff' : '#9b9b9b',
           },
-        }, this.context.t('ropsten')),
+        }, this.context.t('kardia_mainnet')),
       ],
     ),
 
     h(
       DropdownMenuItem,
       {
-        key: 'kovan',
+        key: 'kardia_testnet',
         closeMenu: () => this.props.hideNetworkDropdown(),
-        onClick: () => props.setProviderType('kovan'),
+        onClick: () => props.setProviderType('kardia_testnet'),
         style: dropdownMenuItemStyle,
       },
       [
-        providerType === 'kovan' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
+        providerType === 'kardia_testnet' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
         h(NetworkDropdownIcon, {
           backgroundColor: '#7057ff', // $cornflower-blue
-          isSelected: providerType === 'kovan',
+          isSelected: providerType === 'kardia_testnet',
         }),
         h('span.network-name-item', {
           style: {
-            color: providerType === 'kovan' ? '#ffffff' : '#9b9b9b',
+            color: providerType === 'kardia_testnet' ? '#ffffff' : '#9b9b9b',
           },
-        }, this.context.t('kovan')),
-      ],
-    ),
-
-    h(
-      DropdownMenuItem,
-      {
-        key: 'rinkeby',
-        closeMenu: () => this.props.hideNetworkDropdown(),
-        onClick: () => props.setProviderType('rinkeby'),
-        style: dropdownMenuItemStyle,
-      },
-      [
-        providerType === 'rinkeby' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
-        h(NetworkDropdownIcon, {
-          backgroundColor: '#f6c343', // $saffron
-          isSelected: providerType === 'rinkeby',
-        }),
-        h('span.network-name-item', {
-          style: {
-            color: providerType === 'rinkeby' ? '#ffffff' : '#9b9b9b',
-          },
-        }, this.context.t('rinkeby')),
-      ],
-    ),
-
-    h(
-      DropdownMenuItem,
-      {
-        key: 'poa',
-        closeMenu: () => this.props.hideNetworkDropdown(),
-        onClick: () => props.setProviderType('poa'),
-        style: dropdownMenuItemStyle,
-      },
-      [
-        providerType === 'poa' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
-        h(NetworkDropdownIcon, {
-          backgroundColor: '#5c34a2', // $saffron
-          isSelected: providerType === 'poa',
-        }),
-        h('span.network-name-item', {
-          style: {
-            color: providerType === 'poa' ? '#ffffff' : '#9b9b9b',
-          },
-        }, this.context.t('poa')),
+        }, this.context.t('kardia_testnet')),
       ],
     ),
 
@@ -277,19 +211,9 @@ NetworkDropdown.prototype.render = function () {
 NetworkDropdown.prototype.getNetworkName = function () {
   const { provider } = this.props
   const providerName = provider.type
-
   let name
-
-  if (providerName === 'mainnet') {
-    name = this.context.t('mainnet')
-  } else if (providerName === 'ropsten') {
-    name = this.context.t('ropsten')
-  } else if (providerName === 'kovan') {
-    name = this.context.t('kovan')
-  } else if (providerName === 'rinkeby') {
-    name = this.context.t('rinkeby')
-  } else if (providerName === 'poa') {
-    name = this.context.t('poa')
+  if (providerName === 'kardia_mainnet') {
+    name = 'Kardia Mainnet'
   } else {
     name = this.context.t('unknownNetwork')
   }

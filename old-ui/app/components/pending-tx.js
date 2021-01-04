@@ -587,8 +587,7 @@ class PendingTx extends Component {
     }
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     const txMeta = this.gatherTxMeta()
     const txParams = txMeta.txParams || {}
     if (this.props.isToken || this.state.isToken) {
@@ -646,7 +645,6 @@ class PendingTx extends Component {
   }
 
   resetGasFields () {
-    log.debug(`pending-tx resetGasFields`)
 
     this.inputs.forEach((hexInput) => {
       if (hexInput) {
@@ -690,12 +688,10 @@ class PendingTx extends Component {
 
 // After a customizable state value has been updated,
   gatherTxMeta () {
-    log.debug(`pending-tx gatherTxMeta`)
     const props = this.props
     const state = this.state
     const txData = clone(state.txData) || clone(props.txData)
 
-    log.debug(`UI has defaulted to tx meta ${JSON.stringify(txData)}`)
     return txData
   }
 

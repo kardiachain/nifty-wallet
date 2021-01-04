@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import { Dropdown, DropdownMenuItem } from '../dropdown'
 import actions from '../../../../ui/app/actions'
 import { LOCALHOST } from '../../../../app/scripts/controllers/network/enums'
-import { networks } from '../../../../app/scripts/controllers/network/util'
-import ethNetProps from 'eth-net-props'
+import { networks, getNetworkDisplayName } from '../../../../app/scripts/controllers/network/util'
 import { connect } from 'react-redux'
 
 const LOCALHOST_RPC_URL = 'http://localhost:8545'
@@ -102,10 +101,10 @@ class NetworksMenu extends Component {
     const { provider: { type: providerType } } = props
     const state = this.state || {}
     const isOpen = state.isNetworkMenuOpen
-
     const networkDropdownItems = _networks
     .map((networkID) => {
       const networkObj = networks[networkID]
+      console.log(networkObj)
       return (
         <DropdownMenuItem
           key={networkObj.providerName}
@@ -117,7 +116,7 @@ class NetworksMenu extends Component {
           }}
         >
           {providerType === networkObj.providerName ? <div className="selected-network" /> : null}
-          {ethNetProps.props.getNetworkDisplayName(networkID)}
+          {getNetworkDisplayName(networkID)}
         </DropdownMenuItem>
       )
     })

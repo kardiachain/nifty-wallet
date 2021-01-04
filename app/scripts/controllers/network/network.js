@@ -19,6 +19,7 @@ const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
+import { composeP } from 'ramda'
 
 const {
   ROPSTEN,
@@ -31,15 +32,10 @@ const {
   DAI,
   GOERLI_TESTNET,
   CLASSIC,
-  RSK,
-  RSK_TESTNET,
-  POA_CODE,
-  DAI_CODE,
-  POA_SOKOL_CODE,
-  GOERLI_TESTNET_CODE,
   CLASSIC_CODE,
-  RSK_CODE,
-  RSK_TESTNET_CODE,
+  POA_SOKOL_CODE,
+  KARDIA_MAINNET,
+  KAI_TICK,
 } = require('./enums')
 const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET]
 const POCKET_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, POA, DAI, GOERLI_TESTNET, POA_SOKOL]
@@ -52,9 +48,10 @@ let defaultProviderConfigType
 if (process.env.IN_TEST === 'true') {
   defaultProviderConfigType = LOCALHOST
 } else if (testMode) {
-  defaultProviderConfigType = POA_SOKOL
+  defaultProviderConfigType = KARDIA_MAINNET
 } else {
-  defaultProviderConfigType = POA
+  // defaultProviderConfigType = POA
+  defaultProviderConfigType = KARDIA_MAINNET
 }
 
 const defaultProviderConfig = {
@@ -62,7 +59,7 @@ const defaultProviderConfig = {
 }
 
 const defaultNetworkConfig = {
-  ticker: 'POA',
+  ticker: KAI_TICK,
 }
 
 module.exports = class NetworkController extends EventEmitter {
@@ -150,7 +147,7 @@ module.exports = class NetworkController extends EventEmitter {
       const currentNetwork = this.getNetworkState()
       if (initialNetwork === currentNetwork) {
         if (err) {
-          return this.setNetworkState('loading')
+          console.log('here err ', err)
         }
         log.info('web3.getNetwork returned ' + network)
         this.setNetworkState(network, type)
@@ -163,7 +160,7 @@ module.exports = class NetworkController extends EventEmitter {
     return NETWORK_TYPE_TO_ID_MAP[type] ? NETWORK_TYPE_TO_ID_MAP[type].chainId : configChainId
   }
 
-  setRpcTarget (rpcTarget, chainId, ticker = 'ETH', nickname = '', rpcPrefs) {
+  setRpcTarget (rpcTarget, chainId, ticker = 'KAI', nickname = '', rpcPrefs) {
     const providerConfig = {
       type: 'rpc',
       rpcTarget,
@@ -232,25 +229,15 @@ module.exports = class NetworkController extends EventEmitter {
     if (isPocket && this.dProviderStore.getState().dProvider) {
       this._configurePocketProvider(opts)
     } else if (isInfura) {
-        this._configureInfuraProvider(opts)
+      this._configureInfuraProvider(opts)
     // other type-based rpc endpoints
-    } else if (type === POA) {
-      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(POA_CODE)[0], chainId, ticker, nickname })
-    } else if (type === DAI) {
-      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(DAI_CODE)[0], chainId, ticker, nickname })
     } else if (type === POA_SOKOL) {
       this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(POA_SOKOL_CODE)[0], chainId, ticker, nickname })
-    } else if (type === GOERLI_TESTNET) {
-      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(GOERLI_TESTNET_CODE)[0], chainId, ticker, nickname })
-    } else if (type === CLASSIC) {
-      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(CLASSIC_CODE)[0], chainId, ticker, nickname })
-    } else if (type === RSK) {
-      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(RSK_CODE)[0], chainId, ticker, nickname })
-    } else if (type === RSK_TESTNET) {
-      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(RSK_TESTNET_CODE)[0], chainId, ticker, nickname })
     } else if (type === LOCALHOST) {
       this._configureLocalhostProvider()
     // url-based rpc endpoints
+    } else if (type === 'kardia_mainnet') {
+      this._configureStandardProvider({ rpcUrl: 'https://dev-4.kardiachain.io', chainId, ticker, nickname })
     } else if (type === 'rpc') {
       this._configureStandardProvider({ rpcUrl: rpcTarget, chainId, ticker, nickname })
     } else {
@@ -290,7 +277,7 @@ module.exports = class NetworkController extends EventEmitter {
     networks.networkList['rpc'] = {
       chainId: chainId,
       rpcUrl,
-      ticker: ticker || 'ETH',
+      ticker: ticker || 'KAI',
       nickname,
     }
     // setup networkConfig

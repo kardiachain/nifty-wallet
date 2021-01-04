@@ -67,6 +67,7 @@ const { GasPriceOracle } = require('gas-price-oracle')
 import {
   PhishingController,
 } from 'gaba'
+import KardiaQuery from './kardiaScript/kardia-query'
 
 const {
   CLASSIC_CODE,
@@ -649,9 +650,11 @@ module.exports = class MetamaskController extends EventEmitter {
       const cached = this.accountTracker.store.getState().accounts[address]
 
       if (cached && cached.balance) {
+        console.log('dkm cache')
         resolve(cached.balance)
       } else {
-        ethQuery.getBalance(address, (error, balance) => {
+        console.log('dkm cache 2')
+        KardiaQuery.getBalance(address, (error, balance) => {
           if (error) {
             reject(error)
             log.error(error)

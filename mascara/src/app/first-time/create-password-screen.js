@@ -40,8 +40,7 @@ class CreatePasswordScreen extends Component {
     this.animationEventEmitter = new EventEmitter()
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     const { isInitialized, history } = this.props
 
     if (isInitialized) {

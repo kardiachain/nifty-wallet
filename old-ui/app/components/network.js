@@ -1,8 +1,7 @@
 const Component = require('react').Component
 const h = require('react-hyperscript')
 const inherits = require('util').inherits
-const ethNetProps = require('eth-net-props')
-const { networks } = require('../../../app/scripts/controllers/network/util')
+const { networks, getNetworkDisplayName } = require('../../../app/scripts/controllers/network/util')
 
 module.exports = Network
 
@@ -37,9 +36,10 @@ Network.prototype.render = function () {
       h('i.fa.fa-caret-down'),
     ])
   } else {
+    console.log('lololo ', networkNumber)
     if (networkNumber && networks[networkNumber]) {
       displayName = networks[networkNumber].displayNameDropdown
-      hoverText = ethNetProps.props.getNetworkDisplayName(networkNumber)
+      hoverText = getNetworkDisplayName(networkNumber)
     } else {
       displayName = 'Private Network'
       hoverText = `Private Network (${provider.rpcTarget})`

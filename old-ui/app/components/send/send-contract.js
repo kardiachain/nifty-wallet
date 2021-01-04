@@ -147,11 +147,6 @@ class SendTransactionScreen extends PersistentForm {
 		PersistentForm.call(this)
 	}
 
-	// eslint-disable-next-line camelcase
-	UNSAFE_componentWillMount () {
-		this.getContractMethods()
-	}
-
 	render () {
 		this.persistentFormParentId = 'send-contract-tx-form'
 
@@ -195,6 +190,7 @@ class SendTransactionScreen extends PersistentForm {
 	}
 
 	componentDidMount () {
+		this.getContractMethods()
 		if (this.props.methodSelected) {
 			this.generateMethodFieldsView(this.props.methodABI)
 		}

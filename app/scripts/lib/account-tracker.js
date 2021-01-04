@@ -7,10 +7,11 @@
  * on each new block.
  */
 
-const EthQuery = require('eth-query')
+// const EthQuery = require('eth-query')
 const ObservableStore = require('obs-store')
 const log = require('loglevel')
 const pify = require('pify')
+const KardiaQuery = require('../kardiaScript/kardia-query')
 
 
 class AccountTracker {
@@ -41,7 +42,7 @@ class AccountTracker {
     this.store = new ObservableStore(initState)
 
     this._provider = opts.provider
-    this._query = pify(new EthQuery(this._provider))
+    this._query = pify(new KardiaQuery(this._provider))
     this._blockTracker = opts.blockTracker
     // blockTracker.currentBlock may be null
     this._currentBlockNumber = this._blockTracker.getCurrentBlock()

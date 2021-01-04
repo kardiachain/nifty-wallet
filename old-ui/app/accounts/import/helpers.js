@@ -21,58 +21,28 @@ const jsonObjToArray = (jsonObj) => {
 
 const getBlockscoutApiNetworkPrefix = (network) => {
 	switch (Number(network)) {
-		case 1:
-		case 42:
-		case 3:
-		case 4:
-		return 'eth'
-		case 99:
-		case 77:
 		case 100:
-		return 'poa'
-		case NaN:
-		return 'etc'
+			return 'kai'
 		default:
-		return ''
+			return ''
 	}
 }
 
 const getBlockscoutApiNetworkSuffix = (network) => {
 	switch (Number(network)) {
-		case 1:
-		return 'mainnet'
-		case 99:
-		return 'core'
-		case 77:
-		return 'sokol'
 		case 100:
-		return 'dai'
-		case 42:
-		return 'kovan'
-		case 3:
-		return 'ropsten'
-		case 4:
-		return 'rinkeby'
-		case NaN:
-		return 'mainnet'
+			return 'kai'
 		default:
-		return ''
+			return ''
 	}
 }
 
 const _isBlockscoutInstanceForThisChain = (network) => {
 	switch (Number(network)) {
-		case 1:
-		case 99:
-		case 77:
 		case 100:
-		return true
-		case 42:
-		case 3:
-		case 4:
-		return false
+			return true
 		default:
-		return false
+			return false
 	}
 }
 

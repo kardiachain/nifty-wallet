@@ -15,6 +15,8 @@ const {
   RINKEBY_CODE,
   KOVAN_CODE,
   GOERLI_TESTNET_CODE,
+  KARDIA_MAINNET_CODE,
+  KARDIA_TESTNET_CODE,
   RSK_CODE,
   RSK_TESTNET_CODE} = require('../controllers/network/enums')
 
@@ -47,6 +49,12 @@ function getBuyEthUrl ({ network, amount, address, ind }) {
     case RSK_TESTNET_CODE:
     case GOERLI_TESTNET_CODE:
       url = getFaucets(network)[ind]
+      break
+    case KARDIA_MAINNET_CODE:
+      url = ''
+      break
+    case KARDIA_TESTNET_CODE:
+      url = 'https://testnet.kardiachain.io/faucet'
       break
   }
   return url
@@ -126,6 +134,13 @@ function getExchanges ({network, amount, address}) {
         {
           name: 'Bitso',
           link: 'https://bitso.com/',
+        },
+      ]
+    case KARDIA_MAINNET_CODE:
+      return [
+        {
+          name: 'KuCoin',
+          link: 'https://www.kucoin.com/',
         },
       ]
     default:

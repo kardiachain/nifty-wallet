@@ -26,8 +26,7 @@ export class ShapeShiftForm extends Component {
     isLoading: false,
   };
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     this.props.shapeShiftSubview()
   }
 

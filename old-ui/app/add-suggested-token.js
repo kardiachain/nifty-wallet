@@ -159,7 +159,7 @@ AddSuggestedTokenScreen.prototype.render = function () {
   )
 }
 
-AddSuggestedTokenScreen.prototype.UNSAFE_componentWillMount = function () {
+AddSuggestedTokenScreen.prototype.componentDidMount = function () {
   if (typeof global.ethereumProvider === 'undefined') return
 }
 

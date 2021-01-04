@@ -58,8 +58,7 @@ class BackupPhraseScreen extends Component {
     }
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     const { seedWords, history } = this.props
 
     if (!seedWords) {
