@@ -28,7 +28,7 @@ class AccountTracker {
    * @property {Object} store.accounts The accounts currently stored in this AccountTracker
    * @property {string} store.currentBlockGasLimit A hex string indicating the gas limit of the current block
    * @property {Object} _provider A provider needed to create the EthQuery instance used within this AccountTracker.
-   * @property {EthQuery} _query An EthQuery instance used to access account information from the blockchain
+   * @property {KardiaQuery} _query An EthQuery instance used to access account information from the blockchain
    * @property {BlockTracker} _blockTracker A BlockTracker instance. Needed to ensure that accounts and their info updates
    * when a new block is created.
    * @property {Object} _currentBlockNumber Reference to a property on the _blockTracker: the number (i.e. an id) of the the current block
@@ -149,7 +149,7 @@ class AccountTracker {
     this._currentBlockNumber = blockNumber
 
     // block gasLimit polling shouldn't be in account-tracker shouldn't be here...
-    const currentBlock = await this._query.getBlockByNumber(blockNumber, false)
+    const currentBlock = await this._query.getBlockByNumber(blockNumber)
     if (!currentBlock) return
     const currentBlockGasLimit = currentBlock.gasLimit
     this.store.updateState({ currentBlockGasLimit })

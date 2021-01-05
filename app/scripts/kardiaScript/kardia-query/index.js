@@ -16,7 +16,8 @@ function KardiaQuery (provider) {
 // default block
 KardiaQuery.prototype.getBalance = generateFnWithDefaultBlockFor(2, 'account_balance')
 KardiaQuery.prototype.getCode = generateFnWithDefaultBlockFor(2, 'account_getCode')
-KardiaQuery.prototype.getTransactionCount = generateFnWithDefaultBlockFor(2, 'eth_getTransactionCount')
+// KardiaQuery.prototype.getTransactionCount = generateFnWithDefaultBlockFor(2, 'account_nonce')
+KardiaQuery.prototype.getTransactionCount = generateFnFor('account_nonce')
 KardiaQuery.prototype.getStorageAt = generateFnWithDefaultBlockFor(3, 'eth_getStorageAt')
 KardiaQuery.prototype.call = generateFnWithDefaultBlockFor(2, 'eth_call')
 // standard
@@ -27,18 +28,18 @@ KardiaQuery.prototype.mining = generateFnFor('eth_mining')
 KardiaQuery.prototype.hashrate = generateFnFor('eth_hashrate')
 KardiaQuery.prototype.gasPrice = generateFnFor('eth_gasPrice')
 KardiaQuery.prototype.accounts = generateFnFor('eth_accounts')
-KardiaQuery.prototype.blockNumber = generateFnFor('eth_blockNumber')
+KardiaQuery.prototype.blockNumber = generateFnFor('kai_blockNumber')
 KardiaQuery.prototype.getBlockTransactionCountByHash = generateFnFor('eth_getBlockTransactionCountByHash')
 KardiaQuery.prototype.getBlockTransactionCountByNumber = generateFnFor('eth_getBlockTransactionCountByNumber')
 KardiaQuery.prototype.getUncleCountByBlockHash = generateFnFor('eth_getUncleCountByBlockHash')
 KardiaQuery.prototype.getUncleCountByBlockNumber = generateFnFor('eth_getUncleCountByBlockNumber')
 KardiaQuery.prototype.sign = generateFnFor('eth_sign')
-KardiaQuery.prototype.sendTransaction = generateFnFor('eth_sendTransaction')
+KardiaQuery.prototype.sendTransaction = generateFnFor('tx_sendRawTransaction')
 KardiaQuery.prototype.sendRawTransaction = generateFnFor('eth_sendRawTransaction')
 KardiaQuery.prototype.estimateGas = generateFnFor('eth_estimateGas')
-KardiaQuery.prototype.getBlockByHash = generateFnFor('eth_getBlockByHash')
-KardiaQuery.prototype.getBlockByNumber = generateFnFor('eth_getBlockByNumber')
-KardiaQuery.prototype.getTransactionByHash = generateFnFor('eth_getTransactionByHash')
+KardiaQuery.prototype.getBlockByHash = generateFnFor('kai_getBlockByHash')
+KardiaQuery.prototype.getBlockByNumber = generateFnFor('kai_getBlockByNumber')
+KardiaQuery.prototype.getTransactionByHash = generateFnFor('tx_getTransaction')
 KardiaQuery.prototype.getTransactionByBlockHashAndIndex = generateFnFor('eth_getTransactionByBlockHashAndIndex')
 KardiaQuery.prototype.getTransactionByBlockNumberAndIndex = generateFnFor('eth_getTransactionByBlockNumberAndIndex')
 KardiaQuery.prototype.getTransactionReceipt = generateFnFor('eth_getTransactionReceipt')
@@ -77,6 +78,13 @@ function generateFnFor (methodName) {
     const self = this
     var args = [].slice.call(arguments)
     var cb = args.pop()
+    if (methodName === 'tx_sendRawTransaction') {
+      console.log('argument ', arguments)
+      console.log({
+        method: methodName,
+        params: args,
+      })
+    }
     self.sendAsync({
       method: methodName,
       params: args,

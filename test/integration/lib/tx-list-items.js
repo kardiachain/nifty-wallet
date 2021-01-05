@@ -15,7 +15,7 @@ QUnit.skip('renders list items successfully', (assert) => {
 })
 
 global.ethQuery = global.ethQuery || {}
-global.ethQuery.getTransactionCount = (_, cb) => {
+global.kardiaQuery.getTransactionCount = (_, cb) => {
   cb(null, '0x3')
 }
 

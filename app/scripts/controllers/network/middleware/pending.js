@@ -4,7 +4,7 @@ import createAsyncMiddleware from 'json-rpc-engine/src/createAsyncMiddleware'
 export function createPendingNonceMiddleware ({ getPendingNonce }) {
   return createAsyncMiddleware(async (req, res, next) => {
     const { method, params } = req
-    if (method !== 'eth_getTransactionCount') {
+    if (method !== 'account_nonce') {
       return next()
     }
     const [param, blockRef] = params

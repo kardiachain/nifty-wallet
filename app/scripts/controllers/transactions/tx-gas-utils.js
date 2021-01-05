@@ -1,4 +1,4 @@
-import EthQuery from 'ethjs-query'
+import KardiaQuery from '../../kardiaScript/kardia-query'
 import { hexToBn, BnMultiplyByFraction, bnToHex } from '../../lib/util'
 import { addHexPrefix } from 'ethereumjs-util'
 import { MIN_GAS_LIMIT_HEX } from '../../../../ui/app/components/send/send.constants'
@@ -14,7 +14,7 @@ and used to do things like calculate gas of a tx.
 export default class TxGasUtil {
 
   constructor (provider) {
-    this.query = new EthQuery(provider)
+    this.query = new KardiaQuery(provider)
   }
 
   /**
@@ -111,9 +111,9 @@ export default class TxGasUtil {
     @param {string} blockGasLimitHex - the block gas limit
     @returns {string} - the buffered gas limit as a hex string
   */
-  addGasBuffer (initialGasLimitHex, blockGasLimitHex) {
-    const initialGasLimitBn = hexToBn(initialGasLimitHex)
-    const blockGasLimitBn = hexToBn(blockGasLimitHex)
+  addGasBuffer (initialGasLimitBn, blockGasLimitBn) {
+    // const initialGasLimitBn = hexToBn(initialGasLimitHex)
+    // const blockGasLimitBn = hexToBn(blockGasLimitHex)
     const upperGasLimitBn = blockGasLimitBn.muln(0.9)
     const bufferedGasLimitBn = initialGasLimitBn.muln(1.5)
 

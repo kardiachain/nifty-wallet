@@ -12,7 +12,7 @@ const PendingTx = require('./components/pending-tx')
 import PendingMsg from './components/pending-msg'
 import PendingPersonalMsg from './components/pending-personal-msg'
 import PendingTypedMsg from './components/pending-typed-msg'
-const Loading = require('./components/loading')
+// const Loading = require('./components/loading')
 const { DAI_CODE, POA_SOKOL_CODE, RSK_TESTNET_CODE, GOERLI_TESTNET_CODE } = require('../../app/scripts/controllers/network/enums')
 const { getMetaMaskAccounts } = require('../../ui/app/selectors')
 import BigNumber from 'bignumber.js'
@@ -49,6 +49,9 @@ class ConfirmTxScreen extends Component {
       unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit } = props
     let { conversionRate } = props
 
+    console.log({ network, unapprovedTxs, currentCurrency, computedBalances,
+      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit })
+
     const isTestnet = parseInt(network) === POA_SOKOL_CODE || parseInt(network) === RSK_TESTNET_CODE || parseInt(network) === GOERLI_TESTNET_CODE
     const isDai = parseInt(network) === DAI_CODE
     if (isTestnet) {
@@ -63,7 +66,7 @@ class ConfirmTxScreen extends Component {
     const txParams = txData.params || {}
 
     log.info(`rendering a combined ${unconfTxList.length} unconf msg & txs`)
-    if (unconfTxList.length === 0) return h(Loading, { isLoading: true })
+    // if (unconfTxList.length === 0) return h(Loading, { isLoading: true })
 
     const unconfTxListLength = unconfTxList.length
 
@@ -237,21 +240,28 @@ class ConfirmTxScreen extends Component {
 
 function currentTxView (opts) {
   log.info('rendering current tx view')
-  const { txData } = opts
-  const { txParams, msgParams, type } = txData
+  console.log(opts)
+  // const { txData } = opts
+  // const { txParams, msgParams, type } = txData
 
-  if (txParams) {
-    return h(PendingTx, opts)
-  } else if (msgParams) {
+  return h(PendingTypedMsg, opts)
 
-    if (type === 'eth_sign') {
-      return h(PendingMsg, opts)
-    } else if (type === 'personal_sign') {
-      return h(PendingPersonalMsg, opts)
-    } else if (type === 'eth_signTypedData') {
-      return h(PendingTypedMsg, opts)
-    }
-  }
+  // if (txParams) {
+  //   console.log('currentTxView 1')
+  //   return h(PendingTx, opts)
+  // } else if (msgParams) {
+
+  //   if (type === 'eth_sign') {
+  //     console.log('currentTxView 2')
+  //     return h(PendingMsg, opts)
+  //   } else if (type === 'personal_sign') {
+  //     console.log('currentTxView 3')
+  //     return h(PendingPersonalMsg, opts)
+  //   } else if (type === 'eth_signTypedData') {
+  //     console.log('currentTxView 4')
+  //     return h(PendingTypedMsg, opts)
+  //   }
+  // }
 }
 
 function warningIfExists (warning) {

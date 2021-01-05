@@ -180,8 +180,10 @@ class SendTransactionScreen extends PersistentForm {
   }
 
   onSubmit () {
+    console.log('start send tx')
     const state = this.state || {}
     let recipient = state.recipient || document.querySelector('input[name="address"]').value.replace(/^[.\s]+|[.\s]+$/g, '')
+    console.log('recipient ', recipient)
     let nickname = state.nickname || ' '
     if (typeof recipient === 'object') {
       if (recipient.toAddress) {
@@ -192,24 +194,26 @@ class SendTransactionScreen extends PersistentForm {
       }
     }
     const input = document.querySelector('input[name="amount"]').value
+    console.log('input ', input)
     const parts = input.split('.')
 
     let message
 
     if (isNaN(input) || input === '') {
-      message = 'Invalid ether value.'
+      message = 'Invalid KAI value.'
       return this.props.displayWarning(message)
     }
 
     if (parts[1]) {
       const decimal = parts[1]
       if (decimal.length > 18) {
-        message = 'Ether amount is too precise.'
+        message = 'KAI amount is too precise.'
         return this.props.displayWarning(message)
       }
     }
 
     const value = normalizeEthStringToWei(input)
+    console.log('value ', value)
     const txData = document.querySelector('input[name="txData"]').value
     const txCustomNonce = document.querySelector('input[name="txCustomNonce"]').value
     const balance = this.props.balance
@@ -245,13 +249,15 @@ class SendTransactionScreen extends PersistentForm {
 
     const txParams = {
       from: this.props.address,
-      value: '0x' + value.toString(16),
+      // value: '0x' + value.toString(16),
+      value,
     }
 
     if (recipient) txParams.to = ethUtil.addHexPrefix(recipient)
     if (txData) txParams.data = txData
     if (txCustomNonce) txParams.nonce = '0x' + parseInt(txCustomNonce, 10).toString(16)
-
+    console.log('txParams')
+    console.log(txParams)
     this.props.signTx(txParams)
   }
 }

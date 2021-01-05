@@ -19,7 +19,7 @@ const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
-import { composeP } from 'ramda'
+// import { composeP } from 'ramda'
 
 const {
   ROPSTEN,
@@ -172,7 +172,7 @@ module.exports = class NetworkController extends EventEmitter {
     this.providerConfig = providerConfig
   }
 
-  async setProviderType (type, rpcTarget = '', ticker = 'ETH', nickname = '') {
+  async setProviderType (type, rpcTarget = '', ticker = 'KAI', nickname = '') {
     assert.notEqual(type, 'rpc', `NetworkController - cannot call "setProviderType" with type 'rpc'. use "setRpcTarget"`)
     assert(isKnownProvider(type), `NetworkController - Unknown rpc type "${type}"`)
     const providerConfig = { type, rpcTarget, ticker, nickname }

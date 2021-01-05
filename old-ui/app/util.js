@@ -481,6 +481,7 @@ function isInfuraProvider (type) {
 function isKnownProvider (type) {
   const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET]
   return INFURA_PROVIDER_TYPES.includes(type) ||
+  type === KARDIA_MAINNET ||
   type === LOCALHOST ||
   type === POA_SOKOL ||
   type === POA ||

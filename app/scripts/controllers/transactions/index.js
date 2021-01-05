@@ -2,7 +2,7 @@ import EventEmitter from 'safe-event-emitter'
 import ObservableStore from 'obs-store'
 import ethUtil from 'ethereumjs-util'
 import Transaction from 'ethereumjs-tx'
-import EthQuery from 'ethjs-query'
+import KardiaQuery from '../../kardiaScript/kardia-query'
 
 import abi from 'human-standard-token-abi'
 import abiDecoder from 'abi-decoder'
@@ -12,7 +12,8 @@ abiDecoder.addABI(abi)
 import TransactionStateManager from './tx-state-manager'
 import TxGasUtil from './tx-gas-utils'
 const PendingTransactionTracker = require('./pending-tx-tracker')
-import NonceTracker from 'nonce-tracker'
+// import NonceTracker from 'nonce-tracker'
+import NonceTracker from '../../kardiaScript/kardia-nonce-tracker'
 import * as txUtils from './lib/util'
 import cleanErrorStack from '../../lib/cleanErrorStack'
 import log from 'loglevel'
@@ -65,7 +66,7 @@ class TransactionController extends EventEmitter {
     this.getGasPrice = opts.getGasPrice
 
     this.memStore = new ObservableStore({})
-    this.query = new EthQuery(this.provider)
+    this.query = new KardiaQuery(this.provider)
     this.txGasUtil = new TxGasUtil(this.provider)
 
     this.keyringInstance = opts.keyringInstance

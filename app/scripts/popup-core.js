@@ -2,9 +2,9 @@ const EventEmitter = require('events').EventEmitter
 const async = require('async')
 const Dnode = require('dnode')
 const Eth = require('ethjs')
-const EthQuery = require('eth-query')
 const launchMetamaskUi = require('../../ui')
 const StreamProvider = require('web3-stream-provider')
+const KardiaQuery = require('./kardiaScript/kardia-query')
 const setupMultiplex = require('./lib/stream-utils.js').setupMultiplex
 
 module.exports = initializePopup
@@ -49,7 +49,7 @@ function setupWeb3Connection (connectionStream) {
   connectionStream.on('error', console.error.bind(console))
   providerStream.on('error', console.error.bind(console))
   global.ethereumProvider = providerStream
-  global.ethQuery = new EthQuery(providerStream)
+  global.kardiaQuery = new KardiaQuery(providerStream)
   global.eth = new Eth(providerStream)
 }
 

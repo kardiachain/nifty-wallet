@@ -57,7 +57,6 @@ import seedPhraseVerifier from './lib/seed-phrase-verifier'
 import log from 'loglevel'
 const TrezorKeyring = require('eth-trezor-keyring')
 const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
-import EthQuery from 'eth-query'
 import nanoid from 'nanoid'
 const { importTypes } = require('../../old-ui/app/accounts/import/enums')
 const { LEDGER, TREZOR } = require('../../old-ui/app/components/connect-hardware/enum')
@@ -612,9 +611,9 @@ module.exports = class MetamaskController extends EventEmitter {
       const isCreatedWithCorrectDPath = true
       const vault = await keyringController.createNewVaultAndRestore(password, seed, dPath)
 
-      const ethQuery = new EthQuery(this.provider)
+      const kardiaQuery = new KardiaQuery(this.provider)
       accounts = await keyringController.getAccounts()
-      lastBalance = await this.getBalance(accounts[accounts.length - 1], ethQuery)
+      lastBalance = await this.getBalance(accounts[accounts.length - 1], kardiaQuery)
 
       const primaryKeyring = keyringController.getKeyringsByType('HD Key Tree')[0]
       if (!primaryKeyring) {
@@ -627,7 +626,7 @@ module.exports = class MetamaskController extends EventEmitter {
       while (lastBalance !== '0x0') {
         await keyringController.addNewAccount(primaryKeyring)
         accounts = await keyringController.getAccounts()
-        lastBalance = await this.getBalance(accounts[accounts.length - 1], ethQuery)
+        lastBalance = await this.getBalance(accounts[accounts.length - 1], kardiaQuery)
       }
 
       // set new identities
@@ -644,18 +643,16 @@ module.exports = class MetamaskController extends EventEmitter {
   /**
    * Get an account balance from the AccountTracker or request it directly from the network.
    * @param {string} address - The account address
-   * @param {EthQuery} ethQuery - The EthQuery instance to use when asking the network
+   * @param {KardiaQuery} kardiaQuery - The KardiaQuery instance to use when asking the network
    */
-  getBalance (address, ethQuery) {
+  getBalance (address, kardiaQuery) {
     return new Promise((resolve, reject) => {
       const cached = this.accountTracker.store.getState().accounts[address]
 
       if (cached && cached.balance) {
-        console.log('dkm cache')
         resolve(cached.balance)
       } else {
-        console.log('dkm cache 2')
-        KardiaQuery.getBalance(address, (error, balance) => {
+        kardiaQuery.getBalance(address, (error, balance) => {
           if (error) {
             reject(error)
             log.error(error)

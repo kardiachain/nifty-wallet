@@ -1032,11 +1032,11 @@ function signTypedMsg (msgData) {
 
 function signTx (txData) {
   return (dispatch) => {
-    global.ethQuery.sendTransaction(txData, (err, _data) => {
-      if (err) {
-        return dispatch(actions.displayWarning(err.message))
-      }
-    })
+    // global.kardiaQuery.sendTransaction(txData, (err, _data) => {
+    //   if (err) {
+    //     return dispatch(actions.displayWarning(err.message))
+    //   }
+    // })
     dispatch(actions.showConfTxPage({isContractExecutionByUser: txData && txData.isContractExecutionByUser}))
   }
 }
@@ -1773,6 +1773,7 @@ function showAccountsPage () {
 }
 
 function showConfTxPage (screenParams) {
+  console.log('here render')
   return {
     type: actions.SHOW_CONF_TX_PAGE,
     transForward: (screenParams.transForward || true),
@@ -2585,8 +2586,11 @@ function setNetworkNonce (networkNonce) {
 function updateNetworkNonce (address) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      global.ethQuery.getTransactionCount(address, (err, data) => {
+      global.kardiaQuery.getTransactionCount(address, (err, data) => {
+        console.log('dm')
         if (err) {
+          console.log('dm err')
+          console.log(err)
           dispatch(actions.displayWarning(err.message))
           return reject(err)
         }
