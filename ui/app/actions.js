@@ -189,6 +189,7 @@ const actions = {
   updateTransaction,
   updateAndApproveTx,
   getPK,
+  signKardiaTx,
   getPendingNonce,
   cancelTx,
   cancelTxs,
@@ -1277,6 +1278,22 @@ function getPK (txData) {
         resolve(PK)
       })
     })
+  }
+}
+
+function signKardiaTx (txData) {
+  return (dispatch) => {
+    dispatch(actions.showLoadingIndication())
+    return background.signTransaction(txData)
+      .then((result) => {
+        console.log('signKardiaTx result ')
+        console.log(result)
+        dispatch(actions.hideLoadingIndication())
+      }).catch(error => {
+        console.log('signKardiaTx error')
+        console.log(error)
+        dispatch(actions.hideLoadingIndication())
+      })
   }
 }
 

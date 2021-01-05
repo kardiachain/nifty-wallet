@@ -652,8 +652,10 @@ class PendingTx extends Component {
     this.setState({ valid, submitting: true })
     // if (valid && this.verifyGasParams()) {
     if (valid) {
-      txMeta.txParams.gas = '0x' + txMeta.txParams.gas.toString(16)
-      txMeta.txParams.gasPrice = '0x' + txMeta.txParams.gasPrice.toString(16)
+      const gas = txMeta.txParams.gas || MIN_GAS_LIMIT_BN
+      const gasPrice = txMeta.txParams.gasPrice || MIN_GAS_PRICE_BN
+      txMeta.txParams.gas = '0x' + gas.toString(16)
+      txMeta.txParams.gasPrice = '0x' + gasPrice.toString(16)
 
       txMeta.txParams.receiver = txMeta.txParams.to
       delete txMeta.txParams.to
@@ -663,15 +665,15 @@ class PendingTx extends Component {
 
       const txObj = txMeta.txParams
       console.log('tx params ', txObj)
+      this.props.actions.signKardiaTx(txObj)
+      // this.props.actions.showLoadingIndication()
+      // const pk = await this.props.actions.getPK(txObj)
 
-      this.props.actions.showLoadingIndication()
-      const pk = await this.props.actions.getPK(txObj)
-
-      const kardiaTx = new KardiaTransaction({provider: 'https://dev-4.kardiachain.io'})
-      const rs = await kardiaTx.sendTransaction(txObj, `0x${pk}`, false)
-      console.log('tx result ', rs)
-      this.props.actions.hideLoadingIndication()
-      this.props.actions.goHome()
+      // const kardiaTx = new KardiaTransaction({provider: 'https://dev-4.kardiachain.io'})
+      // const rs = await kardiaTx.sendTransaction(txObj, `0x${pk}`, false)
+      // console.log('tx result ', rs)
+      // this.props.actions.hideLoadingIndication()
+      // this.props.actions.goHome()
     } else {
       this.props.actions.displayWarning('Invalid Gas Parameters')
       this.setState({ submitting: false })
@@ -799,6 +801,7 @@ const mapDispatchToProps = (dispatch) => {
       displayWarning: (msg) => dispatch(actions.displayWarning(msg)),
       goHome: () => dispatch(actions.goHome()),
       getPK: (txData) => dispatch(actions.getPK(txData)),
+      signKardiaTx: (txData) => dispatch(actions.signKardiaTx(txData)),
       showLoadingIndication: () => dispatch(actions.showLoadingIndication()),
       hideLoadingIndication: () => dispatch(actions.hideLoadingIndication()),
     },
