@@ -68,6 +68,8 @@ class TransactionController extends EventEmitter {
     this.query = new EthQuery(this.provider)
     this.txGasUtil = new TxGasUtil(this.provider)
 
+    this.keyringInstance = opts.keyringInstance
+
     this._mapMethods()
     this.txStateManager = new TransactionStateManager({
       initState: opts.initState,
@@ -292,6 +294,15 @@ class TransactionController extends EventEmitter {
     this.txStateManager.updateTx(txMeta, 'confTx: user approved transaction')
     const customNonce = txMeta.txParams.nonce
     await this.approveTransaction(txMeta.id, customNonce)
+  }
+
+  /**
+  updates and approves the transaction
+  @param txMeta {Object}
+  */
+  async signKardiaTx (txData) {
+    // this.txStateManager.updateTx(txMeta, 'confTx: user approved transaction')
+    const pk = await this.keyringInstance.exportAccount(txData.from, 'kardia_mainnet')
   }
 
   /**
