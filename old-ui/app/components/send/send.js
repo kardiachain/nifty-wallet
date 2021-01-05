@@ -250,7 +250,7 @@ class SendTransactionScreen extends PersistentForm {
     const txParams = {
       from: this.props.address,
       // value: '0x' + value.toString(16),
-      value,
+      value: value.toString(),
     }
 
     if (recipient) txParams.to = ethUtil.addHexPrefix(recipient)

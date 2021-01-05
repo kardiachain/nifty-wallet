@@ -4,16 +4,15 @@ const inherits = require('util').inherits
 const formatBalance = require('../util').formatBalance
 const generateBalanceObject = require('../util').generateBalanceObject
 const Tooltip = require('./tooltip.js')
-const FiatValue = require('./fiat-value.js')
 
-module.exports = EthBalanceComponent
+module.exports = KAIBalanceComponent
 
-inherits(EthBalanceComponent, Component)
-function EthBalanceComponent () {
+inherits(KAIBalanceComponent, Component)
+function KAIBalanceComponent () {
   Component.call(this)
 }
 
-EthBalanceComponent.prototype.render = function () {
+KAIBalanceComponent.prototype.render = function () {
   const props = this.props
   let { value } = props
   const { style, width, network, isToken, tokenSymbol } = props
@@ -35,9 +34,9 @@ EthBalanceComponent.prototype.render = function () {
 
   )
 }
-EthBalanceComponent.prototype.renderBalance = function (value) {
+KAIBalanceComponent.prototype.renderBalance = function (value) {
   const props = this.props
-  const { conversionRate, shorten, incoming, currentCurrency } = props
+  const { shorten, incoming } = props
   if (value === 'None') return value
   if (value === '...') return value
   const balanceObj = generateBalanceObject(value, shorten ? 1 : 3)
@@ -45,7 +44,6 @@ EthBalanceComponent.prototype.renderBalance = function (value) {
   const splitBalance = value.split(' ')
   const ethNumber = splitBalance[0]
   const ethSuffix = splitBalance[1]
-  const showFiat = 'showFiat' in props ? props.showFiat : true
 
   if (shorten) {
     balance = balanceObj.shortBalance
@@ -88,8 +86,6 @@ EthBalanceComponent.prototype.renderBalance = function (value) {
           style: dimStyle,
         }, label),
       ]),
-
-      showFiat ? h(FiatValue, { valueStyle, dimStyle, value: props.value, conversionRate, currentCurrency, network: props.network }) : null,
     ]))
   )
 }

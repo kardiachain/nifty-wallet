@@ -600,8 +600,6 @@ module.exports = class MetamaskController extends EventEmitter {
   async createNewVaultAndRestore (password, seed, dPath) {
     const releaseLock = await this.createVaultMutex.acquire()
     try {
-      let accounts, lastBalance
-
       const keyringController = this.keyringController
 
       // clear known identities
@@ -611,9 +609,9 @@ module.exports = class MetamaskController extends EventEmitter {
       const isCreatedWithCorrectDPath = true
       const vault = await keyringController.createNewVaultAndRestore(password, seed, dPath)
 
-      const kardiaQuery = new KardiaQuery(this.provider)
-      accounts = await keyringController.getAccounts()
-      lastBalance = await this.getBalance(accounts[accounts.length - 1], kardiaQuery)
+      // const kardiaQuery = new KardiaQuery(this.provider)
+      const accounts = await keyringController.getAccounts()
+      // let lastBalance = await this.getBalance(accounts[accounts.length - 1], kardiaQuery)
 
       const primaryKeyring = keyringController.getKeyringsByType('HD Key Tree')[0]
       if (!primaryKeyring) {
@@ -623,11 +621,11 @@ module.exports = class MetamaskController extends EventEmitter {
       setDPath(primaryKeyring, networkType, isCreatedWithCorrectDPath)
 
       // seek out the first zero balance
-      while (lastBalance !== '0x0') {
-        await keyringController.addNewAccount(primaryKeyring)
-        accounts = await keyringController.getAccounts()
-        lastBalance = await this.getBalance(accounts[accounts.length - 1], kardiaQuery)
-      }
+      // while (lastBalance !== '0') {
+      //   await keyringController.addNewAccount(primaryKeyring)
+      //   accounts = await keyringController.getAccounts()
+      //   lastBalance = await this.getBalance(accounts[accounts.length - 1], kardiaQuery)
+      // }
 
       // set new identities
       this.preferencesController.setAddresses(accounts)
@@ -657,7 +655,7 @@ module.exports = class MetamaskController extends EventEmitter {
             reject(error)
             log.error(error)
           } else {
-            resolve(balance || '0x0')
+            resolve(balance || '0')
           }
         })
       }
@@ -1162,7 +1160,6 @@ module.exports = class MetamaskController extends EventEmitter {
    * @returns {Promise<Object>} - Full state update.
    */
   signMessage (msgParams) {
-    log.info('MetaMaskController - signMessage')
     const msgId = msgParams.metamaskId
 
     // sets the status op the message to 'approved'
@@ -1221,7 +1218,6 @@ module.exports = class MetamaskController extends EventEmitter {
    * @returns {Promise<Object>} - A full state update.
    */
   signPersonalMessage (msgParams) {
-    log.info('MetaMaskController - signPersonalMessage')
     const msgId = msgParams.metamaskId
     // sets the status op the message to 'approved'
     // and removes the metamaskId for signing
@@ -1274,7 +1270,6 @@ module.exports = class MetamaskController extends EventEmitter {
   * @returns {Promise<Object>} - A full state update.
   */
   async decryptMessageInline (msgParams) {
-    log.info('MetaMaskController - decryptMessageInline')
     // decrypt the message inline
     const msgId = msgParams.metamaskId
     const msg = this.decryptMessageManager.getMsg(msgId)
@@ -1300,7 +1295,6 @@ module.exports = class MetamaskController extends EventEmitter {
   * @returns {Promise<Object>} - A full state update.
   */
   async decryptMessage (msgParams) {
-    log.info('MetaMaskController - decryptMessage')
     const msgId = msgParams.metamaskId
     // sets the status op the message to 'approved'
     // and removes the metamaskId for decryption
@@ -1359,7 +1353,6 @@ module.exports = class MetamaskController extends EventEmitter {
   * @returns {Promise<Object>} - A full state update.
   */
   async encryptionPublicKey (msgParams) {
-    log.info('MetaMaskController - encryptionPublicKey')
     const msgId = msgParams.metamaskId
     // sets the status op the message to 'approved'
     // and removes the metamaskId for decryption
@@ -1415,7 +1408,6 @@ module.exports = class MetamaskController extends EventEmitter {
    * @returns {Object} - Full state update.
    */
   async signTypedMessage (msgParams) {
-    log.info('MetaMaskController - eth_signTypedData')
     const msgId = msgParams.metamaskId
     const version = msgParams.version
     try {
@@ -2014,6 +2006,7 @@ module.exports = class MetamaskController extends EventEmitter {
    * @returns Promise<number>
    */
   async getPendingNonce (address) {
+    console.log('here abc')
     const { nonceDetails, releaseLock} = await this.txController.nonceTracker.getNonceLock(address)
     const pendingNonce = nonceDetails.params.highestSuggested
 

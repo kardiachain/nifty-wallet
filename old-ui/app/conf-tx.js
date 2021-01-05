@@ -5,14 +5,9 @@ const h = require('react-hyperscript')
 const actions = require('../../ui/app/actions')
 const LoadingIndicator = require('./components/loading')
 const txHelper = require('../lib/tx-helper')
-import log from 'loglevel'
 const { getCurrentKeyring, ifContractAcc } = require('./util')
 
 const PendingTx = require('./components/pending-tx')
-import PendingMsg from './components/pending-msg'
-import PendingPersonalMsg from './components/pending-personal-msg'
-import PendingTypedMsg from './components/pending-typed-msg'
-// const Loading = require('./components/loading')
 const { DAI_CODE, POA_SOKOL_CODE, RSK_TESTNET_CODE, GOERLI_TESTNET_CODE } = require('../../app/scripts/controllers/network/enums')
 const { getMetaMaskAccounts } = require('../../ui/app/selectors')
 import BigNumber from 'bignumber.js'
@@ -41,16 +36,14 @@ class ConfirmTxScreen extends Component {
     tokenSymbol: PropTypes.string,
     tokensToSend: PropTypes.objectOf(BigNumber),
     tokensTransferTo: PropTypes.string,
+    txData: PropTypes.object,
   }
 
   render () {
     const props = this.props
     const { network, unapprovedTxs, currentCurrency, computedBalances,
-      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit } = props
+      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit, txData } = props
     let { conversionRate } = props
-
-    console.log({ network, unapprovedTxs, currentCurrency, computedBalances,
-      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit })
 
     const isTestnet = parseInt(network) === POA_SOKOL_CODE || parseInt(network) === RSK_TESTNET_CODE || parseInt(network) === GOERLI_TESTNET_CODE
     const isDai = parseInt(network) === DAI_CODE
@@ -61,11 +54,10 @@ class ConfirmTxScreen extends Component {
     }
 
     const unconfTxList = txHelper(unapprovedTxs, unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, network)
-    const ind = props.pendingTxIndex || 0
-    const txData = unconfTxList[ind] || {}
-    const txParams = txData.params || {}
+    // const ind = props.pendingTxIndex || 0
+    // const txData = unconfTxList[ind] || {}
+    const txParams = txData && txData.params ? txData.params : {}
 
-    log.info(`rendering a combined ${unconfTxList.length} unconf msg & txs`)
     // if (unconfTxList.length === 0) return h(Loading, { isLoading: true })
 
     const unconfTxListLength = unconfTxList.length
@@ -150,7 +142,6 @@ class ConfirmTxScreen extends Component {
   }
 
   signMessage (msgData, event) {
-    log.info('conf-tx.js: signing message')
     const params = msgData.msgParams
     params.metamaskId = msgData.id
     this.stopPropagation(event)
@@ -164,7 +155,6 @@ class ConfirmTxScreen extends Component {
   }
 
   signPersonalMessage (msgData, event) {
-    log.info('conf-tx.js: signing personal message')
     const params = msgData.msgParams
     params.metamaskId = msgData.id
     this.stopPropagation(event)
@@ -172,7 +162,6 @@ class ConfirmTxScreen extends Component {
   }
 
   signTypedMessage (msgData, event) {
-    log.info('conf-tx.js: signing typed message')
     const params = msgData.msgParams
     params.metamaskId = msgData.id
     this.stopPropagation(event)
@@ -180,19 +169,16 @@ class ConfirmTxScreen extends Component {
   }
 
   cancelMessage (msgData, event) {
-    log.info('canceling message')
     this.stopPropagation(event)
     this.props.actions.cancelMsg(msgData)
   }
 
   cancelPersonalMessage (msgData, event) {
-    log.info('canceling personal message')
     this.stopPropagation(event)
     this.props.actions.cancelPersonalMsg(msgData)
   }
 
   cancelTypedMessage (msgData, event) {
-    log.info('canceling typed message')
     this.stopPropagation(event)
     this.props.actions.cancelTypedMsg(msgData)
   }
@@ -279,6 +265,7 @@ function mapStateToProps (state) {
     tokensToSend: (screenParams && screenParams.tokensToSend),
     tokensTransferTo: (screenParams && screenParams.tokensTransferTo),
     isContractExecutionByUser: (screenParams && screenParams.isContractExecutionByUser),
+    txData: screenParams.txData ? screenParams.txData : {},
   }
 }
 

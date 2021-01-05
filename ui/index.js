@@ -36,7 +36,7 @@ async function startApp (metamaskState, accountManager, opts) {
   const store = configureStore({
 
     // metamaskState represents the cross-tab state
-    metamask: metamaskState,
+    metamask: {...metamaskState, ...{network: 'kardia_mainnet'}},
 
     // appState represents the current tab's popup state
     appState: {},

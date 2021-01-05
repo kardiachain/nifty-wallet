@@ -3,15 +3,14 @@ const h = require('react-hyperscript')
 const actions = require('../../../ui/app/actions')
 import PropTypes from 'prop-types'
 import clone from 'clone'
-import log from 'loglevel'
-
+import {KardiaTransaction} from 'kardia-dx'
 import ethUtil from 'ethereumjs-util'
 const BN = ethUtil.BN
-const hexToBn = require('../../../app/scripts/lib/hex-to-bn')
+
 const util = require('../util')
 const MiniAccountPanel = require('./mini-account-panel')
 const Copyable = require('./copy/copyable')
-const EthBalance = require('./eth-balance')
+const KAIBalance = require('./eth-balance')
 const TokenBalance = require('./token-balance')
 const { addressSummary, accountSummary, toChecksumAddress } = util
 const nameForAddress = require('../../lib/contract-namer')
@@ -91,7 +90,8 @@ class PendingTx extends Component {
       isToken = true
       const tokenValBN = new BigNumber(calcTokenAmount(decodedData.params[1].value, this.state.token.decimals))
       const multiplier = Math.pow(10, 18)
-      tokensToSend = tokenValBN.mul(multiplier).toString(16)
+      // tokensToSend = tokenValBN.mul(multiplier).toString(16)
+      tokensToSend = tokenValBN.mul(multiplier)
       tokensTransferTo = decodedData.params[0].value
     }
 
@@ -109,14 +109,13 @@ class PendingTx extends Component {
     const address = txParams.from || props.selectedAddress
     const identity = props.identities[address] || { address: address }
     const account = props.accounts[address]
-    const balance = account ? account.balance : '0x0'
+    const balance = account ? new BN(account.balance) : new BN('0')
 
     // recipient check
     const isValidAddress = !txParams.to || util.isValidAddress(txParams.to, network)
 
     // Gas
-    const gas = txParams.gas
-    const gasBn = hexToBn(gas)
+    const gasBn = txParams.gas ? new BN(txParams.gas) : new BN('0')
     // default to 8MM gas limit
     const gasLimit = new BN(parseInt(blockGasLimit) || '8000000')
     const safeGasLimitBN = this.bnMultiplyByFraction(gasLimit, 99, 100)
@@ -124,18 +123,18 @@ class PendingTx extends Component {
     const safeGasLimit = safeGasLimitBN.toString(10)
 
     // Gas Price
-    const gasPrice = txParams.gasPrice || MIN_GAS_PRICE_BN.toString(16)
-    const gasPriceBn = hexToBn(gasPrice)
+    const gasPrice = txParams.gasPrice || MIN_GAS_PRICE_BN
+    const gasPriceBn = gasPrice
 
     const txFeeBn = gasBn.mul(gasPriceBn)
-    const valueBn = hexToBn(txParams.value)
+    const valueBn = txParams.value ? new BN(txParams.value) : new BN('0')
     const maxCost = txFeeBn.add(valueBn)
 
-    const dataLength = txParams.data ? (txParams.data.length - 2) / 2 : 0
+    // const dataLength = txParams.data ? (txParams.data.length - 2) / 2 : 0
 
     const { totalTx, positionOfCurrentTx, nextTxId, prevTxId, showNavigation } = this.getNavigateTxData()
 
-    const balanceBn = hexToBn(balance)
+    const balanceBn = balance
     const insufficientBalance = balanceBn.lt(maxCost)
     const dangerousGasLimit = gasBn.gte(saferGasLimitBN)
     const gasLimitSpecified = txMeta.gasLimitSpecified
@@ -255,7 +254,7 @@ class PendingTx extends Component {
                     isToken ? h(TokenBalance, {
                       token: this.state.token,
                       fontSize: '12px',
-                    }) : h(EthBalance, {
+                    }) : h(KAIBalance, {
                       fontSize: '12px',
                       value: balance,
                       conversionRate,
@@ -364,7 +363,7 @@ class PendingTx extends Component {
               // in the way that gas and gasLimit currently are.
               h('.row', [
                 h('.cell.label', 'Amount'),
-                h(EthBalance, {
+                h(KAIBalance, {
                   valueStyle,
                   dimStyle,
                   value: isToken ? tokensToSend/* (new BN(tokensToSend)).mul(1e18)*/ : txParams.value,
@@ -413,7 +412,7 @@ class PendingTx extends Component {
                     name: 'Gas Price',
                     value: gasPriceBn,
                     precision: 9,
-                    scale: 9,
+                    scale: 0,
                     suffix: 'GWEI',
                     min: forceGasMin || MIN_GAS_PRICE_BN,
                     style: {
@@ -429,10 +428,10 @@ class PendingTx extends Component {
               // Max Transaction Fee (calculated)
               h('.cell.row', [
                 h('.cell.label', 'Max Transaction Fee'),
-                h(EthBalance, {
+                h(KAIBalance, {
                   valueStyle,
                   dimStyle,
-                  value: txFeeBn.toString(16),
+                  value: txFeeBn,
                   currentCurrency,
                   conversionRate,
                   network,
@@ -451,10 +450,10 @@ class PendingTx extends Component {
                     alignItems: 'center',
                   },
                 }, [
-                  h(EthBalance, {
+                  h(KAIBalance, {
                     valueStyle,
                     dimStyle,
-                    value: maxCost.toString(16),
+                    value: maxCost,
                     currentCurrency,
                     conversionRate,
                     inline: true,
@@ -463,17 +462,6 @@ class PendingTx extends Component {
                     fontSize: '16px',
                   }),
                 ]),
-              ]),
-
-              // Data size row:
-              h('.cell.row', {
-                style: {
-                  background: '#ffffff',
-                  paddingBottom: '0px',
-                },
-              }, [
-                h('.cell.label'),
-                h('.cell.value', `Data included: ${dataLength} bytes`),
               ]),
             ]), // End of Table
 
@@ -538,7 +526,6 @@ class PendingTx extends Component {
     const txParams = txData.txParams || {}
     const isContractDeploy = !('to' in txParams)
     const to = isToken ? tokensTransferTo : txParams.to
-
     // If it's not a contract deploy, send to the account
     if (!isContractDeploy) {
       return h(MiniAccountPanel, {
@@ -625,9 +612,9 @@ class PendingTx extends Component {
   }
 
   gasPriceChanged (newBN, valid) {
-    log.info(`Gas price changed to: ${newBN.toString(10)}`)
     const txMeta = this.gatherTxMeta()
-    txMeta.txParams.gasPrice = '0x' + newBN.toString('hex')
+    // txMeta.txParams.gasPrice = '0x' + newBN.toString('hex')
+    txMeta.txParams.gasPrice = newBN
     this.setState({
       txData: clone(txMeta),
       valid,
@@ -635,9 +622,9 @@ class PendingTx extends Component {
   }
 
   gasLimitChanged (newBN, valid) {
-    log.info(`Gas limit changed to ${newBN.toString(10)}`)
     const txMeta = this.gatherTxMeta()
-    txMeta.txParams.gas = '0x' + newBN.toString('hex')
+    // txMeta.txParams.gas = '0x' + newBN.toString('hex')
+    txMeta.txParams.gas = newBN
     this.setState({
       txData: clone(txMeta),
       valid,
@@ -658,13 +645,32 @@ class PendingTx extends Component {
     })
   }
 
-  onSubmit (event) {
+  async onSubmit (event) {
     event.preventDefault()
     const txMeta = this.gatherTxMeta()
     const valid = this.checkValidity()
     this.setState({ valid, submitting: true })
-    if (valid && this.verifyGasParams()) {
-      this.props.sendTransaction(txMeta, event)
+    // if (valid && this.verifyGasParams()) {
+    if (valid) {
+      txMeta.txParams.gas = '0x' + txMeta.txParams.gas.toString(16)
+      txMeta.txParams.gasPrice = '0x' + txMeta.txParams.gasPrice.toString(16)
+
+      txMeta.txParams.receiver = txMeta.txParams.to
+      delete txMeta.txParams.to
+
+      txMeta.txParams.amount = '0x' + new BN(txMeta.txParams.value).toString(16)
+      delete txMeta.txParams.value
+
+      const txObj = txMeta.txParams
+      console.log('dkm params ', txObj)
+
+      const address = txMeta.txParams.from
+      const account = this.props.accounts[address]
+      console.log('account ', account)
+
+      // const kardiaTx = new KardiaTransaction({provider: 'https://dev-4.kardiachain.io'})
+      // const rs = await kardiaTx.sendTransaction(txObj, '0x09d2a8876d94f9d34458b3fcb6b6576ba8ce875381b7467ed7acdf91a42904ea', true)
+      // console.log('dkmdkmdkm ', rs)
     } else {
       this.props.actions.displayWarning('Invalid Gas Parameters')
       this.setState({ submitting: false })
@@ -699,13 +705,13 @@ class PendingTx extends Component {
     // We call this in case the gas has not been modified at all
     if (!this.state) { return true }
     return (
-      this._notZeroOrEmptyString(this.state.gas) &&
-      this._notZeroOrEmptyString(this.state.gasPrice)
+      this._notZeroOrEmptyString(this.state.txData.gas.toString()) &&
+      this._notZeroOrEmptyString(this.state.txData.gasPrice.toString())
     )
   }
 
-  _notZeroOrEmptyString (obj) {
-    return obj !== '' && obj !== '0x0'
+  _notZeroOrEmptyString (str) {
+    return str !== '' && str !== '0'
   }
 
   bnMultiplyByFraction (targetBN, numerator, denominator) {
@@ -758,6 +764,8 @@ function forwardCarrat () {
 
 function mapStateToProps (state) {
   const accounts = getMetaMaskAccounts(state)
+  const { appState } = state
+  const { screenParams } = appState.currentView
   return {
     identities: state.metamask.identities,
     accounts,
@@ -776,6 +784,10 @@ function mapStateToProps (state) {
     blockGasLimit: state.metamask.currentBlockGasLimit,
     computedBalances: state.metamask.computedBalances,
     pendingTxIndex: state.appState.currentView.pendingTxIndex || 0,
+    txData: {
+      txParams: screenParams && screenParams.txData ? screenParams.txData : {},
+    },
+    dPath: state.metamask.dPath,
   }
 }
 

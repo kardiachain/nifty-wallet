@@ -104,8 +104,6 @@ class NetworksMenu extends Component {
     const networkDropdownItems = _networks
     .map((networkID) => {
       const networkObj = networks[networkID]
-      console.log('net abcxyz')
-      console.log(networkObj)
       return (
         <DropdownMenuItem
           key={networkObj.providerName}

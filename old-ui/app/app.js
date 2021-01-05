@@ -118,8 +118,10 @@ App.prototype.render = function () {
   const loadMessage = loadingMessage || isLoadingNetwork ?
     `Connecting to ${networkName}` : null
 
-  const confirmMsgTx = (props.currentView.name === 'confTx' && Object.keys(props.unapprovedTxs).length === 0)
-
+  // const confirmMsgTx = (props.currentView.name === 'confTx' && Object.keys(props.unapprovedTxs).length === 0)
+  const confirmMsgTx = props.currentView.name === 'confTx'
+  // console.log(confirmMsgTx)
+  // console.log(props.currentView.name === 'confTx')
   return (
     h('.flex-column.full-height', {
       style: {
@@ -138,7 +140,7 @@ App.prototype.render = function () {
       // panel content
       h('.app-primary' + (transForward ? '.from-right' : '.from-left'), {
         style: {
-          background: (props.isUnlocked || props.currentView.name === 'restoreVault' || props.currentView.name === 'config') ? confirmMsgTx ? 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))' : 'white' : 'transparent',
+          background: (props.isUnlocked || props.currentView.name === 'restoreVault' || props.currentView.name === 'config' || props.currentView.name === 'confTx') ? confirmMsgTx ? 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))' : 'white' : 'transparent',
           height: (props.isUnlocked && confirmMsgTx) ? '100%' : 'auto',
         },
       }, [
@@ -328,7 +330,6 @@ App.prototype.renderPrimary = function () {
 App.prototype.getNetworkName = function () {
   const { provider } = this.props
   const providerName = provider.type
-  console.log('getNetworkName ', providerName)
   const network = getNetworkID({network: providerName})
   return getNetworkDisplayName(network.netId)
 }

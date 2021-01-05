@@ -1,5 +1,4 @@
 const ethUtil = require('ethereumjs-util')
-const ethNetProps = require('eth-net-props')
 const {
   ROPSTEN,
   RINKEBY,
@@ -164,7 +163,7 @@ function parseBalance (balance) {
 // Takes wei hex, returns an object with three properties.
 // Its "formatted" property is what we generally use to render values.
 function formatBalance (balance, decimalsToKeep, needsParse = true, network, isToken, tokenSymbol) {
-  const coinName = ethNetProps.props.getNetworkCoinName(network)
+  const coinName = 'KAI'
   const assetName = isToken ? tokenSymbol : coinName
   const parsed = needsParse ? parseBalance(balance) : balance.split('.')
   const beforeDecimal = parsed[0]
@@ -496,7 +495,6 @@ function getNetworkID ({ network }) {
   let chainId
   let netId
   let ticker
-  console.log('getNetworkID ', network)
   switch (network) {
     case KARDIA_MAINNET:
       netId = KARDIA_MAINNET.toString()

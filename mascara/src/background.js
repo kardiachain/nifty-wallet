@@ -28,8 +28,6 @@ global.addEventListener('activate', function (event) {
   event.waitUntil(global.clients.claim())
 })
 
-log.debug('inside:open')
-
 // state persistence
 const dbController = new DbController({
   key: STORAGE_KEY,
@@ -38,10 +36,8 @@ const dbController = new DbController({
 start().catch(log.error)
 
 async function start () {
-  log.debug('Nifty Wallet initializing...')
   const initState = await loadStateFromPersistence()
   await setupController(initState)
-  log.debug('Nifty Wallet initialization complete.')
 }
 
 //
@@ -98,7 +94,6 @@ async function setupController (initState, client) {
   //
 
   connectionListener.on('remote', (portStream, messageEvent) => {
-    log.debug('REMOTE CONECTION FOUND***********')
     connectRemote(portStream, messageEvent.data.context)
   })
 

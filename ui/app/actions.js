@@ -398,7 +398,6 @@ function tryUnlockMetamask (password, dPath) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
     dispatch(actions.unlockInProgress())
-    log.debug(`background.submitPassword`)
 
     return new Promise((resolve, reject) => {
       background.submitPassword(password, dPath, error => {
@@ -476,7 +475,7 @@ function transitionBackward () {
 function confirmSeedWords () {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
-    log.debug(`background.clearSeedWordCache`)
+
     return new Promise((resolve, reject) => {
       background.clearSeedWordCache((err, account) => {
         dispatch(actions.hideLoadingIndication())
@@ -485,7 +484,6 @@ function confirmSeedWords () {
           return reject(err)
         }
 
-        log.info('Seed word cache cleared. ' + account)
         dispatch(actions.showAccountsPage())
         resolve(account)
       })
@@ -496,7 +494,6 @@ function confirmSeedWords () {
 function createNewVaultAndRestore (password, seed, dPath) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
-    log.debug(`background.createNewVaultAndRestore`)
 
     return new Promise((resolve, reject) => {
       background.clearSeedWordCache((err) => {
@@ -533,7 +530,6 @@ function createNewVaultAndRestore (password, seed, dPath) {
 function createNewVaultAndKeychain (password) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
-    log.debug(`background.createNewVaultAndKeychain`)
 
     return new Promise((resolve, reject) => {
       background.createNewVaultAndKeychain(password, err => {
@@ -541,8 +537,6 @@ function createNewVaultAndKeychain (password) {
           dispatch(actions.displayWarning(err.message))
           return reject(err)
         }
-
-        log.debug(`background.placeSeedWords`)
 
         background.placeSeedWords((err) => {
           if (err) {
@@ -593,7 +587,6 @@ function verifySeedPhrase () {
 function requestRevealSeed (password, dPath) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
-    log.debug(`background.submitPassword`)
     return new Promise((resolve, reject) => {
       background.submitPassword(password, dPath, err => {
         if (err) {
@@ -601,7 +594,6 @@ function requestRevealSeed (password, dPath) {
           return reject(err)
         }
 
-        log.debug(`background.placeSeedWords`)
         background.placeSeedWords((err, result) => {
           if (err) {
             dispatch(actions.displayWarning(err.message))
@@ -651,7 +643,6 @@ function resetAccount () {
           return reject(err)
         }
 
-        log.info('Transaction history reset for ' + account)
         dispatch(actions.showAccountsPage())
         resolve(account)
       })
@@ -670,7 +661,6 @@ function changePassword (oldPassword, newPassword, dPath) {
           log.error(err)
           return reject(err)
         }
-        log.info('Password is changed for ' + account)
         dispatch(actions.showAccountsPage())
         resolve(account)
       })
@@ -686,7 +676,6 @@ function getContract (address) {
           log.error(err)
           return reject(err)
         }
-        log.info('Contract retrieved: ' + JSON.stringify(props))
         resolve(props)
       })
     })
@@ -705,7 +694,6 @@ function removeAccount (address, network) {
           return reject(err)
         }
 
-        log.info('Account removed: ' + account)
         dispatch(actions.showAccountsPage())
         resolve()
       })
@@ -725,7 +713,6 @@ function updateABI (address, network, newABI) {
           return reject(err)
         }
 
-        log.info('Implementation ABI for proxy updated: ' + account)
         dispatch(actions.showAccountsPage())
         resolve()
       })
@@ -778,7 +765,6 @@ function navigateToNewAccountScreen () {
 }
 
 function addNewAccount () {
-  log.debug(`background.addNewAccount`)
   return (dispatch, getState) => {
     const oldIdentities = getState().metamask.identities
     dispatch(actions.showLoadingIndication())
@@ -1037,7 +1023,7 @@ function signTx (txData) {
     //     return dispatch(actions.displayWarning(err.message))
     //   }
     // })
-    dispatch(actions.showConfTxPage({isContractExecutionByUser: txData && txData.isContractExecutionByUser}))
+    dispatch(actions.showConfTxPage({isContractExecutionByUser: txData && txData.isContractExecutionByUser, txData}))
   }
 }
 
@@ -1249,7 +1235,6 @@ function signTokenTx (tokenAddress, toAddress, amount, txData, confTxScreenParam
 }
 
 function updateTransaction (txData) {
-  log.info('actions: updateTx: ' + JSON.stringify(txData))
   return dispatch => {
     log.debug(`actions calling background.updateTx`)
     dispatch(actions.showLoadingIndication())
@@ -1300,7 +1285,6 @@ function signKardiaTx (txData) {
 }
 
 function updateAndApproveTx (txData) {
-  log.info('actions: updateAndApproveTx: ' + JSON.stringify(txData))
   return (dispatch) => {
     log.debug(`actions calling background.updateAndApproveTx`)
     dispatch(actions.showLoadingIndication())
@@ -1338,9 +1322,7 @@ function updateAndApproveTx (txData) {
 }
 
 function getPendingNonce (address) {
-  log.info('actions: getPendingNonce')
   return (dispatch) => {
-    log.debug(`actions calling background.getPendingNonce`)
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
       background.getPendingNonce(address, (err, nonce) => {

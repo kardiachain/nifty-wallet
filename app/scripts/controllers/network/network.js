@@ -149,7 +149,6 @@ module.exports = class NetworkController extends EventEmitter {
         if (err) {
           console.log('here err ', err)
         }
-        log.info('web3.getNetwork returned ' + network)
         this.setNetworkState(network, type)
       }
     })
@@ -246,7 +245,6 @@ module.exports = class NetworkController extends EventEmitter {
   }
 
   _configureInfuraProvider ({ type }) {
-    log.info('NetworkController - configureInfuraProvider', type)
     const networkClient = createInfuraClient({
       network: type,
     })
@@ -259,19 +257,16 @@ module.exports = class NetworkController extends EventEmitter {
   }
 
   _configurePocketProvider ({ type }) {
-    log.info('NetworkController - configurePocketProvider', type)
     const networkClient = createPocketClient({ network: type })
     this._setNetworkClient(networkClient)
   }
 
   _configureLocalhostProvider () {
-    log.info('NetworkController - configureLocalhostProvider')
     const networkClient = createLocalhostClient()
     this._setNetworkClient(networkClient)
   }
 
   _configureStandardProvider ({ rpcUrl, chainId, ticker, nickname }) {
-    log.info('NetworkController - configureStandardProvider', rpcUrl)
     const networkClient = createJsonRpcClient({ rpcUrl })
     // hack to add a 'rpc' network with chainId
     networks.networkList['rpc'] = {

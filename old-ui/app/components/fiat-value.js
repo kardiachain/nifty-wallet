@@ -21,7 +21,6 @@ class FiatValue extends Component {
       conversionRate = 1
     }
     const renderedCurrency = currentCurrency || ''
-
     const value = formatBalance(props.value, 6, undefined, props.network)
 
     if (value === 'None') return value

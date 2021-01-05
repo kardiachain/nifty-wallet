@@ -37,9 +37,6 @@ const seedPhraseVerifier = {
       keyring.getAccounts()
         .then((restoredAccounts) => {
 
-          log.debug('Created accounts: ' + JSON.stringify(createdAccounts))
-          log.debug('Restored accounts: ' + JSON.stringify(restoredAccounts))
-
           if (restoredAccounts.length !== createdAccounts.length) {
             // this should not happen...
             return reject(new Error('Wrong number of accounts'))
