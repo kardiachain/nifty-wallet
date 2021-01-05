@@ -239,29 +239,7 @@ class ConfirmTxScreen extends Component {
 }
 
 function currentTxView (opts) {
-  log.info('rendering current tx view')
-  console.log(opts)
-  // const { txData } = opts
-  // const { txParams, msgParams, type } = txData
-
-  return h(PendingTypedMsg, opts)
-
-  // if (txParams) {
-  //   console.log('currentTxView 1')
-  //   return h(PendingTx, opts)
-  // } else if (msgParams) {
-
-  //   if (type === 'eth_sign') {
-  //     console.log('currentTxView 2')
-  //     return h(PendingMsg, opts)
-  //   } else if (type === 'personal_sign') {
-  //     console.log('currentTxView 3')
-  //     return h(PendingPersonalMsg, opts)
-  //   } else if (type === 'eth_signTypedData') {
-  //     console.log('currentTxView 4')
-  //     return h(PendingTypedMsg, opts)
-  //   }
-  // }
+  return h(PendingTx, opts)
 }
 
 function warningIfExists (warning) {
