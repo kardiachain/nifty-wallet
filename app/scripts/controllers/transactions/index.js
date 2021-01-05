@@ -296,13 +296,15 @@ class TransactionController extends EventEmitter {
     await this.approveTransaction(txMeta.id, customNonce)
   }
 
-  /**
-  updates and approves the transaction
-  @param txMeta {Object}
-  */
-  async signKardiaTx (txData) {
+  // /**
+  // sign Kardia transaction
+  // @param txData {Object}
+  // */
+  async getPK (txData) {
     // this.txStateManager.updateTx(txMeta, 'confTx: user approved transaction')
+    console.log('get PK for ', txData.from)
     const pk = await this.keyringInstance.exportAccount(txData.from, 'kardia_mainnet')
+    return pk
   }
 
   /**

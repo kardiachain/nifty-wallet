@@ -120,8 +120,23 @@ App.prototype.render = function () {
 
   // const confirmMsgTx = (props.currentView.name === 'confTx' && Object.keys(props.unapprovedTxs).length === 0)
   const confirmMsgTx = props.currentView.name === 'confTx'
-  // console.log(confirmMsgTx)
-  // console.log(props.currentView.name === 'confTx')
+
+  const getBGColor = () => {
+    if (props.currentView.name === 'confTx') {
+      return 'transparent'
+    } else if (props.isUnlocked ||
+      props.currentView.name === 'restoreVault' ||
+      props.currentView.name === 'config') {
+        if (confirmMsgTx) {
+          return 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))'
+        } else {
+          return 'white'
+        }
+    } else {
+      return 'transparent'
+    }
+  }
+
   return (
     h('.flex-column.full-height', {
       style: {
@@ -140,7 +155,7 @@ App.prototype.render = function () {
       // panel content
       h('.app-primary' + (transForward ? '.from-right' : '.from-left'), {
         style: {
-          background: (props.isUnlocked || props.currentView.name === 'restoreVault' || props.currentView.name === 'config' || props.currentView.name === 'confTx') ? confirmMsgTx ? 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))' : 'white' : 'transparent',
+          background: getBGColor(),
           height: (props.isUnlocked && confirmMsgTx) ? '100%' : 'auto',
         },
       }, [

@@ -256,8 +256,6 @@ class SendTransactionScreen extends PersistentForm {
     if (recipient) txParams.to = ethUtil.addHexPrefix(recipient)
     if (txData) txParams.data = txData
     if (txCustomNonce) txParams.nonce = '0x' + parseInt(txCustomNonce, 10).toString(16)
-    console.log('txParams')
-    console.log(txParams)
     this.props.signTx(txParams)
   }
 }

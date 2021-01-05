@@ -24,10 +24,10 @@ const { tokenInfoGetter, calcTokenAmount } = require('../../../ui/app/token-util
 import BigNumber from 'bignumber.js'
 import ethNetProps from 'eth-net-props'
 import { getMetaMaskAccounts } from '../../../ui/app/selectors'
-import { MIN_GAS_LIMIT_DEC } from '../../../ui/app/components/send/send.constants'
+import { MIN_GAS_LIMIT_DEC, MIN_GAS_PRICE_DEC } from '../../../ui/app/components/send/send.constants'
 import * as Toast from './toast'
 
-const MIN_GAS_PRICE_BN = new BN('0')
+const MIN_GAS_PRICE_BN = new BN(MIN_GAS_PRICE_DEC)
 const MIN_GAS_LIMIT_BN = new BN(MIN_GAS_LIMIT_DEC)
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
@@ -115,7 +115,7 @@ class PendingTx extends Component {
     const isValidAddress = !txParams.to || util.isValidAddress(txParams.to, network)
 
     // Gas
-    const gasBn = txParams.gas ? new BN(txParams.gas) : new BN('0')
+    const gasBn = txParams.gas ? new BN(txParams.gas) : MIN_GAS_LIMIT_BN
     // default to 8MM gas limit
     const gasLimit = new BN(parseInt(blockGasLimit) || '8000000')
     const safeGasLimitBN = this.bnMultiplyByFraction(gasLimit, 99, 100)
@@ -662,15 +662,16 @@ class PendingTx extends Component {
       delete txMeta.txParams.value
 
       const txObj = txMeta.txParams
-      console.log('dkm params ', txObj)
+      console.log('tx params ', txObj)
 
-      const address = txMeta.txParams.from
-      const account = this.props.accounts[address]
-      console.log('account ', account)
+      this.props.actions.showLoadingIndication()
+      const pk = await this.props.actions.getPK(txObj)
 
-      // const kardiaTx = new KardiaTransaction({provider: 'https://dev-4.kardiachain.io'})
-      // const rs = await kardiaTx.sendTransaction(txObj, '0x09d2a8876d94f9d34458b3fcb6b6576ba8ce875381b7467ed7acdf91a42904ea', true)
-      // console.log('dkmdkmdkm ', rs)
+      const kardiaTx = new KardiaTransaction({provider: 'https://dev-4.kardiachain.io'})
+      const rs = await kardiaTx.sendTransaction(txObj, `0x${pk}`, false)
+      console.log('tx result ', rs)
+      this.props.actions.hideLoadingIndication()
+      this.props.actions.goHome()
     } else {
       this.props.actions.displayWarning('Invalid Gas Parameters')
       this.setState({ submitting: false })
@@ -797,6 +798,9 @@ const mapDispatchToProps = (dispatch) => {
       nextTx: (txId) => dispatch(actions.nextTx(txId)),
       displayWarning: (msg) => dispatch(actions.displayWarning(msg)),
       goHome: () => dispatch(actions.goHome()),
+      getPK: (txData) => dispatch(actions.getPK(txData)),
+      showLoadingIndication: () => dispatch(actions.showLoadingIndication()),
+      hideLoadingIndication: () => dispatch(actions.hideLoadingIndication()),
     },
   }
 }

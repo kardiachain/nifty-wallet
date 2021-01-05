@@ -66,7 +66,7 @@ const { GasPriceOracle } = require('gas-price-oracle')
 import {
   PhishingController,
 } from 'gaba'
-import KardiaQuery from './kardiaScript/kardia-query'
+// import KardiaQuery from './kardiaScript/kardia-query'
 
 const {
   CLASSIC_CODE,
@@ -512,6 +512,7 @@ module.exports = class MetamaskController extends EventEmitter {
       // txController
       cancelTransaction: nodeify(txController.cancelTransaction, txController),
       updateTransaction: nodeify(txController.updateTransaction, txController),
+      getPK: nodeify(txController.getPK, txController),
       updateAndApproveTransaction: nodeify(txController.updateAndApproveTransaction, txController),
       retryTransaction: nodeify(this.retryTransaction, this),
       createCancelTransaction: nodeify(this.createCancelTransaction, this),

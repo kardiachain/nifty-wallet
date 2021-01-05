@@ -188,7 +188,7 @@ const actions = {
   signTokenTx: signTokenTx,
   updateTransaction,
   updateAndApproveTx,
-  signKardiaTx,
+  getPK,
   getPendingNonce,
   cancelTx,
   cancelTxs,
@@ -1263,25 +1263,21 @@ function updateTransaction (txData) {
   }
 }
 
-function signKardiaTx (txData) {
-  log.info('actions: signKardiaTx: ' + JSON.stringify(txData))
+function getPK (txData) {
   return (dispatch) => {
-    log.debug(`actions calling background.signKardiaTx`)
-    dispatch(actions.showLoadingIndication())
+    log.debug(`actions calling background.getPK`)
     return new Promise((resolve, reject) => {
-      background.signKardiaTx(txData, err => {
-        dispatch(actions.clearSend())
+      background.getPK(txData, (err, PK) => {
+        console.log('abc')
+        console.log(PK)
 
-        dispatch(actions.hideLoadingIndication())
-        dispatch(actions.closeCurrentNotificationWindow())
-
-        return txData
+        if (err) {
+          reject(err)
+        }
+        resolve(PK)
       })
     })
-      .catch((err) => {
-        dispatch(actions.hideLoadingIndication())
-        return Promise.reject(err)
-      })
+  }
 }
 
 function updateAndApproveTx (txData) {
