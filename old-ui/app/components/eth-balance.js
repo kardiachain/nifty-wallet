@@ -53,13 +53,13 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
 
   const { label } = balanceObj
   const valueStyle = props.valueStyle ? props.valueStyle : {
-    color: '#ffffff',
+    color: '#333333',
     width: '100%',
     fontSize: props.fontSize || '14px',
     textAlign: 'right',
   }
   const dimStyle = props.dimStyle ? props.dimStyle : {
-    color: ' #60db97',
+    color: ' #333333',
     fontSize: props.fontSize || '14px',
     marginLeft: '5px',
   }

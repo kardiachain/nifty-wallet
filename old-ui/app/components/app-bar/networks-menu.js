@@ -77,7 +77,7 @@ class NetworksMenu extends Component {
           style={{
             paddingLeft: '20px',
             fontSize: '16px',
-            color: providerType === LOCALHOST ? 'white' : '',
+            color: providerType === LOCALHOST ? '#333333' : '',
           }}
         >
           {providerType === LOCALHOST ? <div className="selected-network" /> : null}
@@ -111,7 +111,7 @@ class NetworksMenu extends Component {
           onClick={() => props.setProviderType(networkObj.providerName)}
           style={{
             paddingLeft: '20px',
-            color: providerType === networkObj.providerName ? 'white' : '',
+            color: providerType === networkObj.providerName ? '#333333' : '',
           }}
         >
           {providerType === networkObj.providerName ? <div className="selected-network" /> : null}
@@ -212,7 +212,7 @@ class NetworksMenu extends Component {
             closeMenu={() => props.updateNetworksMenuOpenState(false)}
             style={{
               paddingLeft: '20px',
-              color: 'white',
+              color: '#333333 !important',
             }}
           >
             <div className="selected-network" />

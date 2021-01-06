@@ -37,13 +37,13 @@ class Dropdown extends Component {
 
     const innerStyleDefaults = extend({
       padding: '15px 30px',
-      background: 'transparent',
+      background: '#F5F5F5',
       boxShadow: 'rgba(0, 0, 0, 0.15) 0px 2px 2px 2px',
     }, innerStyle)
 
     const styleDefaults = extend({
       borderRadius: '4px',
-      background: 'rgba(71, 28, 115, 0.95)',
+      background: '#F5F5F5',
       overflowY: 'auto',
       transition: 'max-height 300ms ease-in-out',
     }, style)
@@ -60,8 +60,8 @@ class Dropdown extends Component {
       >
         <style>
         {`
-          li.dropdown-menu-item:hover { color:#ffffff; }
-          li.dropdown-menu-item { color: rgba(255, 255, 255, 0.5); position: relative }
+          li.dropdown-menu-item:hover { color: #686868; }
+          li.dropdown-menu-item { color: #333333; position: relative }
         `}
         </style>
         {children}

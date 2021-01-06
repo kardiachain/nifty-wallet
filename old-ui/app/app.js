@@ -128,7 +128,7 @@ App.prototype.render = function () {
       props.currentView.name === 'restoreVault' ||
       props.currentView.name === 'config') {
         if (confirmMsgTx) {
-          return 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))'
+          return '#E5E5E5'
         } else {
           return 'white'
         }

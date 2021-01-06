@@ -180,7 +180,7 @@ class PendingTx extends Component {
               style: {
                 maxWidth: '100%',
                 padding: showNavigation ? '20px 20px 50px 20px' : '20px 20px 20px 20px',
-                background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
+                background: '#E5E5E5',
                 position: 'relative',
               },
             }, [
@@ -191,7 +191,7 @@ class PendingTx extends Component {
                   bottom: '20px',
                   width: '100%',
                   textAlign: 'center',
-                  color: '#ffffff',
+                  color: '#333333',
                 },
               }, [
                 h('h3', {
@@ -229,7 +229,7 @@ class PendingTx extends Component {
                   h('div.font-pre-medium', {
                     style: {
                       fontFamily: 'Nunito SemiBold',
-                      color: '#ffffff',
+                      color: '#333333',
                       whiteSpace: 'nowrap',
                     },
                   }, accountSummary(identity.name, 6, 4)),
@@ -240,7 +240,7 @@ class PendingTx extends Component {
                     h('span.font-small', {
                       style: {
                         fontFamily: 'Nunito Regular',
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: '#333333',
                       },
                     }, addressSummary(network, address, 6, 4, false)),
                   ]),
@@ -539,7 +539,7 @@ class PendingTx extends Component {
             h('span.font-pre-medium', {
               style: {
                 fontFamily: 'Nunito SemiBold',
-                color: '#ffffff',
+                color: '#333333',
                 display: 'inline-block',
                 whiteSpace: 'nowrap',
               },
@@ -551,7 +551,7 @@ class PendingTx extends Component {
               h('span.font-small', {
                 style: {
                   fontFamily: 'Nunito Regular',
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: '#333333',
                 },
               }, addressSummary(props.network, to, 6, 4, false)),
             ]),
@@ -565,7 +565,7 @@ class PendingTx extends Component {
         h('span.font-small', {
           style: {
             fontFamily: 'Nunito Bold',
-            color: '#ffffff',
+            color: '#333333',
           },
         }, 'New Contract'),
 

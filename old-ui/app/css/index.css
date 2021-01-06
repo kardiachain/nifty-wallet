@@ -420,7 +420,7 @@ p.buy-option {
 }
 
 .clipboard.white::before {
-  content: url('../images/copy-white.svg');
+  content: url('../images/copy.svg');
 }
 
 .sandwich-expando {
@@ -471,7 +471,6 @@ p.buy-option {
 .selected-network {
   width: 4px;
   height: 26px;
-  background: #60db97;
   position: absolute;
   left: 0;
 }
@@ -722,7 +721,7 @@ input.large-input {
   margin-left: 50px;
   font-size: 11px;
   text-rendering: geometricPrecision;
-  color: #60db97;
+  color: #333333;
 }
 .name-label:hover .edit-text {
   visibility: visible;
@@ -909,8 +908,8 @@ input.large-input {
 }
 
 .inactiveForm {
-  background: #60269c;
-  color: #ffffff;
+  background:#E5E5E5;
+  color: #1C1C28;
   border: none;
   border-radius: 8px 8px 0px 0px;
   width: 50%;

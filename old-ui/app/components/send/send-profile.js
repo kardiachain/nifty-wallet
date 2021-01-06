@@ -47,7 +47,7 @@ class SendProfile extends Component {
 					className="identicon-wrapper flex-column flex-center select-none"
 					style={{ display: 'inline-block' }}
 					>
-						<Identicon diameter={40} address={address} />
+						<Identicon diameter={60} address={address} />
 					</div>
 					{/* invisible place holder */}
 					<i className="fa fa-users fa-lg invisible" style={{ marginTop: '28px' }} />
@@ -57,7 +57,7 @@ class SendProfile extends Component {
 					<h2
 						className="send-profile-identity-name font-medium flex-center"
 						style={{
-							color: '#ffffff',
+							color: '#333333',
 							paddingTop: '8px',
 							marginBottom: '8px',
 						}}
@@ -66,7 +66,7 @@ class SendProfile extends Component {
 					<div
 						className="flex-row flex-center"
 						style={{
-							color: 'rgba(255, 255, 255, 0.7)',
+							color: '#333333',
 							marginBottom: '30px',
 						}}
 					>

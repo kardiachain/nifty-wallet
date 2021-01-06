@@ -52,7 +52,7 @@ class ExecutorCell extends Component {
 							className="identicon-wrapper flex-column flex-center select-none"
 							style={{ display: 'inline-block' }}
 						>
-							<Identicon diameter={40} address={address} />
+							<Identicon diameter={60} address={address} />
 						</div>
 						{/* invisible place holder */}
 						<i className="fa fa-users fa-lg invisible" style={{ marginTop: '28px' }} />
@@ -62,7 +62,7 @@ class ExecutorCell extends Component {
 						<h2
 							className="font-medium flex-center"
 							style={{
-								color: '#ffffff',
+								color: '#333333',
 								marginBottom: '8px',
 							}}
 						>{identity && identity.name}</h2>

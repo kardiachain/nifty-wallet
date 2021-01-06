@@ -33,7 +33,7 @@ class FiatValue extends Component {
       width: '100%',
       textAlign: 'right',
       fontSize: '14px',
-      color: '#ffffff',
+      color: '#333333',
     }
 
     const dimStyle = props.dimStyle ? props.dimStyle : {

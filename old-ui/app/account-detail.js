@@ -130,7 +130,7 @@ AccountDetailScreen.prototype.render = function () {
         style: {
           padding: '30px 20px',
           flex: '1 0 auto',
-          background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
+          background: '#E5E5E5',
           width: '100%',
         },
       }, [
@@ -147,7 +147,7 @@ AccountDetailScreen.prototype.render = function () {
           // large identicon and addresses
           h('.identicon-wrapper.select-none', [
             h(Identicon, {
-              diameter: 40,
+              diameter: 60,
               address: selected,
             }),
           ]),
@@ -195,7 +195,8 @@ AccountDetailScreen.prototype.render = function () {
                           textOverflow: 'ellipsis',
                           padding: '5px 0px',
                           lineHeight: '25px',
-                          color: '#ffffff',
+                          color: '#333333',
+                          fontWeight: 600,
                         },
                       }, [
                         identity && identity.name,
@@ -246,7 +247,7 @@ AccountDetailScreen.prototype.render = function () {
                   fontSize: '14px',
                   fontFamily: 'Nunito Bold',
                   textRendering: 'geometricPrecision',
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: '#333333',
                 }}, checksumAddress),
                 h(CopyButton, {
                   value: checksumAddress,
@@ -273,6 +274,7 @@ AccountDetailScreen.prototype.render = function () {
             network,
             style: {
               lineHeight: '7px',
+              color: '#1C1C28',
             },
           }),
 

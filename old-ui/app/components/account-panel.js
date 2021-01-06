@@ -49,7 +49,7 @@ AccountPanel.prototype.render = function () {
         h(Identicon, {
           address: panelState.identiconKey,
           imageify: state.imageifyIdenticons,
-          diameter: 40,
+          diameter: 60,
         }),
       ]),
 
@@ -57,7 +57,7 @@ AccountPanel.prototype.render = function () {
       h('.identity-data.flex-column.flex-justify-center.flex-grow.select-none', [
         h('h2.font-medium', {
           style: {
-            color: '#ffffff',
+            color: '#333333',
             marginBottom: '20px',
             lineHeight: '16px',
           },
@@ -68,14 +68,14 @@ AccountPanel.prototype.render = function () {
           }, [
             h('label.font-pre-medium.no-select', {
               style: {
-                color: '#ffffff',
+                color: '#333333',
                 marginBottom: i === 0 ? '10px' : '0px',
                 lineHeight: '14px',
               },
             }, attr.key),
             h('span.font-pre-medium', {
               style: {
-                color: '#ffffff',
+                color: '#333333',
                 lineHeight: '14px',
               },
             }, attr.value),
