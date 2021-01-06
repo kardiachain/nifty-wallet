@@ -31,8 +31,7 @@ const chainTypes = {
 }
 
 
-
-function getNetworkDisplayName(network) {
+function getNetworkDisplayName (network) {
 	const netID = parseInt(network)
 	switch (netID) {
 	case KARDIA_MAINNET_CODE:
@@ -42,7 +41,7 @@ function getNetworkDisplayName(network) {
 	}
 }
 
-function getNetworkCoinName(network) {
+function getNetworkCoinName (network) {
 	const netID = parseInt(network)
 	switch (netID) {
 	case KARDIA_MAINNET_CODE:
@@ -63,7 +62,7 @@ module.exports = {
   KAI_TICK,
   KARDIA_MAINNET_CHAINID,
   getNetworkDisplayName,
-  getNetworkCoinName
+  getNetworkCoinName,
   // KARDIA_TESTNET,
   // KARDIA_TESTNET_CODE,
   // KARDIA_TESTNET_DISPLAY_NAME,

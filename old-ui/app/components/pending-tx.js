@@ -24,6 +24,7 @@ import BigNumber from 'bignumber.js'
 import { getMetaMaskAccounts } from '../../../ui/app/selectors'
 import { MIN_GAS_LIMIT_DEC, MIN_GAS_PRICE_DEC } from '../../../ui/app/components/send/send.constants'
 import * as Toast from './toast'
+import {getNetworkCoinName} from '../../../app/scripts/controllers/network/enums'
 
 const MIN_GAS_PRICE_BN = new BN(MIN_GAS_PRICE_DEC)
 const MIN_GAS_LIMIT_BN = new BN(MIN_GAS_LIMIT_DEC)

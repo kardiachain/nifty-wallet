@@ -87,13 +87,8 @@ function accountSummary (acc, firstSegLength = 6, lastSegLength = 4) {
 
 function isValidAddress (address, network) {
   const prefixed = ethUtil.addHexPrefix(address)
-  if (ifRSK(network)) {
-    if (address === '0x0000000000000000000000000000000000000000') return false
-    return (ethUtil.isValidAddress(prefixed))
-  } else {
-    if (address === '0x0000000000000000000000000000000000000000') return false
-    return (isAllOneCase(prefixed) && ethUtil.isValidAddress(prefixed)) || ethUtil.isValidChecksumAddress(prefixed)
-  }
+  if (address === '0x0000000000000000000000000000000000000000') return false
+  return (isAllOneCase(prefixed) && ethUtil.isValidAddress(prefixed)) || ethUtil.isValidChecksumAddress(prefixed)
 }
 
 function isValidENSAddress (address) {
@@ -388,22 +383,6 @@ function getAllKeyRingsAccounts (keyrings, network) {
     return list
   }, [])
   return accountOrder
-}
-
-function toChecksumAddressRSK (address, chainId = null) {
-  const zeroX = '0x'
-  const stripAddress = ethUtil.stripHexPrefix(address).toLowerCase()
-  const prefix = chainId !== null ? (chainId.toString() + zeroX) : ''
-  const keccakHash = ethUtil.sha3(prefix + stripAddress).toString('hex')
-  let output = zeroX
-
-  for (let i = 0; i < stripAddress.length; i++) {
-   output += parseInt(keccakHash[i], 16) >= 8 ?
-              stripAddress[i].toUpperCase() :
-              stripAddress[i]
-  }
-
-  return output
 }
 
 function toChecksumAddress (network, address, chainId = null) {
