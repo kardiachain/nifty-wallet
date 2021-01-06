@@ -1,6 +1,6 @@
 const EventEmitter = require('events')
 const log = require('loglevel')
-const EthQuery = require('ethjs-query')
+const KardiQuery = require('../../kardiaScript/kardia-query')
 
 /**
 
@@ -22,7 +22,7 @@ const EthQuery = require('ethjs-query')
 class PendingTransactionTracker extends EventEmitter {
   constructor (config) {
     super()
-    this.query = new EthQuery(config.provider)
+    this.query = new KardiQuery(config.provider)
     this.nonceTracker = config.nonceTracker
     this.getPendingTransactions = config.getPendingTransactions
     this.getCompletedTransactions = config.getCompletedTransactions

@@ -1,5 +1,4 @@
 import extend from 'xtend'
-import log from 'loglevel'
 const actions = require('../actions')
 const txHelper = require('../../lib/tx-helper')
 const { customHdPaths } = require('../../../old-ui/app/components/connect-hardware/util.js')
@@ -641,7 +640,9 @@ function reduceApp (state, action) {
 
     case actions.DISPLAY_TOAST:
       return extend(appState, {
-        toastMsg: action.value,
+        toastMsg: action.value.text,
+        toastType: action.value.type,
+        toastClickHandler: action.value.onClick,
         isLoading: false,
       })
 

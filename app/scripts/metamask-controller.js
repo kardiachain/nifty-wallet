@@ -23,7 +23,7 @@ import createLoggerMiddleware from './lib/createLoggerMiddleware'
 import createTabIdMiddleware from './lib/createTabIdMiddleware'
 import providerAsMiddleware from 'eth-json-rpc-middleware/providerAsMiddleware'
 const setupMultiplex = require('./lib/stream-utils.js').setupMultiplex
-const KeyringController = require('eth-keychain-controller')
+const KeyringController = require('../scripts/kardiaScript/kardia-keychain-controller')
 const NetworkController = require('./controllers/network')
 const PreferencesController = require('./controllers/preferences')
 const CurrencyController = require('./controllers/currency')
@@ -512,6 +512,8 @@ module.exports = class MetamaskController extends EventEmitter {
       cancelTransaction: nodeify(txController.cancelTransaction, txController),
       updateTransaction: nodeify(txController.updateTransaction, txController),
       getPK: nodeify(txController.getPK, txController),
+      signTransaction: nodeify(txController.signEthTx, txController),
+      sendRawTx: nodeify(txController.sendRawTx, txController),
       updateAndApproveTransaction: nodeify(txController.updateAndApproveTransaction, txController),
       retryTransaction: nodeify(this.retryTransaction, this),
       createCancelTransaction: nodeify(this.createCancelTransaction, this),
@@ -1979,7 +1981,6 @@ module.exports = class MetamaskController extends EventEmitter {
    * @returns Promise<number>
    */
   async getPendingNonce (address) {
-    console.log('here abc')
     const { nonceDetails, releaseLock} = await this.txController.nonceTracker.getNonceLock(address)
     const pendingNonce = nonceDetails.params.highestSuggested
 

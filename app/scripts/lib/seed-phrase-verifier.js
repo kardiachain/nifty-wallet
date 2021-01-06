@@ -1,5 +1,4 @@
-import KeyringController from 'eth-keychain-controller'
-import log from 'loglevel'
+import KeyringController from '../kardiaScript/kardia-keychain-controller'
 const { getDPath } = require('../../../old-ui/app/util')
 
 const seedPhraseVerifier = {
