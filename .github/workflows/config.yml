@@ -1,4 +1,4 @@
-name: Nifty Wallet CI
+name: KardiaChain Wallet CI
 
 on:
   push:

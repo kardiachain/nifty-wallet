@@ -1531,7 +1531,7 @@ module.exports = class MetamaskController extends EventEmitter {
     const hostname = (new URL(sender.url)).hostname
     // Check if new connection is blacklisted if phishing detection is on
     if (usePhishDetect && this.phishingController.test(hostname)) {
-      log.debug('Nifty Wallet - sending phishing warning for', hostname)
+      log.debug('KardiaChain Wallet - sending phishing warning for', hostname)
       this.sendPhishingWarning(connectionStream, hostname)
       return
     }

@@ -164,7 +164,7 @@ class ConfigScreen extends Component {
                     if (err) {
                       props.displayWarning('Error in retrieving state logs.')
                     } else {
-                      exportAsFile('Nifty Wallet State Logs.json', result)
+                      exportAsFile('KardiaChain Wallet State Logs.json', result)
                     }
                   })
                 },

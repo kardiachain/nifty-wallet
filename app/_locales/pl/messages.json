@@ -33,7 +33,7 @@
     "message": "Dodaj sugerowane tokeny."
   },
   "addAcquiredTokens": {
-    "message": "Dodaj tokeny pozyskane przy pomocy Nifty Wallet"
+    "message": "Dodaj tokeny pozyskane przy pomocy KardiaChain Wallet"
   },
   "amount": {
     "message": "Ilość"
@@ -93,7 +93,7 @@
     "message": "Twoja przeglądarka nie jest obsługiwana..."
   },
   "builtInCalifornia": {
-    "message": "Nifty Wallet został zaprojektowany i stworzony w Kaliforni."
+    "message": "KardiaChain Wallet został zaprojektowany i stworzony w Kaliforni."
   },
   "buy": {
     "message": "Kup"
@@ -123,7 +123,7 @@
     "message": "Zamknij"
   },
   "chromeRequiredForHardwareWallets": {
-    "message": "Żeby połączyć się z portfelem sprzętowym, należy uruchomić Nifty Wallet z przeglądarką Google Chrome."
+    "message": "Żeby połączyć się z portfelem sprzętowym, należy uruchomić KardiaChain Wallet z przeglądarką Google Chrome."
   },
   "confirm": {
     "message": "Potwierdź"
@@ -266,7 +266,7 @@
     "message": "Zdeponuj przez ShapeShift"
   },
   "depositShapeShiftExplainer": {
-    "message": "Jeśli posiadasz inne kryptowaluty, możesz nimi handlować i deponować Eter bezpośrednio do swojego portfela Nifty Wallet. Nie trzeba żadnego konta."
+    "message": "Jeśli posiadasz inne kryptowaluty, możesz nimi handlować i deponować Eter bezpośrednio do swojego portfela KardiaChain Wallet. Nie trzeba żadnego konta."
   },
   "details": {
     "message": "Szczegóły"
@@ -474,7 +474,7 @@
     "message": "Importuj konto"
   },
   "importAccountMsg": {
-    "message": " Importowane konta nie będą powiązane z Twoją pierwotną frazą seed Nifty Wallet. Dowiedz się więcej o importowaniu kont "
+    "message": " Importowane konta nie będą powiązane z Twoją pierwotną frazą seed KardiaChain Wallet. Dowiedz się więcej o importowaniu kont "
   },
   "importAnAccount": {
     "message": "Importuj konto"
@@ -530,7 +530,7 @@
     "description": "formatuj do importowania konta"
   },
   "keepTrackTokens": {
-    "message": "Monitoruj stan tokenów kupionych przy pomocy konta Nifty Wallet."
+    "message": "Monitoruj stan tokenów kupionych przy pomocy konta KardiaChain Wallet."
   },
   "kovan": {
     "message": "Sieć testowa Kovan"
@@ -591,10 +591,10 @@
     "message": "Wiadomość"
   },
   "metamaskDescription": {
-    "message": "Nifty Wallet to bezpieczny portfel dla Ethereum."
+    "message": "KardiaChain Wallet to bezpieczny portfel dla Ethereum."
   },
   "metamaskSeedWords": {
-    "message": "Słowa Seed Nifty Wallet"
+    "message": "Słowa Seed KardiaChain Wallet"
   },
   "min": {
     "message": "Minimum"
@@ -606,7 +606,7 @@
     "message": "Należy wybrać co najmniej 1 token."
   },
   "needEtherInWallet": {
-    "message": "Żeby skorzystać ze zdecentraliowanych aplikacji (dApps) przy pomocy Nifty Wallet, potrzebujesz Eteru w swoim portfelu."
+    "message": "Żeby skorzystać ze zdecentraliowanych aplikacji (dApps) przy pomocy KardiaChain Wallet, potrzebujesz Eteru w swoim portfelu."
   },
   "needImportFile": {
     "message": "Musisz wybrać plik do zaimportowania.",
@@ -950,7 +950,7 @@
     "message": "Wybierz konto"
   },
   "selectAnAccountHelp": {
-    "message": "Wybierz konto do przeglądania w Nifty Wallet"
+    "message": "Wybierz konto do przeglądania w KardiaChain Wallet"
   },
   "selectHdPath": {
     "message": "Wybierz ścieżkę HD"
@@ -1083,7 +1083,7 @@
     "message": "Symbol tokena"
   },
   "tokenWarning1": {
-    "message": "Monitoruj stan tokenów kupionych przy pomocy konta Nifty Wallet. Jeśli masz tokeny kupione przy pomocy innych kont, nie pojawią się tutaj."
+    "message": "Monitoruj stan tokenów kupionych przy pomocy konta KardiaChain Wallet. Jeśli masz tokeny kupione przy pomocy innych kont, nie pojawią się tutaj."
   },
   "total": {
     "message": "Suma"
@@ -1126,7 +1126,7 @@
     "message": "Witamy w nowym interfejsie (Beta)"
   },
   "uiWelcomeMessage": {
-    "message": "Używasz teraz nowego interfejsu Nifty Wallet."
+    "message": "Używasz teraz nowego interfejsu KardiaChain Wallet."
   },
   "unapproved": {
     "message": "Niezatwierdzone"
@@ -1196,7 +1196,7 @@
     "message": "Witaj z powrotem!"
   },
   "welcomeBeta": {
-    "message": "Witaj w Nifty Wallet Beta"
+    "message": "Witaj w KardiaChain Wallet Beta"
   },
   "whatsThis": {
     "message": "Co to jest?"

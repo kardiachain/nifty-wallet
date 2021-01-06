@@ -66,7 +66,7 @@ class AccountImportSubview extends Component {
               display: 'inline-block',
               alignItems: 'center',
           }}>
-            <span>Imported accounts will not be associated with your originally created Nifty Wallet account seedphrase.</span>
+            <span>Imported accounts will not be associated with your originally created KardiaChain Wallet account seedphrase.</span>
           </div>
           <div style={{ padding: '10px 0' }}>
             <h3 style={{ padding: '3px' }}>Select Type</h3>

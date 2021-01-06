@@ -42,7 +42,7 @@ UnlockScreen.prototype.render = function () {
             fontSize: '30px',
             color: '#ffffff',
           },
-        }, 'Nifty Wallet'),
+        }, 'KardiaChain Wallet'),
 
         h('div', [
           h('input.large-input', {

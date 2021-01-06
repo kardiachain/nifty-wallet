@@ -1,4 +1,4 @@
-# Nifty Wallet Inpage Provider
+# KardiaChain Wallet Inpage Provider
 
 Used to initialize the inpage ethereum provider injected by MetaMask.
 

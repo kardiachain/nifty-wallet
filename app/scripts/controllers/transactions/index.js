@@ -154,11 +154,11 @@ class TransactionController extends EventEmitter {
           case 'submitted':
             return resolve(finishedTxMeta.hash)
           case 'rejected':
-            return reject(cleanErrorStack(new Error('Nifty Wallet Tx Signature: User denied transaction signature.')))
+            return reject(cleanErrorStack(new Error('KardiaChain Wallet Tx Signature: User denied transaction signature.')))
           case 'failed':
             return reject(cleanErrorStack(new Error(finishedTxMeta.err.message)))
           default:
-            return reject(cleanErrorStack(new Error(`Nifty Wallet Tx Signature: Unknown problem: ${JSON.stringify(finishedTxMeta.txParams)}`)))
+            return reject(cleanErrorStack(new Error(`KardiaChain Wallet Tx Signature: Unknown problem: ${JSON.stringify(finishedTxMeta.txParams)}`)))
         }
       })
     })

@@ -45,7 +45,7 @@ class TokenRatesController {
           contractExchangeRates[normalizeAddress(token.address)] = price ? price[nativeCurrency] : 0
         })
       } catch (error) {
-        log.warn(`Nifty Wallet - TokenRatesController exchange rate fetch failed.`, error)
+        log.warn(`KardiaChain Wallet - TokenRatesController exchange rate fetch failed.`, error)
       }
     }
     this.store.putState({ contractExchangeRates })

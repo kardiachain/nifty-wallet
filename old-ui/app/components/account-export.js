@@ -144,7 +144,7 @@ ExportAccountView.prototype.render = function () {
         },
       }, [
         h('button.btn-violet', {
-          onClick: () => exportAsFile(`Nifty Wallet ${nickname} Private Key`, plainKey),
+          onClick: () => exportAsFile(`KardiaChain Wallet ${nickname} Private Key`, plainKey),
         }, 'Save as File'),
         h('button', {
           style: {

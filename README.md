@@ -1,5 +1,4 @@
-# Nifty Wallet Browser Extension
-[![Build Status](https://circleci.com/gh/poanetwork/nifty-wallet.svg?style=shield)](https://circleci.com/gh/poanetwork/nifty-wallet) [![Coverage Status](https://coveralls.io/repos/github/poanetwork/nifty-wallet/badge.svg?branch=master)](https://coveralls.io/github/poanetwork/nifty-wallet?branch=master)
+# KardiaChain Wallet Browser Extension
 
 ## Introduction
 

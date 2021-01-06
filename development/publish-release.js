@@ -36,7 +36,7 @@ async function publishRelease () {
     method: 'POST',
     uri: CREATE_RELEASE_URI,
     headers: {
-      'User-Agent': 'Nifty Wallet',
+      'User-Agent': 'KardiaChain Wallet',
       'Authorization': `token ${GITHUB_TOKEN}`,
     },
     body: JSON.stringify({
@@ -84,7 +84,7 @@ async function uploadAsset (path, name, releaseId) {
     headers: {
       'Authorization': `token ${GITHUB_TOKEN}`,
       'Content-Type': 'application/zip',
-      'User-Agent': 'Nifty Wallet',
+      'User-Agent': 'KardiaChain Wallet',
     },
   })
 }
