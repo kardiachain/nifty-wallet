@@ -21,7 +21,6 @@ import { connect } from 'react-redux'
 import abiDecoder from 'abi-decoder'
 const { tokenInfoGetter, calcTokenAmount } = require('../../../ui/app/token-util')
 import BigNumber from 'bignumber.js'
-import ethNetProps from 'eth-net-props'
 import { getMetaMaskAccounts } from '../../../ui/app/selectors'
 import { MIN_GAS_LIMIT_DEC, MIN_GAS_PRICE_DEC } from '../../../ui/app/components/send/send.constants'
 import * as Toast from './toast'
@@ -67,7 +66,7 @@ class PendingTx extends Component {
         dataRetrieved: false,
       },
       isToken: false,
-      coinName: ethNetProps.props.getNetworkCoinName(opts.network),
+      coinName: getNetworkCoinName(opts.network),
     }
     this.tokenInfoGetter = tokenInfoGetter()
   }
@@ -412,7 +411,7 @@ class PendingTx extends Component {
                     value: gasPriceBn,
                     precision: 9,
                     scale: 0,
-                    suffix: 'GWEI',
+                    suffix: 'OXY',
                     min: forceGasMin || MIN_GAS_PRICE_BN,
                     style: {
                       position: 'relative',

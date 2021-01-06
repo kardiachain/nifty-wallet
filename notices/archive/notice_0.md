@@ -1,11 +1,9 @@
-Dear Nifty Wallet Users,
+Dear KardiaChain Wallet Users,
 
-Nifty Wallet is beta software. 
+KardiaChain Wallet is a beta software and currently under development. 
 
-When you log in to Nifty Wallet, your current account's address is visible to every new site you visit. This can be used to look up your account balances of Ether and other tokens.
-
-For your privacy, for now, please sign out of Nifty Wallet when you're done using a site.
+For your privacy and security, please use it with trusted website only and sign out after done using a website.
 
 ## Related Links ##
 
-**[Terms of Service](https://github.com/poanetwork/metamask-extension/wiki/Terms-of-Service)**
+**[Terms of Service](https://github.com/kardiachain/kardia-wallet-extension/blob/master/TERM_OF_SERVICE.MD)**

@@ -274,7 +274,7 @@ Removal of webRequest permission was not applied in the previous version. Applyi
 - [#58](https://github.com/poanetwork/metamask-extension/pull/58): Update Terms of Use page style
 - [#57](https://github.com/poanetwork/metamask-extension/pull/57): Optimized images for release.
 - [#55](https://github.com/poanetwork/metamask-extension/pull/55): Tests fix.
-- [#52](https://github.com/poanetwork/metamask-extension/pull/52): Nifty Wallet restyling.
+- [#52](https://github.com/poanetwork/metamask-extension/pull/52): KardiaChain Wallet restyling.
 - [#54](https://github.com/poanetwork/metamask-extension/pull/54): Fix explorer url for POA network on confirmed transaction.
 - [#50](https://github.com/poanetwork/metamask-extension/pull/50): Update sentry links.
 - [#45](https://github.com/poanetwork/metamask-extension/pull/45): Automate release publish.

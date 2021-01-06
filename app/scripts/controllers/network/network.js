@@ -13,7 +13,6 @@ import createLocalhostClient from './createLocalhostClient'
 const createPocketClient = require('./createPocketClient')
 const { createSwappableProxy, createEventEmitterProxy } = require('swappable-obj-proxy')
 import ethNetProps from 'eth-net-props'
-import parse from 'url-parse'
 const networks = { networkList: {} }
 const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
@@ -22,23 +21,12 @@ import {
 // import { composeP } from 'ramda'
 
 const {
-  ROPSTEN,
-  RINKEBY,
-  KOVAN,
-  MAINNET,
   LOCALHOST,
-  POA_SOKOL,
-  POA,
-  DAI,
-  GOERLI_TESTNET,
-  CLASSIC,
-  CLASSIC_CODE,
-  POA_SOKOL_CODE,
   KARDIA_MAINNET,
   KAI_TICK,
 } = require('./enums')
-const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET]
-const POCKET_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, POA, DAI, GOERLI_TESTNET, POA_SOKOL]
+const INFURA_PROVIDER_TYPES = []
+const POCKET_PROVIDER_TYPES = []
 
 const env = process.env.METAMASK_ENV
 const METAMASK_DEBUG = process.env.METAMASK_DEBUG
@@ -139,11 +127,6 @@ module.exports = class NetworkController extends EventEmitter {
     const ethQuery = new EthQuery(this._provider)
     const initialNetwork = this.getNetworkState()
     ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
-      const targetHost = parse(rpcTarget, true).host
-      const classicHost = parse(ethNetProps.RPCEndpoints(CLASSIC_CODE)[0], true).host
-      if (type === CLASSIC || targetHost === classicHost) {
-        network = CLASSIC_CODE.toString()
-      } // workaround to avoid Mainnet and Classic are having the same network ID
       const currentNetwork = this.getNetworkState()
       if (initialNetwork === currentNetwork) {
         if (err) {
@@ -230,8 +213,6 @@ module.exports = class NetworkController extends EventEmitter {
     } else if (isInfura) {
       this._configureInfuraProvider(opts)
     // other type-based rpc endpoints
-    } else if (type === POA_SOKOL) {
-      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(POA_SOKOL_CODE)[0], chainId, ticker, nickname })
     } else if (type === LOCALHOST) {
       this._configureLocalhostProvider()
     // url-based rpc endpoints

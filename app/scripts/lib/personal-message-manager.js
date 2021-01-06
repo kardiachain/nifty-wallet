@@ -87,7 +87,7 @@ export default class PersonalMessageManager extends EventEmitter {
   addUnapprovedMessageAsync (msgParams, req) {
     return new Promise((resolve, reject) => {
       if (!msgParams.from) {
-        reject(new Error('Nifty Wallet Message Signature: from field is required.'))
+        reject(new Error('KardiaChain Wallet Message Signature: from field is required.'))
         return
       }
       const msgId = this.addUnapprovedMessage(msgParams, req)
@@ -99,14 +99,14 @@ export default class PersonalMessageManager extends EventEmitter {
           case 'rejected':
             reject(
               ethErrors.provider.userRejectedRequest(
-                'Nifty Wallet Message Signature: User denied message signature.',
+                'KardiaChain Wallet Message Signature: User denied message signature.',
               ),
             )
             return
           default:
             reject(
               new Error(
-                `Nifty Wallet Message Signature: Unknown problem: ${JSON.stringify(
+                `KardiaChain Wallet Message Signature: Unknown problem: ${JSON.stringify(
                   msgParams,
                 )}`,
               ),

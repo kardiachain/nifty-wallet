@@ -56,7 +56,7 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
           color: '#ffffff',
           marginBottom: 10,
         },
-      }, 'Nifty Wallet'),
+      }, 'KardiaChain Wallet'),
 
 
       h('div', [
@@ -69,7 +69,7 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
         }, 'Encrypt your new DEN'),
 
         h(Tooltip, {
-          title: 'Your DEN is your password-encrypted storage within Nifty Wallet.',
+          title: 'Your DEN is your password-encrypted storage within KardiaChain Wallet.',
           id: 'initMenu',
         },
 

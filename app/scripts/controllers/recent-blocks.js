@@ -71,11 +71,7 @@ class RecentBlocksController {
    *
    */
   setHistoryLength (type, opts) {
-    if (ifRSKByProviderType(type)) {
-      this.historyLength = 1
-    } else {
-      this.historyLength = opts.historyLength || 40
-    }
+    this.historyLength = opts.historyLength || 40
   }
 
   /**

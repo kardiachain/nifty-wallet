@@ -39,7 +39,7 @@
     "message": "Aggiungi Token Suggeriti"
   },
   "addAcquiredTokens": {
-    "message": "Aggiungi i token che hai acquistato usando Nifty Wallet"
+    "message": "Aggiungi i token che hai acquistato usando KardiaChain Wallet"
   },
   "amount": {
     "message": "Importo"
@@ -48,11 +48,11 @@
     "message": "Importo + Gas"
   },
   "appDescription": {
-    "message": "Ethereum Browser Extension",
+    "message": "KardiaChain Web3 Extension",
     "description": "La descrizione dell'applicazione"
   },
   "appName": {
-    "message": "Nifty Wallet",
+    "message": "KardiaChain Wallet",
     "description": "Il nome dell'applicazione"
   },
   "approve": {
@@ -105,7 +105,7 @@
     "message": "Il tuo Browser non è supportato..."
   },
   "builtInCalifornia": {
-    "message": "Nifty Wallet è progettato e realizzato in California."
+    "message": "KardiaChain Wallet è progettato e realizzato in California."
   },
   "buy": {
     "message": "Compra"
@@ -144,7 +144,7 @@
     "message": "Chiudi"
   },
   "chromeRequiredForHardwareWallets": {
-    "message": "Devi usare Nifty Wallet con Google Chrome per connettere il tuo Portafoglio Hardware"
+    "message": "Devi usare KardiaChain Wallet con Google Chrome per connettere il tuo Portafoglio Hardware"
   },
   "confirm": {
     "message": "Conferma"
@@ -277,7 +277,7 @@
     "message": "La rete predefinita per transazioni in Ether è la Rete Ethereum Principale."
   },
   "denExplainer": {
-    "message": "Il DEN è il tuo archivio crittato con password dentro Nifty Wallet."
+    "message": "Il DEN è il tuo archivio crittato con password dentro KardiaChain Wallet."
   },
   "deposit": {
     "message": "Deposita"
@@ -305,7 +305,7 @@
     "message": "Deposita con ShapeShift"
   },
   "depositShapeShiftExplainer": {
-    "message": "Se possiedi altre criptomonete, puoi scambiare e depositare Ether direttamente nel tuo portafoglio Nifty Wallet. Nessun account richiesto."
+    "message": "Se possiedi altre criptomonete, puoi scambiare e depositare Ether direttamente nel tuo portafoglio KardiaChain Wallet. Nessun account richiesto."
   },
   "details": {
     "message": "Dettagli"
@@ -466,7 +466,7 @@
     "message": "Connetti portafoglio hardware"
   },
   "hardwareWalletsMsg": {
-    "message": "Selezione un portafoglio hardware che vuoi utilizzare con Nifty Wallet"
+    "message": "Selezione un portafoglio hardware che vuoi utilizzare con KardiaChain Wallet"
   },
   "havingTroubleConnecting": {
     "message": "Problemi di connessione?"
@@ -507,7 +507,7 @@
     "message": "Importa Account"
   },
   "importAccountMsg": {
-    "message": " Gli account importati non saranno associati alla frase seed originariamente creata con Nifty Wallet. Impara di più sugli account importati "
+    "message": " Gli account importati non saranno associati alla frase seed originariamente creata con KardiaChain Wallet. Impara di più sugli account importati "
   },
   "importAnAccount": {
     "message": "Importa un account"
@@ -566,7 +566,7 @@
     "description": "formato per importare un account"
   },
   "keepTrackTokens": {
-    "message": "Tieni traccia dei tokens che hai acquistato con il tuo account Nifty Wallet."
+    "message": "Tieni traccia dei tokens che hai acquistato con il tuo account KardiaChain Wallet."
   },
   "kovan": {
     "message": "Rete di test Kovan"
@@ -627,13 +627,13 @@
     "message": "Messaggio"
   },
   "metamaskDescription": {
-    "message": "Nifty Wallet è una cassaforte sicura per identità su Ethereum."
+    "message": "KardiaChain Wallet è una cassaforte sicura per identità su Ethereum."
   },
   "metamaskSeedWords": {
-    "message": "Parole Seed di Nifty Wallet"
+    "message": "Parole Seed di KardiaChain Wallet"
   },
   "metamaskVersion": {
-    "message": "versione di Nifty Wallet"
+    "message": "versione di KardiaChain Wallet"
   },
   "min": {
     "message": "Minimo"
@@ -645,7 +645,7 @@
     "message": "Devi selezionare almeno un token."
   },
   "needEtherInWallet": {
-    "message": "Per interagire con applicazioni decentralizzate con Nifty Wallet, devi possedere Ether nel tuo portafoglio."
+    "message": "Per interagire con applicazioni decentralizzate con KardiaChain Wallet, devi possedere Ether nel tuo portafoglio."
   },
   "needImportFile": {
     "message": "Devi selezionare un file da importare.",
@@ -989,7 +989,7 @@
     "message": "Seleziona un Account"
   },
   "selectAnAccountHelp": {
-    "message": "Selezione l'account da visualizzare in Nifty Wallet"
+    "message": "Selezione l'account da visualizzare in KardiaChain Wallet"
   },
   "selectHdPath": {
     "message": "Seleziona Percorso HD"
@@ -1128,7 +1128,7 @@
     "message": "Simbolo Token"
   },
   "tokenWarning1": {
-    "message": "Tieni traccia dei token che hai acquistato con il tuo account Nifty Wallet. Se hai acquistato token con un account diverso, quei token non appariranno qui."
+    "message": "Tieni traccia dei token che hai acquistato con il tuo account KardiaChain Wallet. Se hai acquistato token con un account diverso, quei token non appariranno qui."
   },
   "total": {
     "message": "Totale"
@@ -1189,7 +1189,7 @@
     "message": "Prova di nuovo"
   },
   "twelveWords": {
-    "message": "Queste 12 parole sono l'unico modo per ripristinare i tuoi account Nifty Wallet. \nSalvale in un posto sicuro e segreto."
+    "message": "Queste 12 parole sono l'unico modo per ripristinare i tuoi account KardiaChain Wallet. \nSalvale in un posto sicuro e segreto."
   },
   "typePassword": {
     "message": "Inserisci Password"
@@ -1198,7 +1198,7 @@
     "message": "Benvenuto alla nuova interfaccia (Beta)"
   },
   "uiWelcomeMessage": {
-    "message": "Stai utilizzanto la nuova interfaccia di Nifty Wallet. Guarda in giro, prova nuove funzionalità come inviare token, e facci sapere se hai dei problemi."
+    "message": "Stai utilizzanto la nuova interfaccia di KardiaChain Wallet. Guarda in giro, prova nuove funzionalità come inviare token, e facci sapere se hai dei problemi."
   },
   "unapproved": {
     "message": "Non approvata"
@@ -1277,7 +1277,7 @@
     "message": "Bentornato!"
   },
   "welcomeBeta": {
-    "message": "Benvenuto nella Beta di Nifty Wallet"
+    "message": "Benvenuto nella Beta di KardiaChain Wallet"
   },
   "whatsThis": {
     "message": "Cos'è questo?"

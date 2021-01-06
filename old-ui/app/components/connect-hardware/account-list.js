@@ -56,7 +56,7 @@ class AccountList extends Component {
           <h3 className="hw-connect">
             <h3 className="hw-connect__unlock-title">{`Unlock ${capitalizeFirstLetter(device)}`}</h3>
             {device.toLowerCase() === LEDGER ? this.renderHdPathSelector() : null}
-            <p className="hw-connect__msg">Select the accounts to view in Nifty Wallet</p>
+            <p className="hw-connect__msg">Select the accounts to view in KardiaChain Wallet</p>
           </h3>
         </div>
       )

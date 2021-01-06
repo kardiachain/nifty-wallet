@@ -15,7 +15,7 @@ const cleanContextForImports = () => {
   try {
     global.define = undefined
   } catch (_) {
-    console.warn('Nifty Wallet - global.define could not be deleted.')
+    console.warn('KardiaChain Wallet - global.define could not be deleted.')
   }
 }
 
@@ -26,7 +26,7 @@ const restoreContextAfterImports = () => {
   try {
     global.define = __define
   } catch (_) {
-    console.warn('Nifty Wallet - global.define could not be overwritten.')
+    console.warn('KardiaChain Wallet - global.define could not be overwritten.')
   }
 }
 
@@ -34,7 +34,7 @@ cleanContextForImports()
 
 import log from 'loglevel'
 import LocalMessageDuplexStream from 'post-message-stream'
-import MetamaskInpageProvider from 'nifty-wallet-inpage-provider'
+import MetamaskInpageProvider from './kardiaScript/kai-wallet-inpage-provider'
 
 // TODO:deprecate:Q1-2020
 import 'web3/dist/web3.min.js'
@@ -51,8 +51,8 @@ log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn')
 
 // setup background connection
 const metamaskStream = new LocalMessageDuplexStream({
-  name: 'nifty-inpage',
-  target: 'nifty-contentscript',
+  name: 'kai-inpage',
+  target: 'kai-contentscript',
 })
 
 // compose the inpage provider
@@ -77,9 +77,9 @@ const proxiedInpageProvider = new Proxy(inpageProvider, {
 
 const web3 = new Web3(proxiedInpageProvider)
 web3.setProvider = function () {
-  log.debug('Nifty Wallet - overrode web3.setProvider')
+  log.debug('KardiaChain Wallet - overrode web3.setProvider')
 }
-log.debug('Nifty Wallet - injected web3')
+log.debug('KardiaChain Wallet - injected web3')
 
 proxiedInpageProvider._web3Ref = web3.eth
 

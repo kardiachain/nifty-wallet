@@ -50,7 +50,7 @@ InfoScreen.prototype.render = function () {
           // current version number
 
           h('.info', [
-            h('div', 'Nifty Wallet'),
+            h('div', 'KardiaChain Wallet'),
             h('div', {
               style: {
                 marginBottom: '10px',

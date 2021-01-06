@@ -88,13 +88,13 @@ export default class MessageManager extends EventEmitter {
           case 'rejected':
             return reject(
               ethErrors.provider.userRejectedRequest(
-                'Nifty Wallet Message Signature: User denied message signature.',
+                'KardiaChain Wallet Message Signature: User denied message signature.',
               ),
             )
           default:
             return reject(
               new Error(
-                `Nifty Wallet Message Signature: Unknown problem: ${JSON.stringify(
+                `KardiaChain Wallet Message Signature: Unknown problem: ${JSON.stringify(
                   msgParams,
                 )}`,
               ),

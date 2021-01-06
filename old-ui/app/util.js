@@ -1,28 +1,9 @@
 const ethUtil = require('ethereumjs-util')
 const {
-  ROPSTEN,
-  RINKEBY,
-  KOVAN,
-  MAINNET,
-  MAINNET_CODE,
-  POA_SOKOL,
-  POA_CODE,
-  POA,
-  DAI,
-  DAI_CODE,
-  GOERLI_TESTNET,
-  POA_SOKOL_CODE,
-  RSK_CODE,
-  RSK_TESTNET_CODE,
   LOCALHOST,
-  CLASSIC,
-  CLASSIC_CODE,
-  RSK,
-  RSK_TESTNET,
   KARDIA_MAINNET,
   KARDIA_MAINNET_CHAINID,
   KARDIA_TICK,
-  customDPaths,
 } = require('../../app/scripts/controllers/network/enums')
 
 const valueTable = {
@@ -71,11 +52,6 @@ module.exports = {
   ifContractAcc,
   ifHardwareAcc,
   getAllKeyRingsAccounts,
-  ifRSK,
-  ifETC,
-  ifRSKByProviderType,
-  ifPOA,
-  ifXDai,
   toChecksumAddress,
   isValidChecksumAddress,
   isInfuraProvider,
@@ -402,7 +378,6 @@ function ifHardwareAcc (keyring) {
   return false
 }
 
-
 function getAllKeyRingsAccounts (keyrings, network) {
   const accountOrder = keyrings.reduce((list, keyring) => {
     if (ifContractAcc(keyring) && keyring.network === network) {
@@ -413,35 +388,6 @@ function getAllKeyRingsAccounts (keyrings, network) {
     return list
   }, [])
   return accountOrder
-}
-
-function ifRSK (network) {
-  if (!network) return false
-  const numericNet = isNaN(network) ? network : parseInt(network)
-  return numericNet === RSK_CODE || numericNet === RSK_TESTNET_CODE
-}
-
-function ifETC (network) {
-  if (!network) return false
-  const numericNet = isNaN(network) ? network : parseInt(network)
-  return numericNet === CLASSIC_CODE
-}
-
-function ifRSKByProviderType (type) {
-  if (!type) return false
-  return type === RSK || type === RSK_TESTNET
-}
-
-function ifPOA (network) {
-  if (!network) return false
-  const numericNet = isNaN(network) ? network : parseInt(network)
-  return numericNet === POA_SOKOL_CODE || numericNet === POA_CODE
-}
-
-function ifXDai (network) {
-  if (!network) return false
-  const numericNet = isNaN(network) ? network : parseInt(network)
-  return numericNet === DAI_CODE
 }
 
 function toChecksumAddressRSK (address, chainId = null) {
@@ -461,11 +407,7 @@ function toChecksumAddressRSK (address, chainId = null) {
 }
 
 function toChecksumAddress (network, address, chainId = null) {
-  if (ifRSK(network)) {
-    return toChecksumAddressRSK(address, parseInt(network))
-  } else {
-    return ethUtil.toChecksumAddress(address, chainId)
-  }
+  return ethUtil.toChecksumAddress(address, chainId)
 }
 
 function isValidChecksumAddress (network, address) {
@@ -473,22 +415,15 @@ function isValidChecksumAddress (network, address) {
 }
 
 function isInfuraProvider (type) {
-  const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET]
+  const INFURA_PROVIDER_TYPES = []
   return INFURA_PROVIDER_TYPES.includes(type)
 }
 
 function isKnownProvider (type) {
-  const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET]
+  const INFURA_PROVIDER_TYPES = []
   return INFURA_PROVIDER_TYPES.includes(type) ||
   type === KARDIA_MAINNET ||
-  type === LOCALHOST ||
-  type === POA_SOKOL ||
-  type === POA ||
-  type === DAI ||
-  type === GOERLI_TESTNET ||
-  type === CLASSIC ||
-  type === RSK ||
-  type === RSK_TESTNET
+  type === LOCALHOST
 }
 
 function getNetworkID ({ network }) {
@@ -510,11 +445,7 @@ function getNetworkID ({ network }) {
 }
 
 function getDPath (networkType, isCreatedWithCorrectDPath) {
-  if (isCreatedWithCorrectDPath) {
-    return customDPaths[networkType] || `m/44'/60'/0'/0`
-  } else {
     return `m/44'/60'/0'/0`
-  }
 }
 
 function setDPath (keyring, networkType, isCreatedWithCorrectDPath) {
@@ -526,14 +457,6 @@ function setDPath (keyring, networkType, isCreatedWithCorrectDPath) {
 
 function getTokenImageFolder (networkID) {
   switch (networkID) {
-    case MAINNET_CODE:
-      return 'images/contract'
-    case POA_CODE:
-      return 'images/contractPOA'
-    case RSK_CODE:
-      return 'images/contractRSK'
-    case RSK_TESTNET_CODE:
-      return 'images/contractRSKTest'
     default:
       return 'images/contractPOA'
   }

@@ -11,7 +11,9 @@ const infuraCurrencies = require('./infura-conversion.json').objects.sort((a, b)
 const validUrl = require('valid-url')
 const exportAsFile = require('./util').exportAsFile
 const Modal = require('../../ui/app/components/modals/index').Modal
-const ethNetProps = require('eth-net-props')
+const {
+  getNetworkDisplayName
+} = require('../../app/scripts/controllers/network/enums')
 const { networks } = require('../../app/scripts/controllers/network/util')
 const {
   ROPSTEN,
@@ -162,7 +164,7 @@ class ConfigScreen extends Component {
                     if (err) {
                       props.displayWarning('Error in retrieving state logs.')
                     } else {
-                      exportAsFile('Nifty Wallet State Logs.json', result)
+                      exportAsFile('KardiaChain Wallet State Logs.json', result)
                     }
                   })
                 },
@@ -330,7 +332,7 @@ class ConfigScreen extends Component {
 
     if (networks[provider.type]) {
       title = 'Current Network'
-      value = ethNetProps.props.getNetworkDisplayName(networks[provider.type].networkID)
+      value = getNetworkDisplayName(networks[provider.type].networkID)
     } else {
       title = 'Current RPC'
       value = metamaskState.provider.rpcTarget

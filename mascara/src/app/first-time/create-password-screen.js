@@ -117,7 +117,7 @@ class CreatePasswordScreen extends Component {
         })}>
           {isMascara && <div className="mascara-info first-view-phone-invisible">
             <div className="info">
-              Nifty Wallet is a secure identity vault for Ethereum.
+              KardiaChain Wallet is a secure identity vault for Ethereum.
             </div>
             <div className="info">
               It allows you to hold ether & tokens, and interact with decentralized applications.

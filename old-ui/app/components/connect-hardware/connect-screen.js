@@ -69,7 +69,7 @@ class ConnectScreen extends Component {
             <div className="new-account-connect-form unsupported-browser">
                 <div className="hw-connect">
                     <h3 className="hw-connect__title">Your Browser is not supported...</h3>
-                    <p className="hw-connect__msg">You need to use Nifty Wallet on Google Chrome in order to connect to your Hardware Wallet.</p>
+                    <p className="hw-connect__msg">You need to use KardiaChain Wallet on Google Chrome in order to connect to your Hardware Wallet.</p>
                 </div>
                 <Button
                     type="primary"
@@ -85,7 +85,7 @@ class ConnectScreen extends Component {
     renderHeader () {
         return (
             <div className="hw-connect__header">
-                <p className="hw-connect__header__msg">{`Select a hardware wallet you'd like to use with Nifty Wallet`}</p>
+                <p className="hw-connect__header__msg">{`Select a hardware wallet you'd like to use with KardiaChain Wallet`}</p>
             </div>
         )
     }
