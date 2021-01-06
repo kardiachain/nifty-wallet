@@ -413,7 +413,7 @@ class PendingTx extends Component {
                     value: gasPriceBn,
                     precision: 9,
                     scale: 0,
-                    suffix: 'GWEI',
+                    suffix: 'OXY',
                     min: forceGasMin || MIN_GAS_PRICE_BN,
                     style: {
                       position: 'relative',
@@ -652,8 +652,10 @@ class PendingTx extends Component {
     this.setState({ valid, submitting: true })
     // if (valid && this.verifyGasParams()) {
     if (valid) {
-      txMeta.txParams.gas = '0x' + txMeta.txParams.gas.toString(16)
-      txMeta.txParams.gasPrice = '0x' + txMeta.txParams.gasPrice.toString(16)
+      const gas = txMeta.txParams.gas || MIN_GAS_LIMIT_BN
+      const gasPrice = txMeta.txParams.gasPrice || MIN_GAS_PRICE_BN
+      txMeta.txParams.gas = '0x' + gas.toString(16)
+      txMeta.txParams.gasPrice = '0x' + gasPrice.toString(16)
 
       txMeta.txParams.receiver = txMeta.txParams.to
       delete txMeta.txParams.to
