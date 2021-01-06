@@ -6,11 +6,11 @@ Used to initialize the inpage ethereum provider injected by MetaMask.
 
 ```javascript
 // Create a stream to a remote provider:
-var niftywalletStream = new LocalMessageDuplexStream({
+var kaiWalletStream = new LocalMessageDuplexStream({
   name: 'inpage',
   target: 'contentscript',
 })
 
 // compose the inpage provider
-var inpageProvider = new MetamaskInpageProvider(niftywalletStream)
+var inpageProvider = new MetamaskInpageProvider(kaiWalletStream)
 ```

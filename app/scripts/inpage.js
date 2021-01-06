@@ -51,8 +51,8 @@ log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn')
 
 // setup background connection
 const metamaskStream = new LocalMessageDuplexStream({
-  name: 'nifty-inpage',
-  target: 'nifty-contentscript',
+  name: 'kai-inpage',
+  target: 'kai-contentscript',
 })
 
 // compose the inpage provider

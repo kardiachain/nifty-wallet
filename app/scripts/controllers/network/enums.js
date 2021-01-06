@@ -31,10 +31,10 @@ const RSK_CHAINID = '0x1E'
 const RSK_TESTNET_CHAINID = '0x1F'
 const CLASSIC_CHAINID = '0x3D'
 // TODO: Update constant
-const KARDIA_MAINNET_CHAINID = '0'
+const KARDIA_MAINNET_CHAINID = '0x0'
 // const KARDIA_TESTNET_CHAINID = '0x1000'
 
-const DAI_CODE = 100
+const DAI_CODE = 99
 const POA_SOKOL_CODE = 77
 const MAINNET_CODE = 1
 const ROPSTEN_CODE = 3
