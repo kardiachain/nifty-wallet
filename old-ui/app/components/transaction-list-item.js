@@ -14,19 +14,9 @@ const ethNetProps = require('eth-net-props')
 
 const TransactionIcon = require('./transaction-list-item-icon')
 const ShiftListItem = require('./shift-list-item')
-const { ifRSK } = require('../util')
 
-const { POA_CODE,
-  DAI_CODE,
-  POA_SOKOL_CODE,
-  MAINNET_CODE,
-  ROPSTEN_CODE,
-  RINKEBY_CODE,
-  KOVAN_CODE,
-  GOERLI_TESTNET_CODE,
-  CLASSIC_CODE,
-  RSK_CODE,
-  RSK_TESTNET_CODE,
+const {
+  KARDIA_MAINNET_CODE
 } = require('../../../app/scripts/controllers/network/enums')
 
 const mapDispatchToProps = dispatch => {
@@ -73,23 +63,13 @@ TransactionListItem.prototype.render = function () {
   const { transaction, network, conversionRate, currentCurrency } = this.props
   const { status } = transaction
   if (transaction.key === 'shapeshift') {
-    if (Number(network) === MAINNET_CODE) return h(ShiftListItem, transaction)
+    if (Number(network) === KARDIA_MAINNET_CODE) return h(ShiftListItem, transaction)
   }
   const date = formatDate(transaction.time)
 
   let isLinkable = false
   const numericNet = isNaN(network) ? network : parseInt(network)
-  isLinkable = numericNet === MAINNET_CODE ||
-    numericNet === ROPSTEN_CODE ||
-    numericNet === RINKEBY_CODE ||
-    numericNet === KOVAN_CODE ||
-    numericNet === POA_SOKOL_CODE ||
-    numericNet === POA_CODE ||
-    numericNet === DAI_CODE ||
-    numericNet === GOERLI_TESTNET_CODE ||
-    numericNet === CLASSIC_CODE ||
-    numericNet === RSK_CODE ||
-    numericNet === RSK_TESTNET_CODE
+  isLinkable = numericNet === KARDIA_MAINNET_CODE
 
   const isMsg = ('msgParams' in transaction)
   const isTx = ('txParams' in transaction)

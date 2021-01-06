@@ -60,7 +60,7 @@ const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
 import nanoid from 'nanoid'
 const { importTypes } = require('../../old-ui/app/accounts/import/enums')
 const { LEDGER, TREZOR } = require('../../old-ui/app/components/connect-hardware/enum')
-const { ifPOA, ifXDai, ifRSK, getNetworkID, getDPath, setDPath } = require('../../old-ui/app/util')
+const { getNetworkID, getDPath, setDPath } = require('../../old-ui/app/util')
 const { GasPriceOracle } = require('gas-price-oracle')
 
 import {
@@ -69,8 +69,7 @@ import {
 // import KardiaQuery from './kardiaScript/kardia-query'
 
 const {
-  CLASSIC_CODE,
-  MAINNET_CODE } = require('./controllers/network/enums')
+  KARDIA_MAINNET_CODE } = require('./controllers/network/enums')
 const accountsPerPage = 5
 
 module.exports = class MetamaskController extends EventEmitter {
@@ -1871,8 +1870,6 @@ module.exports = class MetamaskController extends EventEmitter {
 
       const networkIdStr = networkController.store.getState().network
       const networkId = parseInt(networkIdStr)
-      const isETHC = networkId === CLASSIC_CODE || networkId === MAINNET_CODE
-      const isRSK = ifRSK(networkId)
       let gasPrice
 
       if (isETHC) {
@@ -1908,18 +1905,6 @@ module.exports = class MetamaskController extends EventEmitter {
   getGasPriceFromBlocks (networkId) {
     const { recentBlocksController } = this
     const { recentBlocks } = recentBlocksController.store.getState()
-    const isPOA = ifPOA(networkId)
-    const isXDai = ifXDai(networkId)
-
-    // Return 10 gwei if using a POA, Sokol
-    if (isPOA) {
-      return '0x' + GWEI_10_BN.toString(16)
-    }
-
-    // Return 1 gwei if xDai or there are no blocks have been observed:
-    if (isXDai || recentBlocks.length === 0) {
-      return '0x' + GWEI_BN.toString(16)
-    }
 
     const lowestPrices = recentBlocks.map((block) => {
       if (!block.gasPrices || block.gasPrices.length < 1) {
@@ -1973,28 +1958,15 @@ module.exports = class MetamaskController extends EventEmitter {
    */
   getGasPriceFromOracles (networkId) {
     return new Promise(async (resolve, reject) => {
-      if (networkId === MAINNET_CODE) {
+      if (networkId === KARDIA_MAINNET_CODE) {
         const oracle = new GasPriceOracle()
         // optional fallbackGasPrices
         const fallbackGasPrices = {
-            instant: 70, fast: 31, standard: 20, low: 7,
+            instant: 4, fast: 3, standard: 2, low: 1,
         }
         oracle.gasPrices(fallbackGasPrices).then((gasPrices) => {
           gasPrices && (gasPrices.standard || gasPrices.fast) ? resolve(gasPrices.standard || gasPrices.fast) : reject()
         })
-      } else if (networkId === CLASSIC_CODE) {
-        const gasPriceOracleETC = 'https://gasprice-etc.poa.network'
-        try {
-          const response = await fetch(gasPriceOracleETC)
-          const parsedResponse = await response.json()
-          if (parsedResponse && (parsedResponse.standard || parsedResponse.fast)) {
-            resolve(parsedResponse.standard || parsedResponse.fast)
-          } else {
-            reject('Empty response from gas price oracle')
-          }
-        } catch (error) {
-          reject(error)
-        }
       } else {
         reject(`No gas price oracles for ${networkId}`)
       }

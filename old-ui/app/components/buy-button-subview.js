@@ -32,7 +32,7 @@ class BuyButtonSubview extends Component {
     const props = this.props
     const { network } = props
     const isLoading = props.isSubLoading
-    const coinName = ethNetProps.props.getNetworkCoinName(network)
+    const coinName = getNetworkCoinName(network)
     return (
       <div className="flex-column">
         { /* loading indication*/ }
