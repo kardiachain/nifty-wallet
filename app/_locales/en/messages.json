@@ -48,11 +48,11 @@
     "message": "Amount + Gas"
   },
   "appDescription": {
-    "message": "Ethereum Browser Extension",
+    "message": "KardiaChain Web3 Extension",
     "description": "The description of the application"
   },
   "appName": {
-    "message": "Nifty Wallet",
+    "message": "KardiaChain Wallet",
     "description": "The name of the application"
   },
   "approve": {

@@ -24,11 +24,11 @@
     "message": "Halaga + Gas"
   },
   "appDescription": {
-    "message": "Ethereum Browser Extension",
+    "message": "KardiaChain Web3 Extension",
     "description": "Ang deskripsyon ng application"
   },
   "appName": {
-    "message": "Nifty Wallet",
+    "message": "KardiaChain Wallet",
     "description": "Ang pangalan ng application"
   },
   "attemptingConnect": {
