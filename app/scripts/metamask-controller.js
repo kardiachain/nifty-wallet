@@ -51,7 +51,6 @@ import selectChainId from './lib/select-chain-id'
 const version = require('../manifest.json').version
 import ethUtil, { BN } from 'ethereumjs-util'
 const GWEI_BN = new BN('1000000000')
-const GWEI_10_BN = new BN('10000000000')
 import percentile from 'percentile'
 import seedPhraseVerifier from './lib/seed-phrase-verifier'
 import log from 'loglevel'
@@ -60,7 +59,7 @@ const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
 import nanoid from 'nanoid'
 const { importTypes } = require('../../old-ui/app/accounts/import/enums')
 const { LEDGER, TREZOR } = require('../../old-ui/app/components/connect-hardware/enum')
-const { getNetworkID, getDPath, setDPath } = require('../../old-ui/app/util')
+const { getDPath, setDPath } = require('../../old-ui/app/util')
 const { GasPriceOracle } = require('gas-price-oracle')
 
 import {
@@ -179,19 +178,19 @@ module.exports = class MetamaskController extends EventEmitter {
           this.accountTracker._updateAccounts()
           this.detectTokensController.restartTokenDetection()
 
-          const previousNetworkID = parseInt(previousNetworkIDStr, 10)
-          const nextNetwork = getNetworkID({network: newNetworkType})
-          const nextNetworkID = parseInt(nextNetwork && nextNetwork.netId, 10)
-          if (nextNetworkID !== previousNetworkID) {
-            const isPreviousETC = previousNetworkID === CLASSIC_CODE
-            const isPreviousRSK = ifRSK(previousNetworkID)
-            const isNextETC = nextNetworkID === CLASSIC_CODE
-            const isNextRSK = ifRSK(nextNetworkID)
-            if (isPreviousETC || isPreviousRSK || isNextETC || isNextRSK) {
-              this.forgetDevice(LEDGER, false)
-              this.forgetDevice(TREZOR, false)
-            }
-          }
+          // const previousNetworkID = parseInt(previousNetworkIDStr, 10)
+          // const nextNetwork = getNetworkID({network: newNetworkType})
+          // const nextNetworkID = parseInt(nextNetwork && nextNetwork.netId, 10)
+          // if (nextNetworkID !== previousNetworkID) {
+          //   const isPreviousETC = previousNetworkID === CLASSIC_CODE
+          //   const isPreviousRSK = ifRSK(previousNetworkID)
+          //   const isNextETC = nextNetworkID === CLASSIC_CODE
+          //   const isNextRSK = ifRSK(nextNetworkID)
+          //   if (isPreviousETC || isPreviousRSK || isNextETC || isNextRSK) {
+          //     this.forgetDevice(LEDGER, false)
+          //     this.forgetDevice(TREZOR, false)
+          //   }
+          // }
         })
         .catch(e => {
           console.log(e)
@@ -1872,28 +1871,8 @@ module.exports = class MetamaskController extends EventEmitter {
 
       const networkIdStr = networkController.store.getState().network
       const networkId = parseInt(networkIdStr)
-      let gasPrice
-
-      if (isETHC) {
-        try {
-          gasPrice = await this.getGasPriceFromOracles(networkId)
-          if (gasPrice) {
-            const gasPriceBN = new BN(gasPrice)
-            gasPrice = gasPriceBN.mul(GWEI_BN)
-            resolve('0x' + gasPrice.toString(16))
-          }
-        } catch (error) {
-          log.error(error)
-          gasPrice = this.getGasPriceFromBlocks(networkId)
-          resolve(gasPrice)
-        }
-      } else if (isRSK) {
-        gasPrice = this.getGasPriceFromLastBlockRSK()
-        resolve(gasPrice)
-      } else {
-        gasPrice = this.getGasPriceFromBlocks(networkId)
-        resolve(gasPrice)
-      }
+      const gasPrice = this.getGasPriceFromBlocks(networkId)
+      resolve(gasPrice)
     })
   }
 
