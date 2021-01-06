@@ -159,18 +159,31 @@ class TrezorKeyring extends EventEmitter {
   signTransaction (address, tx) {
       console.log('Start Trezor signing')
       return new Promise((resolve, reject) => {
+        console.log('Start Trezor unlock')
         this.unlock()
           .then(status => {
+            console.log('Trezor unlocked')
             setTimeout(_ => {
+              console.log('Trezor start singing tx')
+              console.log('Trezor tx info', {
+                to: this._normalize(tx.receiver),
+                value: this._normalize(tx.amount),
+                data: this._normalize(tx.data),
+                // chainId: tx._chainId,
+                nonce: this._normalize(tx.nonce),
+                gasLimit: this._normalize(tx.gas),
+                gasPrice: this._normalize(tx.gasPrice),
+              })
+              console.log('Trezor Address Path', this._pathFromAddress(address))
               TrezorConnect.ethereumSignTransaction({
                 path: this._pathFromAddress(address),
                 transaction: {
-                  to: this._normalize(tx.to),
-                  value: this._normalize(tx.value),
+                  to: this._normalize(tx.receiver),
+                  value: this._normalize(tx.amount),
                   data: this._normalize(tx.data),
                   // chainId: tx._chainId,
                   nonce: this._normalize(tx.nonce),
-                  gasLimit: this._normalize(tx.gasLimit),
+                  gasLimit: this._normalize(tx.gas),
                   gasPrice: this._normalize(tx.gasPrice),
                 },
               }).then(response => {
@@ -191,6 +204,7 @@ class TrezorKeyring extends EventEmitter {
                   resolve(signedTx)
                 } else {
                   console.log('Trezor fail')
+                  console.log('Trezor fail response', response)
                   reject(new Error(response.payload && response.payload.error || 'Unknown error'))
                 }
 
