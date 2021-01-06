@@ -4,7 +4,7 @@ import actions from '../../../../ui/app/actions'
 import { connect } from 'react-redux'
 import { Dropdown, DropdownMenuItem } from '../dropdown'
 import copyToClipboard from 'copy-to-clipboard'
-import ethNetProps from 'eth-net-props'
+// import ethNetProps from 'eth-net-props'
 import { getCurrentKeyring, ifContractAcc, ifHardwareAcc, getAllKeyRingsAccounts, toChecksumAddress } from '../../util'
 import { importTypes } from '../../accounts/import/enums'
 import { getFullABI } from '../../accounts/import/helpers'
@@ -206,9 +206,10 @@ class AccountDropdowns extends Component {
   }
 
   viewOnBlockExplorer = () => {
-    const { selected, network } = this.props
-    const networkCode = parseInt(network, 10)
-    const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
+    // const { selected, network } = this.props
+    // const networkCode = parseInt(network, 10)
+    // const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
+    const url = 'https://explorer.kardiachain.io'
     global.platform.openWindow({ url })
   }
 

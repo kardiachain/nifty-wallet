@@ -145,20 +145,8 @@ TokenList.prototype.render = function () {
 }
 
 TokenList.prototype.renderTokenStatusBar = function () {
-  const { tokens } = this.state
-  const { network } = this.props
-  const tokensFromCurrentNetwork = tokens.filter(token => (parseInt(token.network) === parseInt(network) || !token.network))
 
-  let msg
-  let noTokens = false
-  if (tokensFromCurrentNetwork.length === 1) {
-    msg = `You own 1 token`
-  } else if (tokensFromCurrentNetwork.length > 1) {
-    msg = `You own ${tokensFromCurrentNetwork.length} tokens`
-  } else {
-    msg = `No tokens found`
-    noTokens = true
-  }
+  const msg = 'Coming soon'
 
   return h('div', [
       h('div', {
@@ -171,26 +159,7 @@ TokenList.prototype.renderTokenStatusBar = function () {
       },
     }, [
       h('span', msg),
-      h('button.btn-primary.wallet-view__add-token-button', {
-        key: 'reveal-account-bar',
-        onClick: (event) => {
-          event.preventDefault()
-          this.props.addToken()
-        },
-        style: {
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-      }, [
-        'Add Token',
-      ]),
     ]),
-    noTokens ? h('div', {
-      style: {
-        height: '70px',
-      },
-    }) : null,
   ])
 }
 

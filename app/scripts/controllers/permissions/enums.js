@@ -31,7 +31,7 @@ export const SAFE_METHODS = [
   'net_listening',
   'net_peerCount',
   'net_version',
-  'eth_blockNumber',
+  'kai_blockNumber',
   'eth_call',
   'eth_chainId',
   'eth_coinbase',

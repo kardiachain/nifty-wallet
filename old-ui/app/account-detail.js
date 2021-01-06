@@ -128,7 +128,7 @@ AccountDetailScreen.prototype.render = function () {
     // identicon, label, balance, etc
       h('.account-data-subsection', {
         style: {
-          padding: '30px',
+          padding: '30px 20px',
           flex: '1 0 auto',
           background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
           width: '100%',
@@ -147,7 +147,7 @@ AccountDetailScreen.prototype.render = function () {
           // large identicon and addresses
           h('.identicon-wrapper.select-none', [
             h(Identicon, {
-              diameter: 60,
+              diameter: 40,
               address: selected,
             }),
           ]),

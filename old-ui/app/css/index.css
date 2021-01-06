@@ -103,9 +103,7 @@ button, input[type="submit"] {
   font-family: 'Nunito Bold';
   outline: none;
   cursor: pointer;
-  padding-left: 15px;
-  padding-right: 15px;
-  height: 32px;
+  padding: 8px 16px;
   border: none;
   color: white;
   transform-origin: center center;
@@ -113,8 +111,8 @@ button, input[type="submit"] {
   border-radius: 3px;
   font-size: 14px;
   /* default green */
-  background: #60db97;
-  /*box-shadow: 0px 5px 10px 0px rgba(92, 52, 162, 0.3);*/
+  border-radius: 8px;
+  background: linear-gradient(83.98deg, rgba(126, 219, 220, 0.3) 0%, rgba(228, 175, 203, 0.3) 11.65%, rgba(226, 194, 139, 0.3) 20.18%, rgba(5, 5, 15, 0.3) 54.57%), #05050F;  /*box-shadow: 0px 5px 10px 0px rgba(92, 52, 162, 0.3);*/
 }
 
 .btn-spread {
@@ -133,6 +131,15 @@ button, input[type="submit"] {
 .btn-violet {
   background: #6729a8;
   margin-right: 10px;
+}
+
+.btn-kai-light {
+  background: white;
+  border: 1.5px solid #D1D5DC;
+  box-sizing: border-box;
+  border-radius: 8px;
+  margin-right: 10px;
+  color: #1C1C28;
 }
 
 button[disabled], input[type="submit"][disabled] {
@@ -233,6 +240,10 @@ textarea.twelve-word-phrase {
   font-size: 14px;
   background: white;
   resize: none;
+  background: #F5F5F5 !important;
+  border: 1px solid #D1D5DC !important;
+  box-shadow: inset 0px 0.5px 4px rgba(96, 97, 112, 0.32) !important;
+  border-radius: 8px !important;
 }
 
 .network-indicator {
@@ -243,11 +254,13 @@ textarea.twelve-word-phrase {
 }
 
 .network-name {
-  width: 5.4em;
+  width: 110px;
   line-height: 9px;
   text-rendering: geometricPrecision;
   padding-left: 9px;
-  color: #6729a8;
+  color: #000000;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .check {
@@ -448,11 +461,11 @@ p.buy-option {
 }
 
 .logo {
-  background-image: url(../images/logo-1.png);
+  background-image: url(../images/kardia_logo.png);
   background-repeat: no-repeat;
-  width: 146px;
-  height: 134px;
-  margin-top: 30px;
+  width: 280px;
+  height: 170px;
+  margin-top: 21px;
 }
 
 .selected-network {
@@ -533,12 +546,13 @@ p.buy-option {
 }
 
 input.large-input, textarea.large-input {
-  /*margin-bottom: 24px;*/
-  padding: 0px 10px;
-  border-radius: 3px;
-  border: 1px solid #e2e2e2;
-  font-family: 'Nunito Regular';
   font-size: 14px;
+  padding: 16px;
+  height: 40px !important;
+  background: #F5F5F5 !important;
+  border: 1px solid #D1D5DC !important;
+  box-shadow: inset 0px 0.5px 4px rgba(96, 97, 112, 0.32) !important;
+  border-radius: 8px !important;
 }
 
 input.large-input {

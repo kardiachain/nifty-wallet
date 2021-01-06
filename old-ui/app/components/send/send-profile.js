@@ -35,7 +35,7 @@ class SendProfile extends Component {
 			<div
 				className="account-data-subsection flex-row flex-grow"
 				style={{
-					background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
+					background: '#E5E5E5',
 					padding: '30px',
 					minHeight: '178px',
 				}}
@@ -47,7 +47,7 @@ class SendProfile extends Component {
 					className="identicon-wrapper flex-column flex-center select-none"
 					style={{ display: 'inline-block' }}
 					>
-						<Identicon diameter={62} address={address} />
+						<Identicon diameter={40} address={address} />
 					</div>
 					{/* invisible place holder */}
 					<i className="fa fa-users fa-lg invisible" style={{ marginTop: '28px' }} />

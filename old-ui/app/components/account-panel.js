@@ -36,7 +36,7 @@ AccountPanel.prototype.render = function () {
 
     h('.identity-panel.flex-row.flex-space-between', {
       style: {
-        background: ((state.style && state.style.background) || 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))'),
+        background: ((state.style && state.style.background) || '#E5E5E5'),
         padding: '30px',
         flex: '1 0 auto',
         cursor: panelState.onClick ? 'pointer' : undefined,
@@ -49,7 +49,7 @@ AccountPanel.prototype.render = function () {
         h(Identicon, {
           address: panelState.identiconKey,
           imageify: state.imageifyIdenticons,
-          diameter: 60,
+          diameter: 40,
         }),
       ]),
 

@@ -40,7 +40,8 @@ UnlockScreen.prototype.render = function () {
           style: {
             paddingTop: '50px',
             fontSize: '30px',
-            color: '#ffffff',
+            color: '#1C1C28',
+            fontWeight: 600,
           },
         }, 'KardiaChain Wallet'),
 
@@ -76,7 +77,7 @@ UnlockScreen.prototype.render = function () {
           onClick: () => this.props.dispatch(actions.forgotPassword()),
           style: {
             fontSize: '14px',
-            color: '#60db97',
+            color: 'rgb(255 52 52)',
           },
         }, 'Restore from seed phrase'),
       ]),

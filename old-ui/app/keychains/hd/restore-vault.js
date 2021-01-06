@@ -118,7 +118,7 @@ RestoreVaultScreen.prototype.render = function () {
         }, [
 
           // cancel
-          h('button.btn-violet', {
+          h('button.btn-kai-light', {
             onClick: this.showInitializeMenu.bind(this),
           }, 'Cancel'),
 

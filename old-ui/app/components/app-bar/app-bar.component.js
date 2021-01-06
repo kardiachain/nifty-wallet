@@ -88,27 +88,31 @@ module.exports = class AppBar extends Component {
             alignItems: 'center',
             visibility: isUnlocked ? 'visible' : 'none',
             background: 'white',
-            height: '38px',
+            height: '52px',
             position: 'relative',
             zIndex: 12,
+            boxShadow: '0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16)'
           }}
         >
           <div className="app-bar-left-menu-section">
             <img
-              height={24}
-              width={24}
-              src={'./images/icon-128.png'}
-            />
-            <NetworkIndicator
-              network={network}
-              provider={provider}
-              isUnlocked={isUnlocked}
-              onClick={(event) => {
-                event.preventDefault()
-                event.stopPropagation()
-                this.setState({ isNetworkMenuOpen: !isNetworkMenuOpen })
-              }}
-            />
+              height={40}
+              width={40}
+              src={'./images/kardia_logo.png'}
+            /> <span>{!isUnlocked ? 'Kardia Wallet' : ''}</span>
+            {
+              isUnlocked ?
+              <NetworkIndicator
+                network={network}
+                provider={provider}
+                isUnlocked={isUnlocked}
+                onClick={(event) => {
+                  event.preventDefault()
+                  event.stopPropagation()
+                  this.setState({ isNetworkMenuOpen: !isNetworkMenuOpen })
+                }}
+              /> : <></>
+            }
           </div>
           {isUnlocked && (
             <div className="app-bar-right-menus-section">
