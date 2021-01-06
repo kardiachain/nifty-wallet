@@ -54,7 +54,8 @@ const GWEI_BN = new BN('1000000000')
 import percentile from 'percentile'
 import seedPhraseVerifier from './lib/seed-phrase-verifier'
 import log from 'loglevel'
-const TrezorKeyring = require('eth-trezor-keyring')
+// const TrezorKeyring = require('eth-trezor-keyring')
+const TrezorKeyring = require('../../app/scripts/kardiaScript/kardia-trezor-keyring')
 const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
 import nanoid from 'nanoid'
 const { importTypes } = require('../../old-ui/app/accounts/import/enums')
