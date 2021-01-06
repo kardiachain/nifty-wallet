@@ -16,7 +16,7 @@ const TransactionIcon = require('./transaction-list-item-icon')
 const ShiftListItem = require('./shift-list-item')
 
 const {
-  KARDIA_MAINNET_CODE
+  KARDIA_MAINNET_CODE,
 } = require('../../../app/scripts/controllers/network/enums')
 
 const mapDispatchToProps = dispatch => {
@@ -284,9 +284,7 @@ function renderErrorOrWarning (transaction, network) {
   }
 
   // show warning
-  const isRSK = ifRSK(network)
-  if (warning && !isRSK || (
-      isRSK &&
+  if (warning || (
       warning &&
       !warning.error.includes('[ethjs-rpc] rpc error with payload') &&
       !warning.error.includes('[ethjs-query] while formatting outputs from rpc')
