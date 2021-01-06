@@ -3,7 +3,6 @@ const h = require('react-hyperscript')
 const actions = require('../../../ui/app/actions')
 import PropTypes from 'prop-types'
 import clone from 'clone'
-import {KardiaTransaction} from 'kardia-dx'
 import ethUtil from 'ethereumjs-util'
 const BN = ethUtil.BN
 
@@ -665,15 +664,11 @@ class PendingTx extends Component {
 
       const txObj = txMeta.txParams
       console.log('tx params ', txObj)
-      this.props.actions.signKardiaTx(txObj)
-      // this.props.actions.showLoadingIndication()
-      // const pk = await this.props.actions.getPK(txObj)
-
-      // const kardiaTx = new KardiaTransaction({provider: 'https://dev-4.kardiachain.io'})
-      // const rs = await kardiaTx.sendTransaction(txObj, `0x${pk}`, false)
-      // console.log('tx result ', rs)
-      // this.props.actions.hideLoadingIndication()
-      // this.props.actions.goHome()
+      try {
+        await this.props.actions.signKardiaTx(txObj)
+      } catch (error) {
+        this.props.actions.displayWarning(error)
+      }
     } else {
       this.props.actions.displayWarning('Invalid Gas Parameters')
       this.setState({ submitting: false })

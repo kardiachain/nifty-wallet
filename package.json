@@ -152,7 +152,7 @@
     "json-rpc-middleware-stream": "^2.1.1",
     "json-rpc-pocket": "0.0.1",
     "jsonschema": "^1.2.4",
-    "kardia-dx": "git+https://github.com/kardiachain/kardia-js-sdk.git",
+    "kardia-tool": "0.0.13-3",
     "lodash.debounce": "^4.0.8",
     "lodash.shuffle": "^4.2.0",
     "lodash.uniqby": "^4.7.0",

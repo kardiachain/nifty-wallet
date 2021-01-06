@@ -1284,16 +1284,29 @@ function getPK (txData) {
 function signKardiaTx (txData) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
-    return background.signTransaction(txData)
-      .then((result) => {
-        console.log('signKardiaTx result ')
-        console.log(result)
-        dispatch(actions.hideLoadingIndication())
-      }).catch(error => {
-        console.log('signKardiaTx error')
-        console.log(error)
-        dispatch(actions.hideLoadingIndication())
+    return new Promise((resolve, reject) => {
+      console.log('signKardiaTx')
+      background.signTransaction(txData, txData.from, (err, result) => {
+        console.log('rawTx ', result)
+        if (err) {
+          reject(err)
+        }
+        resolve(result)
       })
+    }).then((tx) => {
+      console.log('sendRawKardiaTx')
+      background.sendRawTx(tx.rawTransaction, (err, txHash) => {
+        dispatch(actions.hideLoadingIndication())
+        console.log('txHash ', txHash)
+        if (err) {
+          throw err
+        }
+        dispatch(actions.goHome())
+        dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
+          window.open(`https://explorer-beta-dev.kardiachain.io/tx/${txHash}`)
+        }))
+      })
+    })
   }
 }
 
@@ -2244,10 +2257,10 @@ function hideWarning () {
   }
 }
 
-function displayToast (text) {
+function displayToast (text, type, onClick) {
   return {
     type: actions.DISPLAY_TOAST,
-    value: text,
+    value: {text, type, onClick},
   }
 }
 

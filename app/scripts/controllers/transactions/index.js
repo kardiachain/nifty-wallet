@@ -12,7 +12,6 @@ abiDecoder.addABI(abi)
 import TransactionStateManager from './tx-state-manager'
 import TxGasUtil from './tx-gas-utils'
 const PendingTransactionTracker = require('./pending-tx-tracker')
-// import NonceTracker from 'nonce-tracker'
 import NonceTracker from '../../kardiaScript/kardia-nonce-tracker'
 import * as txUtils from './lib/util'
 import cleanErrorStack from '../../lib/cleanErrorStack'
@@ -105,6 +104,18 @@ class TransactionController extends EventEmitter {
 
     // request state update to finalize initialization
     this._updatePendingTxsAfterFirstBlock()
+  }
+
+  /** @returns {string} transaction hash*/
+  async sendRawTx (rawTx) {
+    return new Promise((resolve, reject) => {
+      this.query.sendTransaction(rawTx, (err, txHash) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(txHash)
+      })
+    })
   }
 
   /** @returns {number} the chainId*/
