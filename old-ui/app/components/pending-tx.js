@@ -501,7 +501,7 @@ class PendingTx extends Component {
               }),
 
             h('button.cancel.btn-red', {
-              onClick: props.cancelTransaction,
+              onClick: props.actions.goHome,
             }, 'Reject'),
           ]),
           showNavigation ? h('.flex-row.flex-space-around.conf-buttons', {
