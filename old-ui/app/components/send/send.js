@@ -19,9 +19,8 @@ import * as Toast from '../toast'
 import AmountMaxButton from './amount-max-button'
 
 const optionalDataLabelStyle = {
-  background: '#ffffff',
   color: '#333333',
-  marginTop: '16px',
+  // marginTop: '16px',
 }
 const optionalDataValueStyle = {
   width: '100%',
@@ -57,7 +56,7 @@ class SendTransactionScreen extends PersistentForm {
     return (
       <div className="send-screen flex-column flex-grow">
         <Toast.ToastComponent type={Toast.TOAST_TYPE_ERROR} />
-        <SendProfile/>
+        {/* <SendProfile/> */}
 
         <SendHeader
           title= "Send Transaction"
@@ -100,7 +99,9 @@ class SendTransactionScreen extends PersistentForm {
             }}
           />
 
-          <button
+          <button style={{
+            height:'100%'
+          }}
             onClick={this.onSubmit.bind(this)}>
               Next
           </button>
@@ -108,7 +109,7 @@ class SendTransactionScreen extends PersistentForm {
         </section>
         <section className="flex-row flex-left amount-max-container"><AmountMaxButton /></section>
 
-        <h3 className="flex-center"
+        <h3 className="flex-start"
           style={optionalDataLabelStyle}
         >
           Transaction Data (optional)
@@ -129,7 +130,7 @@ class SendTransactionScreen extends PersistentForm {
           />
         </section>
 
-        <h3 className="flex-center"
+        <h3 className="flex-start"
           style={optionalDataLabelStyle}
         >
           Custom nonce (optional)

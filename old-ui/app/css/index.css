@@ -549,10 +549,11 @@ input.large-input, textarea.large-input {
   font-size: 14px;
   padding: 16px;
   height: 40px !important;
-  background: #F5F5F5 !important;
+  /* background: #F5F5F5 !important; */
   border: 1px solid #D1D5DC !important;
   box-shadow: inset 0px 0.5px 4px rgba(96, 97, 112, 0.32) !important;
   border-radius: 8px !important;
+  /* margin-bottom:12px; */
 }
 
 input.large-input {
@@ -742,7 +743,8 @@ input.large-input {
 /* Send Screen */
 
 .send-screen section {
-  margin: 10px 30px;
+  /* margin: 10px 30px; */
+  margin-bottom:16px;
 }
 
 .send-screen section.amount-max-container {
