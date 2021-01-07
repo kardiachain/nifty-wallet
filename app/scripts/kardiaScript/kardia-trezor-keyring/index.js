@@ -165,7 +165,7 @@ class TrezorKeyring extends EventEmitter {
             console.log('Trezor unlocked')
             setTimeout(_ => {
               console.log('Trezor start singing tx')
-              console.log('Trezor tx info', {
+              const _txParams = {
                 to: this._normalize(tx.receiver),
                 value: this._normalize(tx.amount),
                 data: this._normalize(tx.data),
@@ -173,19 +173,12 @@ class TrezorKeyring extends EventEmitter {
                 nonce: this._normalize(tx.nonce),
                 gasLimit: this._normalize(tx.gas),
                 gasPrice: this._normalize(tx.gasPrice),
-              })
+              }
+              console.log('Trezor tx info', _txParams)
               console.log('Trezor Address Path', this._pathFromAddress(address))
               TrezorConnect.ethereumSignTransaction({
                 path: this._pathFromAddress(address),
-                transaction: {
-                  to: this._normalize(tx.receiver),
-                  value: this._normalize(tx.amount),
-                  data: this._normalize(tx.data),
-                  // chainId: tx._chainId,
-                  nonce: this._normalize(tx.nonce),
-                  gasLimit: this._normalize(tx.gas),
-                  gasPrice: this._normalize(tx.gasPrice),
-                },
+                transaction: _txParams,
               }).then(response => {
                 if (response.success) {
                   console.log('Treozor success')
@@ -193,14 +186,28 @@ class TrezorKeyring extends EventEmitter {
                   tx.r = response.payload.r
                   tx.s = response.payload.s
 
-                  const signedTx = new Transaction(tx)
+                  const signedTx = new Transaction({
+                    to: this._normalize(tx.receiver),
+                    value: this._normalize(tx.amount),
+                    data: this._normalize(tx.data),
+                    // chainId: tx._chainId,
+                    nonce: this._normalize(tx.nonce),
+                    gasLimit: this._normalize(tx.gas),
+                    gasPrice: this._normalize(tx.gasPrice),
+                    v: response.payload.v,
+                    r: response.payload.r,
+                    s: response.payload.s
+                  })
+
+                  console.log(signedTx)
 
                   const addressSignedWith = ethUtil.toChecksumAddress(`0x${signedTx.from.toString('hex')}`)
                   const correctAddress = ethUtil.toChecksumAddress(address)
                   if (addressSignedWith !== correctAddress) {
                     reject(new Error('signature doesnt match the right address'))
                   }
-
+                  console.log('singedTx', signedTx.serialize().toString('hex'))
+                  console.log('singedTx payload', response)
                   resolve(signedTx)
                 } else {
                   console.log('Trezor fail')
