@@ -1205,11 +1205,11 @@ div.message-container > div:first-child {
 }
 
 .confirm-label {
-  padding: 20px 50px;
-  color: #6729a8;
-  border: solid 1px #6729a8;
+  padding: 20px;
+  color: #363636;
+  border: solid 1px #df0e18;
   border-radius: 5px;
-  background-color: rgba(103,41,168, 0.2);
+  background-color: rgb(255 73 73 / 20%);
   word-wrap: break-word;
 }
 

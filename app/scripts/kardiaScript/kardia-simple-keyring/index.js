@@ -5,8 +5,9 @@ const ethUtil = require('ethereumjs-util')
 const type = 'Simple Key Pair'
 const sigUtil = require('eth-sig-util')
 const KardiaTool = require('kardia-tool')
+const { RPC_ENDPOINT } = require('../../../../constant')
 
-const kardiaTool = KardiaTool.default('https://dev-4.kardiachain.io')
+const kardiaTool = KardiaTool.default(RPC_ENDPOINT)
 const kardiaCommon = kardiaTool.common
 
 class SimpleKeyring extends EventEmitter {

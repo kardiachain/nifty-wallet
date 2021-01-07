@@ -18,6 +18,7 @@ const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
+import { RPC_ENDPOINT } from '../../../../constant'
 // import { composeP } from 'ramda'
 
 const {
@@ -217,7 +218,7 @@ module.exports = class NetworkController extends EventEmitter {
       this._configureLocalhostProvider()
     // url-based rpc endpoints
     } else if (type === 'kardia_mainnet') {
-      this._configureStandardProvider({ rpcUrl: 'https://dev-4.kardiachain.io', chainId, ticker, nickname })
+      this._configureStandardProvider({ rpcUrl: RPC_ENDPOINT, chainId, ticker, nickname })
     } else if (type === 'rpc') {
       this._configureStandardProvider({ rpcUrl: rpcTarget, chainId, ticker, nickname })
     } else {

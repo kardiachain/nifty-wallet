@@ -16,7 +16,7 @@ import BigNumber from 'bignumber.js'
 BigNumber.config({ ERRORS: false })
 import log from 'loglevel'
 // import SendProfile from './send-profile'
-import SendHeader from './send-header'
+// import SendHeader from './send-header'
 import ErrorComponent from '../error'
 import { getMetaMaskAccounts, getSendToken, getSendTo, getTokenBalance, getSendTokenContract } from '../../../../ui/app/selectors'
 import AmountMaxButton from './amount-max-button'

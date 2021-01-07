@@ -127,11 +127,6 @@ export default class PersonalMessageManager extends EventEmitter {
    *
    */
   addUnapprovedMessage (msgParams, req) {
-    log.debug(
-      `PersonalMessageManager addUnapprovedMessage: ${JSON.stringify(
-        msgParams,
-      )}`,
-    )
     // add origin from request
     if (req) {
       msgParams.origin = req.origin

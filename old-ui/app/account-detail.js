@@ -39,6 +39,7 @@ function mapStateToProps (state) {
     tokens: state.metamask.tokens,
     suggestedTokens: state.metamask.suggestedTokens,
     computedBalances: state.metamask.computedBalances,
+    kardiaTxList: state.metamask.kardiaTxList,
   }
 }
 
@@ -56,6 +57,7 @@ function mapDispatchToProps (dispatch) {
       setCurrentAccountTab: (key) => dispatch(actions.setCurrentAccountTab(key)),
       displayToast: (msg) => dispatch(actions.displayToast(msg)),
       isCreatedWithCorrectDPath: () => dispatch(actions.isCreatedWithCorrectDPath()),
+      getKardiaTxHistory: (address) => dispatch(actions.getKardiaTxHistory(address)),
     },
   }
 }
@@ -68,6 +70,12 @@ function AccountDetailScreen () {
 AccountDetailScreen.prototype.componentDidMount = function () {
   const props = this.props
   const { address, network, keyrings, identities } = props
+  console.log('here')
+  this.txInterval = setInterval(() => {
+    const selected = props.address || Object.keys(props.accounts)[0]
+    const checksumAddress = selected && toChecksumAddress(network, selected)
+    props.actions.getKardiaTxHistory(checksumAddress)
+  }, 2000)
   props.actions.isCreatedWithCorrectDPath()
   .then(isCreatedWithCorrectDPath => {
     if (!isCreatedWithCorrectDPath) {
@@ -77,6 +85,10 @@ AccountDetailScreen.prototype.componentDidMount = function () {
       }
     }
   })
+}
+
+AccountDetailScreen.prototype.componentWillUnmount = function () {
+  clearInterval(this.txInterval)
 }
 
 AccountDetailScreen.prototype.componentWillUpdate = function (nextProps) {
@@ -141,7 +153,7 @@ AccountDetailScreen.prototype.render = function () {
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            margin:'16px 0px'
+            margin: '16px 0px',
           },
         }, [
 
@@ -269,7 +281,7 @@ AccountDetailScreen.prototype.render = function () {
             boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
             borderRadius: '8px',
             padding: '16px 12px',
-            marginBottom:'16px'
+            marginBottom: '16px',
           },
         }, [
 
@@ -337,7 +349,7 @@ AccountDetailScreen.prototype.tabSections = function () {
 
     h(TabBar, {
       tabs: [
-        { content: 'Sent', key: 'history', id: 'wallet-view__tab-history' },
+        { content: 'History', key: 'history', id: 'wallet-view__tab-history' },
         { content: 'Tokens', key: 'tokens', id: 'wallet-view__tab-tokens' },
       ],
       defaultTab: currentAccountTab || 'history',
@@ -370,11 +382,11 @@ AccountDetailScreen.prototype.tabSwitchView = function () {
 }
 
 AccountDetailScreen.prototype.transactionList = function () {
-  const {transactions, unapprovedMsgs, address,
-    network, shapeShiftTxList, conversionRate } = this.props
+  const {unapprovedMsgs, address,
+    network, shapeShiftTxList, conversionRate, kardiaTxList } = this.props
 
   return h(TransactionList, {
-    transactions: transactions.sort((a, b) => b.time - a.time),
+    transactions: kardiaTxList.sort((a, b) => b.time - a.time),
     network,
     unapprovedMsgs,
     conversionRate,
