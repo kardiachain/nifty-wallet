@@ -20,7 +20,7 @@ const { POA,
 const { hasUnconfirmedTransactions } = require('./helpers/confirm-transaction/util')
 const WebcamUtils = require('../lib/webcam-utils')
 import { getEnvironmentType } from '../../app/scripts/lib/util'
-import { API_ENDPOINT } from '../../constant'
+import { API_ENDPOINT, EXPLORER_ENDPOINT } from '../../constant'
 
 const actions = {
   _setBackgroundConnection: _setBackgroundConnection,
@@ -1258,7 +1258,7 @@ function signKardiaTx (txData) {
         dispatch(actions.hideLoadingIndication())
         dispatch(actions.goHome())
         dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
-          window.open(`https://explorer-dev.kardiachain.io/tx/${txHash}`)
+          window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
         }))
       })
     })

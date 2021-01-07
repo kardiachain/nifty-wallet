@@ -18,6 +18,7 @@ const ShiftListItem = require('./shift-list-item')
 const {
   KARDIA_MAINNET_CODE,
 } = require('../../../app/scripts/controllers/network/enums')
+const { EXPLORER_ENDPOINT } = require('../../../constant')
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -106,7 +107,7 @@ TransactionListItem.prototype.render = function () {
         }
         event.stopPropagation()
         if (!transaction.hash || !isLinkable) return
-        const url = `https://explorer-dev.kardiachain.io/tx/${transaction.hash}`
+        const url = `${EXPLORER_ENDPOINT}/tx/${transaction.hash}`
         global.platform.openWindow({ url })
       },
       style: {
