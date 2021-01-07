@@ -128,9 +128,9 @@ AccountDetailScreen.prototype.render = function () {
     // identicon, label, balance, etc
       h('.account-data-subsection', {
         style: {
-          padding: '30px 20px',
+          // padding: '30px 0px',
           flex: '1 0 auto',
-          background: '#E5E5E5',
+          background: '#F7F7F8',
           width: '100%',
         },
       }, [
@@ -140,14 +140,15 @@ AccountDetailScreen.prototype.render = function () {
           style: {
             display: 'flex',
             justifyContent: 'flex-start',
-            alignItems: 'flex-start',
+            alignItems: 'center',
+            margin:'16px 0px'
           },
         }, [
 
           // large identicon and addresses
           h('.identicon-wrapper.select-none', [
             h(Identicon, {
-              diameter: 60,
+              diameter: 40,
               address: selected,
             }),
           ]),
@@ -264,6 +265,11 @@ AccountDetailScreen.prototype.render = function () {
           style: {
             justifyContent: 'space-between',
             alignItems: 'flex-start',
+            background: '#FFFFFF',
+            boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
+            borderRadius: '8px',
+            padding: '16px 12px',
+            marginBottom:'16px'
           },
         }, [
 

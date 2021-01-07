@@ -66,6 +66,7 @@ html {
   display: flex;
   background: #ffffff;
   width: 100%;
+  padding:0px 20px;
 }
 
 input:focus, textarea:focus {
@@ -897,23 +898,27 @@ input.large-input {
   border-radius: 8px 8px 0px 0px;
   width: 50%;
   text-align: center;
+  font-weight: 600;
 }
 
 .activeForm.left {
-  border-radius: 0px 8px 0px 0px;
+  border-radius: 8px;
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.1);
 }
 
 .activeForm.right {
-  border-radius: 8px 0px 0px 0px;
+  border-radius: 8px;
 }
 
 .inactiveForm {
-  background:#E5E5E5;
-  color: #1C1C28;
+  /* background:#E5E5E5; */
+  color: #8A94A6;
   border: none;
-  border-radius: 8px 8px 0px 0px;
+  border-radius: 8px;
   width: 50%;
   text-align: center;
+  font-weight: 600;
+  
 }
 
 .ex-coins {

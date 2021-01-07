@@ -45,8 +45,8 @@ TransactionList.prototype.render = function () {
         style: {
           overflowY: 'auto',
           height: '100%',
-          padding: '0 30px',
           textAlign: 'center',
+
         },
       }, [
 
@@ -73,11 +73,23 @@ TransactionList.prototype.render = function () {
           style: {
             flexDirection: 'column',
             justifyContent: 'center',
+            backgroundImage: 'url("./images/no-tx.png")',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            marginTop: '80px',
+            width: '100%',
+            height: '174px'
           },
         }, [
           h('p', {
             style: {
-              margin: '50px 0',
+              // margin: '50px 0',
+              fontWeight: 600,
+              fontSize: '14px',
+              lineHeight: '16px',
+              color: 'rgba(28, 28, 40, 0.54)',
+              position:'absolute',
+              bottom:'10%'
             },
           }, 'No transaction history.'),
         ]),

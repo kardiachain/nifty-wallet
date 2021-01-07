@@ -130,7 +130,8 @@ App.prototype.render = function () {
         if (confirmMsgTx) {
           return '#E5E5E5'
         } else {
-          return 'white'
+          // return 'white'
+          return '#F7F7F8'
         }
     } else {
       return 'transparent'
@@ -144,7 +145,7 @@ App.prototype.render = function () {
         overflow: 'hidden',
         position: 'relative',
         alignItems: 'center',
-        background: (props.isUnlocked || props.currentView.name === 'restoreVault' || props.currentView.name === 'config') ? 'white' : '#E5E5E5',
+        background: (props.isUnlocked || props.currentView.name === 'restoreVault' || props.currentView.name === 'config') ? '#F7F7F8' : '#E5E5E5',
       },
     }, [
       h(AppBar, {

@@ -53,14 +53,10 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
 
   const { label } = balanceObj
   const valueStyle = props.valueStyle ? props.valueStyle : {
-    color: '#333333',
     width: '100%',
-    fontSize: props.fontSize || '14px',
     textAlign: 'right',
   }
   const dimStyle = props.dimStyle ? props.dimStyle : {
-    color: ' #333333',
-    fontSize: props.fontSize || '14px',
     marginLeft: '5px',
   }
 
@@ -73,8 +69,13 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
       h('.flex-row', {
         style: {
           alignItems: 'flex-end',
-          lineHeight: '20px',
           textRendering: 'geometricPrecision',
+
+          fontWeight: '600',
+          fontSize: '15px',
+          lineHeight: '20px',
+          color: '#1C1C28'
+
         },
         'data-tip': '',
         'data-for': 'ethBalance',
