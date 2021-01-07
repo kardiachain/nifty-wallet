@@ -48,7 +48,7 @@ TransactionIcon.prototype.render = function () {
 
   if (transaction.to) {
     return h(Identicon, {
-      diameter: 60,
+      diameter: 40,
       address: transaction.to || transaction.hash,
     })
   } else {

@@ -31,8 +31,8 @@ ShiftListItem.prototype.render = function () {
   return (
     h('.transaction-list-item.flex-row', {
       style: {
-        paddingTop: '20px',
-        paddingBottom: '20px',
+        paddingTop: '12px',
+        paddingBottom: '12px',
         justifyContent: 'space-around',
         alignItems: 'center',
       },

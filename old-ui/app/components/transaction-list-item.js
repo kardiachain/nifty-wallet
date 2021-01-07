@@ -118,6 +118,7 @@ TransactionListItem.prototype.render = function () {
       h(`.flex-row.flex-space-between${isClickable ? '.pointer' : ''}`, {
         style: {
           width: '100%',
+          alignItems:'center'
         },
       }, [
         h('.identicon-wrapper.flex-column.flex-center.select-none', [
@@ -172,7 +173,7 @@ TransactionListItem.prototype.render = function () {
           showFiat: false,
           network,
           style: {
-            margin: '0px auto 0px 5px',
+            // margin: '0px auto 0px 5px',
           },
         }) : h('.flex-column'),
       ]),

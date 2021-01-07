@@ -21,7 +21,7 @@ KAIBalanceComponent.prototype.render = function () {
 
   return (
 
-    h('.ether-balance.ether-balance-amount', {
+    h('.ether-balance-amount', {
       style,
     }, [
       h('div', {
