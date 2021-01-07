@@ -53,7 +53,7 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
         style: {
           paddingTop: '50px',
           fontSize: '1.3em',
-          color: '#ffffff',
+          color: '#333333',
           marginBottom: 10,
         },
       }, 'KardiaChain Wallet'),
@@ -63,7 +63,7 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
         h('h3', {
           style: {
             fontSize: '0.8em',
-            color: '#ffffff',
+            color: '#333333',
             display: 'inline',
           },
         }, 'Encrypt your new DEN'),
