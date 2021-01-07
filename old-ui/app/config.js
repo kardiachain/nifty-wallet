@@ -67,8 +67,7 @@ class ConfigScreen extends Component {
     return (
       h('.flex-column.flex-grow', {
         style: {
-          maxHeight: '585px',
-          overflowY: 'auto',
+          maxHeight: '600px',
         },
       }, [
 

@@ -242,6 +242,7 @@ hr.horizontal-line {
 .ether-balance {
   display: flex;
   align-items: center;
+  margin-top: 10px;
 }
 
 .tabSection {

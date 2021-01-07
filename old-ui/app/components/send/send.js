@@ -19,7 +19,6 @@ import * as Toast from '../toast'
 import AmountMaxButton from './amount-max-button'
 
 const optionalDataLabelStyle = {
-  background: '#ffffff',
   color: '#333333',
   marginTop: '16px',
 }

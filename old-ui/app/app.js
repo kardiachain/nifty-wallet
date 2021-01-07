@@ -142,7 +142,7 @@ App.prototype.render = function () {
     h('.flex-column.full-height', {
       style: {
         // Windows was showing a vertical scroll bar:
-        overflow: 'hidden',
+        overflow: 'auto',
         position: 'relative',
         alignItems: 'center',
         background: (props.isUnlocked || props.currentView.name === 'restoreVault' || props.currentView.name === 'config') ? '#F7F7F8' : '#E5E5E5',

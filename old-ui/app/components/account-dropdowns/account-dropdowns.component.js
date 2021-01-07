@@ -210,7 +210,8 @@ class AccountDropdowns extends Component {
     // const networkCode = parseInt(network, 10)
     // const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
     const url = 'https://explorer.kardiachain.io'
-    global.platform.openWindow({ url })
+    // global.platform.openWindow({ url })
+    window.open(url)
   }
 
   showQRCode = () => {
