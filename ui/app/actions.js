@@ -1266,26 +1266,17 @@ function updateTransaction (txData) {
 function signKardiaTx (txData) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
-    return new Promise((resolve, reject) => {
+    return new Promise((_, reject) => {
       console.log('signKardiaTx')
-      background.signTransaction(txData, txData.from, (err, result) => {
-        console.log('rawTx ', result)
+      background.signTransaction(txData, txData.from, (err, txHash) => {
+        console.log('txHash ', txHash)
         if (err) {
           reject(err)
         }
-        resolve(result)
-      })
-    }).then((tx) => {
-      console.log('sendRawKardiaTx')
-      background.sendRawTx(tx.rawTransaction, (err, txHash) => {
         dispatch(actions.hideLoadingIndication())
-        console.log('txHash ', txHash)
-        if (err) {
-          throw err
-        }
         dispatch(actions.goHome())
         dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
-          window.open(`https://explorer-beta-dev.kardiachain.io/tx/${txHash}`)
+          window.open(`https://explorer-dev.kardiachain.io/tx/${txHash}`)
         }))
       })
     })

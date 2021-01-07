@@ -104,7 +104,7 @@ class TransactionController extends EventEmitter {
     this._updatePendingTxsAfterFirstBlock()
   }
 
-  /** @returns {string} transaction hash*/
+  /** @returns {Promise<string>} transaction hash*/
   async sendRawTx (rawTx) {
     return new Promise((resolve, reject) => {
       this.query.sendTransaction(rawTx, (err, txHash) => {
@@ -371,7 +371,10 @@ class TransactionController extends EventEmitter {
 
   /** sign and send raw Tx */
   async signAndSendRawTx (tx, address) {
-
+    const rs = await this.signEthTx(tx, address)
+    console.log('Raw TX: ', rs)
+    const txHash = await this.sendRawTx(rs.rawTransaction)
+    return txHash
   }
 
   /**
