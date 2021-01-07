@@ -4,7 +4,7 @@ import MenuDroppo from './menu-droppo'
 import extend from 'xtend'
 import classnames from 'classnames'
 
-const noop = () => {}
+const noop = () => { }
 
 class Dropdown extends Component {
   static defaultProps = {
@@ -24,7 +24,7 @@ class Dropdown extends Component {
     constOverflow: PropTypes.bool,
   }
 
-  render () {
+  render() {
     const {
       isOpen,
       onClickOutside,
@@ -36,35 +36,37 @@ class Dropdown extends Component {
     } = this.props
 
     const innerStyleDefaults = extend({
-      padding: '15px 30px',
-      background: '#F5F5F5',
-      boxShadow: 'rgba(0, 0, 0, 0.15) 0px 2px 2px 2px',
+      boxShadow: '0px 2px 8px rgba(40, 41, 61, 0.04), 0px 16px 24px rgba(96, 97, 112, 0.16)',
+      borderRadius: '8px',
+      border: '1px solid #E1E4E8',
+      padding: '12px 8px',
+      background: '#FFFFFF',
     }, innerStyle)
 
-    const styleDefaults = extend({
-      borderRadius: '4px',
-      background: '#F5F5F5',
-      overflowY: 'auto',
-      transition: 'max-height 300ms ease-in-out',
-    }, style)
+  const styleDefaults = extend({
+    borderRadius: '4px',
+    background: '#F5F5F5',
+    overflowY: 'auto',
+    transition: 'max-height 300ms ease-in-out',
+  }, style)
 
-    return (
+  return(
       <MenuDroppo
-        useCssTransition={useCssTransition}
-        isOpen={isOpen}
-        zIndex={11}
-        constOverflow={constOverflow}
-        onClickOutside={onClickOutside}
-        style={styleDefaults}
-        innerStyle={innerStyleDefaults}
+        useCssTransition = { useCssTransition }
+        isOpen = { isOpen }
+        zIndex = { 11}
+        constOverflow = { constOverflow }
+        onClickOutside = { onClickOutside }
+        style = { styleDefaults }
+        innerStyle = { innerStyleDefaults }
       >
-        <style>
+      <style>
         {`
-          li.dropdown-menu-item:hover { color: #686868; }
-          li.dropdown-menu-item { color: #333333; position: relative }
+          li.dropdown-menu-item:hover { color: #1C1C28; background: #F2F4FA; border-radius: 8px; }
+          li.dropdown-menu-item { color: rgba(28, 28, 40, 0.54); position: relative }
         `}
-        </style>
-        {children}
+      </style>
+        { children }
       </MenuDroppo>
     )
   }
@@ -79,18 +81,15 @@ class DropdownMenuItem extends Component {
     className: PropTypes.string,
   }
 
-  render () {
+  render() {
     const { onClick, closeMenu, children } = this.props
     const style = Object.assign({
       listStyle: 'none',
-      padding: (this.props.style && this.props.style.padding) ? this.props.style.padding : '15px 0px',
-      fontSize: '16px',
+      padding: (this.props.style && this.props.style.padding) ? this.props.style.padding : '12px',
+      fontSize: '15px',
       fontStyle: 'normal',
-      fontFamily: 'Nunito Regular',
+      fontFamily: 'Work Sans, sans-serif',
       cursor: 'pointer',
-      display: 'flex',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
     }, this.props.style)
 
     return (

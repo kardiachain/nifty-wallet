@@ -17,12 +17,12 @@ class AccountsDropdownItemWrapper extends DropdownMenuItem {
     return (
       <DropdownMenuItem
         style={{
-          padding: '8px 0px',
+          padding: '12px',
         }}
         closeMenu={() => {}}
         onClick={() => this.props.onClick()}
       >
-        <span className="acc-dd-menu-item-text">{this.props.label}</span>
+        <span>{this.props.label}</span>
       </DropdownMenuItem>
     )
   }
@@ -137,7 +137,7 @@ class AccountDropdowns extends Component {
           width: '265px',
         }}
         innerStyle={{
-          padding: '8px 25px',
+          padding: '12px 8px',
         }}
         isOpen={accountSelectorActive}
         onClickOutside={(event) => {
@@ -166,7 +166,7 @@ class AccountDropdowns extends Component {
           marginLeft: '-234px',
           minWidth: '180px',
           top: '30px',
-          width: '280px',
+          // width: '280px',
         }}
         isOpen={optionsMenuActive}
         onClickOutside={(event) => {

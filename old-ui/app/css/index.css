@@ -37,9 +37,9 @@ html {
 }
 
 .address-dropdown {
-  background-image: url(../images/more.svg);
-  width: 30px;
-  height: 24px;
+  background-image: url(../images/nav.png);
+  width: 20px;
+  height: 20px;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -672,7 +672,7 @@ input.large-input {
   overflow-x: hidden;
   /*overflow-y: auto;*/
   overflow-y: -moz-scrollbars-none;
-  max-height: 585px;
+  /* max-height: 585px; */
   flex-direction: inherit;
 }
 
@@ -899,6 +899,9 @@ input.large-input {
   width: 50%;
   text-align: center;
   font-weight: 600;
+  display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .activeForm.left {
@@ -918,6 +921,10 @@ input.large-input {
   width: 50%;
   text-align: center;
   font-weight: 600;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
 }
 

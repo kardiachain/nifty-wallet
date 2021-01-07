@@ -35,7 +35,6 @@ class SendProfile extends Component {
 			<div
 				className="account-data-subsection flex-row flex-grow"
 				style={{
-					background: '#E5E5E5',
 					padding: '30px',
 					minHeight: '178px',
 				}}

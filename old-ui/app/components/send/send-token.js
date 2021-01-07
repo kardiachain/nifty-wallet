@@ -15,7 +15,7 @@ import Loading from '../loading'
 import BigNumber from 'bignumber.js'
 BigNumber.config({ ERRORS: false })
 import log from 'loglevel'
-import SendProfile from './send-profile'
+// import SendProfile from './send-profile'
 import SendHeader from './send-header'
 import ErrorComponent from '../error'
 import { getMetaMaskAccounts, getSendToken, getSendTo, getTokenBalance, getSendTokenContract } from '../../../../ui/app/selectors'
@@ -57,8 +57,8 @@ class SendTransactionScreen extends PersistentForm {
     return (
 
       <div className="send-screen flex-column flex-grow">
-        <SendProfile isToken={true} token={token} />
-        <SendHeader title={`Send ${this.state.token.symbol} Tokens`} />
+        {/* <SendProfile isToken={true} token={token} /> */}
+        {/* <SendHeader title={`Send ${this.state.token.symbol} Tokens`} /> */}
         <ErrorComponent error={error} />
         <section className="flex-row flex-center">
           <EnsInput

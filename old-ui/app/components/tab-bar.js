@@ -20,8 +20,7 @@ TabBar.prototype.render = function () {
       style: {
         // background: '#E5E5E5',
         paddingTop: (style && style.paddingTop),
-        minHeight: '45px',
-        lineHeight: '45px',
+        minHeight: '44px',
         background: '#F7F8F9',
         border: '1px solid #F1F2F4', 
         boxShadow: 'inset 0px 1px 2px rgba(0, 0, 0, 0.12)', 
