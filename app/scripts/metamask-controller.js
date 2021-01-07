@@ -1310,7 +1310,7 @@ module.exports = class MetamaskController extends EventEmitter {
       // tells the listener that the message has been decrypted and can be returned to the dapp
       this.decryptMessageManager.setMsgStatusDecrypted(msgId, rawMess)
     } catch (error) {
-      log.info('MetaMaskController - eth_decrypt failed.', error)
+      log.error('MetaMaskController - eth_decrypt failed.', error)
       this.decryptMessageManager.errorMessage(msgId, error)
     }
     return this.getState()
@@ -1366,7 +1366,7 @@ module.exports = class MetamaskController extends EventEmitter {
       // and can be returned to the dapp
       this.encryptionPublicKeyManager.setMsgStatusReceived(msgId, publicKey)
     } catch (error) {
-      log.info('MetaMaskController - eth_getEncryptionPublicKey failed.', error)
+      log.error('MetaMaskController - eth_getEncryptionPublicKey failed.', error)
       this.encryptionPublicKeyManager.errorMessage(msgId, error)
     }
     return this.getState()
@@ -1425,7 +1425,7 @@ module.exports = class MetamaskController extends EventEmitter {
       this.typedMessageManager.setMsgStatusSigned(msgId, signature)
       return this.getState()
     } catch (error) {
-      log.info('MetaMaskController - eth_signTypedData failed.', error)
+      log.error('MetaMaskController - eth_signTypedData failed.', error)
       this.typedMessageManager.errorMessage(msgId, error)
     }
   }

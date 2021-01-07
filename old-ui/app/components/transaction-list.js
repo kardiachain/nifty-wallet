@@ -14,14 +14,16 @@ function TransactionList () {
 }
 
 TransactionList.prototype.render = function () {
-  const { transactions, network, unapprovedMsgs, conversionRate } = this.props
+  const { transactions, network, conversionRate } = this.props
 
-  let shapeShiftTxList
-  if (Number(network) === MAINNET_CODE) {
-    shapeShiftTxList = this.props.shapeShiftTxList
-  }
-  const txsToRender = !shapeShiftTxList ? transactions.concat(unapprovedMsgs) : transactions.concat(unapprovedMsgs, shapeShiftTxList)
-  .sort((a, b) => b.time - a.time)
+  // let shapeShiftTxList
+  // if (Number(network) === MAINNET_CODE) {
+    // shapeShiftTxList = this.props.shapeShiftTxList
+  // }
+  // const txsToRender = !shapeShiftTxList ? transactions.concat(unapprovedMsgs) : transactions.concat(unapprovedMsgs, shapeShiftTxList)
+  // .sort((a, b) => b.time - a.time)
+
+  const txsToRender = transactions
 
   return (
 
@@ -78,7 +80,7 @@ TransactionList.prototype.render = function () {
             backgroundSize: 'cover',
             marginTop: '80px',
             width: '100%',
-            height: '174px'
+            height: '174px',
           },
         }, [
           h('p', {
@@ -88,8 +90,8 @@ TransactionList.prototype.render = function () {
               fontSize: '14px',
               lineHeight: '16px',
               color: 'rgba(28, 28, 40, 0.54)',
-              position:'absolute',
-              bottom:'2%'
+              position: 'absolute',
+              bottom: '2%',
             },
           }, 'No transaction history.'),
         ]),

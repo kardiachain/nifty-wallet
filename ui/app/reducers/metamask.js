@@ -54,6 +54,7 @@ function reduceMetamask (state, action) {
     preferences: {
       useETHAsPrimaryCurrency: true,
     },
+    kardiaTxList: [],
     dPath: `m/44'/60'/0'/0`,
   }, state.metamask)
 
@@ -166,6 +167,11 @@ function reduceMetamask (state, action) {
     case actions.SET_SELECTED_TOKEN:
       return extend(metamaskState, {
         selectedTokenAddress: action.value,
+      })
+
+    case actions.UPDATE_KARDIA_TX_LIST:
+      return extend(metamaskState, {
+        kardiaTxList: action.value,
       })
 
     case actions.SET_ACCOUNT_LABEL:

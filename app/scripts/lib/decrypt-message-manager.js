@@ -128,11 +128,6 @@ export default class DecryptMessageManager extends EventEmitter {
    *
    */
   addUnapprovedMessage (msgParams, req) {
-    log.debug(
-      `DecryptMessageManager addUnapprovedMessage: ${JSON.stringify(
-        msgParams,
-      )}`,
-    )
     // add origin from request
     if (req) {
       msgParams.origin = req.origin

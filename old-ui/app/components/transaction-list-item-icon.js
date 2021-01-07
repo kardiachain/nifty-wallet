@@ -13,7 +13,7 @@ function TransactionIcon () {
 }
 
 TransactionIcon.prototype.render = function () {
-  const { transaction, txParams, isMsg } = this.props
+  const { transaction, isMsg } = this.props
   switch (transaction.status) {
     case 'unapproved':
       return h(!isMsg ? '.unapproved-tx-icon' : 'i.fa.fa-certificate.fa-lg')
@@ -46,10 +46,10 @@ TransactionIcon.prototype.render = function () {
     })
   }
 
-  if (txParams.to) {
+  if (transaction.to) {
     return h(Identicon, {
       diameter: 60,
-      address: txParams.to || transaction.hash,
+      address: transaction.to || transaction.hash,
     })
   } else {
     return h('i.contract-small', {
