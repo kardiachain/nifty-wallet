@@ -89,7 +89,7 @@ TransactionList.prototype.render = function () {
               lineHeight: '16px',
               color: 'rgba(28, 28, 40, 0.54)',
               position:'absolute',
-              bottom:'10%'
+              bottom:'2%'
             },
           }, 'No transaction history.'),
         ]),

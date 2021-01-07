@@ -52,16 +52,17 @@ class NetworksMenu extends Component {
             props.updateNetworksMenuOpenState(false)
           }
         }}
-        zIndex={11}
+        zIndex={99}
         style={{
           position: 'absolute',
           left: '2px',
           top: '38px',
-          width: '270px',
+          width: '169px',
           maxHeight: isOpen ? '524px' : '0px',
+          zIndex: 99
         }}
         innerStyle={{
-          padding: '2px 16px 2px 0px',
+          // padding: '2px 16px 2px 0px',
         }}
       >
 

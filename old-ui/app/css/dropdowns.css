@@ -7,18 +7,8 @@
 }
 .accs-dd-menu-item-account-name {
 	margin-left: 10px;
-	font-size: 16px;
-	max-width: 95px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
-.acc-dd-menu-item-text {
-	font-size: 16px;
-	margin-bottom: 5px;
-    color: #60db97;
-}
 .accounts-selector-additional-style {
 	background: url(images/switch_acc.svg) white center center no-repeat;
   	height: 25px;
