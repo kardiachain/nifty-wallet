@@ -243,7 +243,6 @@ module.exports = class MetamaskController extends EventEmitter {
       txHistoryLimit: 40,
       getNetwork: this.networkController.getNetworkState.bind(this),
       signTransaction: this.keyringController.signTransaction.bind(this.keyringController),
-      keyringInstance: this.keyringController,
       provider: this.provider,
       blockTracker: this.blockTracker,
       getGasPrice: this.getGasPrice.bind(this),
@@ -511,8 +510,7 @@ module.exports = class MetamaskController extends EventEmitter {
       // txController
       cancelTransaction: nodeify(txController.cancelTransaction, txController),
       updateTransaction: nodeify(txController.updateTransaction, txController),
-      getPK: nodeify(txController.getPK, txController),
-      signTransaction: nodeify(txController.signEthTx, txController),
+      signTransaction: nodeify(txController.signAndSendRawTx, txController),
       sendRawTx: nodeify(txController.sendRawTx, txController),
       updateAndApproveTransaction: nodeify(txController.updateAndApproveTransaction, txController),
       retryTransaction: nodeify(this.retryTransaction, this),

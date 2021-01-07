@@ -188,7 +188,6 @@ const actions = {
   signTokenTx: signTokenTx,
   updateTransaction,
   updateAndApproveTx,
-  getPK,
   signKardiaTx,
   getPendingNonce,
   cancelTx,
@@ -1261,23 +1260,6 @@ function updateTransaction (txData) {
         dispatch(actions.hideLoadingIndication())
         return txData
       })
-  }
-}
-
-function getPK (txData) {
-  return (dispatch) => {
-    log.debug(`actions calling background.getPK`)
-    return new Promise((resolve, reject) => {
-      background.getPK(txData, (err, PK) => {
-        console.log('abc')
-        console.log(PK)
-
-        if (err) {
-          reject(err)
-        }
-        resolve(PK)
-      })
-    })
   }
 }
 

@@ -795,7 +795,6 @@ const mapDispatchToProps = (dispatch) => {
       nextTx: (txId) => dispatch(actions.nextTx(txId)),
       displayWarning: (msg) => dispatch(actions.displayWarning(msg)),
       goHome: () => dispatch(actions.goHome()),
-      getPK: (txData) => dispatch(actions.getPK(txData)),
       signKardiaTx: (txData) => dispatch(actions.signKardiaTx(txData)),
       showLoadingIndication: () => dispatch(actions.showLoadingIndication()),
       hideLoadingIndication: () => dispatch(actions.hideLoadingIndication()),
