@@ -4,15 +4,11 @@ const connect = require('react-redux').connect
 import PropTypes from 'prop-types'
 const actions = require('../../ui/app/actions')
 const LoadingIndicator = require('./components/loading')
-const Web3 = require('web3')
-// const infuraCurrencies = require('./infura-conversion.json').objects.sort((a, b) => {
-//       return a.quote.name.toLocaleLowerCase().localeCompare(b.quote.name.toLocaleLowerCase())
-//     })
 const validUrl = require('valid-url')
 const exportAsFile = require('./util').exportAsFile
 const Modal = require('../../ui/app/components/modals/index').Modal
 const {
-  getNetworkDisplayName
+  getNetworkDisplayName,
 } = require('../../app/scripts/controllers/network/enums')
 const { networks } = require('../../app/scripts/controllers/network/util')
 const {
@@ -282,7 +278,6 @@ class ConfigScreen extends Component {
       this.setState({
         loading: true,
       })
-      const web3 = new Web3(new Web3.providers.HttpProvider(newRpc))
       global.kardiaQuery.blockNumber((err, res) => {
         if (err) {
           props.displayWarning('Invalid RPC endpoint')
@@ -293,16 +288,6 @@ class ConfigScreen extends Component {
           loading: false,
         })
       })
-      // web3.eth.getBlockNumber((err, res) => {
-      //   if (err) {
-      //     props.displayWarning('Invalid RPC endpoint')
-      //   } else {
-      //     props.setRpcTarget(newRpc)
-      //   }
-      //   this.setState({
-      //     loading: false,
-      //   })
-      // })
     } else {
       if (!newRpc.startsWith('http')) {
         props.displayWarning('URIs require the appropriate HTTP/HTTPS prefix.')
