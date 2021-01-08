@@ -67,9 +67,10 @@
     "unlimitedStorage",
     "clipboardWrite",
     "http://localhost:8545/",
-    "https://*.infura.io/",
+    "https://*.kardiachain.io/*",
     "activeTab",
     "*://*.eth/",
+    "*://*.kai/",
     "notifications"
   ],
   "web_accessible_resources": [
@@ -78,7 +79,7 @@
   ],
   "externally_connectable": {
     "matches": [
-      "https://metamask.io/*"
+      "https://*.kardiachain.io/*"
     ],
     "ids": [
       "*"
