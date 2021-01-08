@@ -2,6 +2,7 @@ const { EventEmitter } = require('events')
 const HDKey = require('hdkey')
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
+const Transaction = require('ethereumjs-tx')
 
 const hdPathString = `m/44'/60'/0'`
 const type = 'Ledger Hardware'
@@ -153,11 +154,21 @@ class LedgerBridgeKeyring extends EventEmitter {
   }
 
   // tx is an instance of the ethereumjs-transaction class.
-  signTransaction (address, tx) {
+  signTransaction (address, _tx) {
     return new Promise((resolve, reject) => {
       this.unlock()
         .then((_) => {
+          const _txParams = {
+            to: this._normalize(_tx.receiver),
+            value: this._normalize(_tx.amount),
+            data: this._normalize(_tx.data),
+            // chainId: tx._chainId,
+            nonce: this._normalize(_tx.nonce),
+            gasLimit: this._normalize(_tx.gas),
+            gasPrice: this._normalize(_tx.gasPrice),
+          }
 
+          const tx = new Transaction(_txParams)
           tx.v = ethUtil.bufferToHex(tx.getChainId())
           tx.r = '0x00'
           tx.s = '0x00'
