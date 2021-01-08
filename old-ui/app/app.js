@@ -114,6 +114,7 @@ App.prototype.render = function () {
     provider,
   } = props
   const isLoadingNetwork = network === 'loading' && currentView.name !== 'config' && currentView.name !== 'delete-rpc'
+  console.log('provider ', provider)
   const networkName = provider.type === 'rpc' ? `${this.getNetworkName()} (${provider.rpcTarget})` : this.getNetworkName()
   const loadMessage = loadingMessage || isLoadingNetwork ?
     `Connecting to ${networkName}` : null

@@ -78,13 +78,6 @@ function generateFnFor (methodName) {
     const self = this
     var args = [].slice.call(arguments)
     var cb = args.pop()
-    if (methodName === 'tx_sendRawTransaction') {
-      console.log('argument ', arguments)
-      console.log({
-        method: methodName,
-        params: args,
-      })
-    }
     self.sendAsync({
       method: methodName,
       params: args,

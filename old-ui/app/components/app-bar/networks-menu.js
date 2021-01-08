@@ -59,7 +59,7 @@ class NetworksMenu extends Component {
           top: '38px',
           width: '169px',
           maxHeight: isOpen ? '524px' : '0px',
-          zIndex: 99
+          zIndex: 99,
         }}
         innerStyle={{
           // padding: '2px 16px 2px 0px',

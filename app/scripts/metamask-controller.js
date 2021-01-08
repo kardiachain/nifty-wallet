@@ -56,7 +56,8 @@ import seedPhraseVerifier from './lib/seed-phrase-verifier'
 import log from 'loglevel'
 // const TrezorKeyring = require('eth-trezor-keyring')
 const TrezorKeyring = require('../../app/scripts/kardiaScript/kardia-trezor-keyring')
-const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
+// const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
+const LedgerBridgeKeyring = require('../../app/scripts/kardiaScript/kardia-ledger-bridge-keyring')
 import nanoid from 'nanoid'
 const { importTypes } = require('../../old-ui/app/accounts/import/enums')
 const { LEDGER, TREZOR } = require('../../old-ui/app/components/connect-hardware/enum')

@@ -1,4 +1,5 @@
 const LOCALHOST = 'localhost'
+const RPC = 'rpc'
 const KARDIA_MAINNET = 'kardia_mainnet'
 // const KARDIA_TESTNET = 'kardia_testnet'
 
@@ -14,9 +15,12 @@ const KARDIA_MAINNET_CODE = 100
 const KARDIA_MAINNET_NETWORK_ID = '100'
 // const KARDIA_TESTNET_NETWORK_ID = '1000'
 
+const RPC_NETWORK_ID = RPC
+
 const NETWORK_TYPE_TO_ID_MAP = {
   [KARDIA_MAINNET]: { networkId: KARDIA_MAINNET_NETWORK_ID, chainId: KARDIA_MAINNET_CHAINID },
   // [KARDIA_TESTNET]: { networkId: KARDIA_TESTNET_NETWORK_ID, chainId: KARDIA_TESTNET_CHAINID },
+  [RPC]: { networkId: RPC_NETWORK_ID, chainId: '0x0' },
 }
 
 const KARDIA_MAINNET_DISPLAY_NAME = 'Aris Mainnet 1.0'
@@ -34,10 +38,10 @@ const chainTypes = {
 function getNetworkDisplayName (network) {
 	const netID = parseInt(network)
 	switch (netID) {
-	case KARDIA_MAINNET_CODE:
-		return 'Mainnet Aris 1.0'
-	default:
-		return 'Unknown Private Network'
+    case KARDIA_MAINNET_CODE:
+      return 'Mainnet Aris 1.0'
+    default:
+      return 'Unknown Private Network'
 	}
 }
 
@@ -53,6 +57,7 @@ function getNetworkCoinName (network) {
 
 module.exports = {
   LOCALHOST,
+  RPC,
   chainTypes,
   NETWORK_TYPE_TO_ID_MAP,
   KARDIA_MAINNET_CODE,
