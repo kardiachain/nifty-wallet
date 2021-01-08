@@ -56,7 +56,8 @@ import seedPhraseVerifier from './lib/seed-phrase-verifier'
 import log from 'loglevel'
 // const TrezorKeyring = require('eth-trezor-keyring')
 const TrezorKeyring = require('../../app/scripts/kardiaScript/kardia-trezor-keyring')
-const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
+// const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
+const LedgerBridgeKeyring = require('../../app/scripts/kardiaScript/kardia-ledger-bridge-keyring')
 import nanoid from 'nanoid'
 const { importTypes } = require('../../old-ui/app/accounts/import/enums')
 const { LEDGER, TREZOR } = require('../../old-ui/app/components/connect-hardware/enum')
@@ -124,12 +125,12 @@ module.exports = class MetamaskController extends EventEmitter {
     this.currencyController.scheduleConversionInterval()
 
     // infura controller
-    this.infuraController = new InfuraController({
-      initState: initState.InfuraController,
-    })
-    this.infuraController.scheduleInfuraNetworkCheck()
+    // this.infuraController = new InfuraController({
+    //   initState: initState.InfuraController,
+    // })
+    // this.infuraController.scheduleInfuraNetworkCheck()
 
-    this.phishingController = new PhishingController()
+    // this.phishingController = new PhishingController()
 
     // rpc provider
     this.initializeProvider()
@@ -303,7 +304,7 @@ module.exports = class MetamaskController extends EventEmitter {
       NoticeController: this.noticeController.store,
       ShapeShiftController: this.shapeshiftController.store,
       NetworkController: this.networkController.store,
-      InfuraController: this.infuraController.store,
+      // InfuraController: this.infuraController.store,
       CachedBalancesController: this.cachedBalancesController.store,
       PermissionsController: this.permissionsController.permissions,
       PermissionsMetadata: this.permissionsController.store,
@@ -328,7 +329,7 @@ module.exports = class MetamaskController extends EventEmitter {
       CurrencyController: this.currencyController.store,
       NoticeController: this.noticeController.memStore,
       ShapeshiftController: this.shapeshiftController.store,
-      InfuraController: this.infuraController.store,
+      // InfuraController: this.infuraController.store,
       PermissionsController: this.permissionsController.permissions,
       PermissionsMetadata: this.permissionsController.store,
     })
@@ -1527,14 +1528,14 @@ module.exports = class MetamaskController extends EventEmitter {
    * @param {MessageSender} sender - The sender of the messages on this stream
    */
   setupUntrustedCommunication (connectionStream, sender) {
-    const { usePhishDetect } = this.preferencesController.store.getState()
-    const hostname = (new URL(sender.url)).hostname
+    // const { usePhishDetect } = this.preferencesController.store.getState()
+    // const hostname = (new URL(sender.url)).hostname
     // Check if new connection is blacklisted if phishing detection is on
-    if (usePhishDetect && this.phishingController.test(hostname)) {
-      log.debug('KardiaChain Wallet - sending phishing warning for', hostname)
-      this.sendPhishingWarning(connectionStream, hostname)
-      return
-    }
+    // if (usePhishDetect && this.phishingController.test(hostname)) {
+    //   log.debug('KardiaChain Wallet - sending phishing warning for', hostname)
+    //   this.sendPhishingWarning(connectionStream, hostname)
+    //   return
+    // }
 
     // setup multiplexing
     const mux = setupMultiplex(connectionStream)

@@ -1,6 +1,7 @@
 const ethUtil = require('ethereumjs-util')
 const {
   LOCALHOST,
+  RPC,
   KARDIA_MAINNET,
   KARDIA_MAINNET_CHAINID,
   KARDIA_TICK,
@@ -413,6 +414,12 @@ function getNetworkID ({ network }) {
     case KARDIA_MAINNET:
       netId = KARDIA_MAINNET.toString()
       chainId = KARDIA_MAINNET_CHAINID
+      ticker = KARDIA_TICK
+      break
+    case RPC:
+      // TODO: update for custom RPC
+      netId = RPC
+      chainId = RPC
       ticker = KARDIA_TICK
       break
     default:

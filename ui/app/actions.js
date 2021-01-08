@@ -2547,11 +2547,9 @@ function getKardiaTxHistory (address) {
     method: 'GET',
   }
   return (dispatch) => {
-    console.log(`${API_ENDPOINT}/addresses/${address}/txs?page=0&limit=10`)
     return fetch(`${API_ENDPOINT}/addresses/${address}/txs?page=0&limit=10`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log('Kardia TX History')
         if (result.msg !== 'Success') {
           return Promise.reject(result.msg)
         }

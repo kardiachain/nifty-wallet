@@ -3,7 +3,6 @@ const h = require('react-hyperscript')
 const inherits = require('util').inherits
 
 const TransactionListItem = require('./transaction-list-item')
-// const { MAINNET_CODE } = require('../../../app/scripts/controllers/network/enums')
 
 module.exports = TransactionList
 
@@ -16,12 +15,6 @@ function TransactionList () {
 TransactionList.prototype.render = function () {
   const { transactions, network, conversionRate } = this.props
 
-  // let shapeShiftTxList
-  // if (Number(network) === MAINNET_CODE) {
-    // shapeShiftTxList = this.props.shapeShiftTxList
-  // }
-  // const txsToRender = !shapeShiftTxList ? transactions.concat(unapprovedMsgs) : transactions.concat(unapprovedMsgs, shapeShiftTxList)
-  // .sort((a, b) => b.time - a.time)
 
   const txsToRender = transactions
 
@@ -85,7 +78,6 @@ TransactionList.prototype.render = function () {
         }, [
           h('p', {
             style: {
-              // margin: '50px 0',
               fontWeight: 600,
               fontSize: '14px',
               lineHeight: '16px',

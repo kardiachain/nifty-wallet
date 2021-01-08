@@ -8,11 +8,7 @@ const addressSummary = require('../util').addressSummary
 const CopyButton = require('./copy/copy-button')
 const vreme = new (require('vreme'))()
 const Tooltip = require('./tooltip')
-// const numberToBN = require('number-to-bn')
 const actions = require('../../../ui/app/actions')
-// const ethNetProps = require('eth-net-props')
-
-const TransactionIcon = require('./transaction-list-item-icon')
 const ShiftListItem = require('./shift-list-item')
 
 const {
@@ -32,33 +28,6 @@ inherits(TransactionListItem, Component)
 function TransactionListItem () {
   Component.call(this)
 }
-
-// TransactionListItem.prototype.showRetryButton = function () {
-//   const { transaction = {}, transactions } = this.props
-//   const { submittedTime, txParams } = transaction
-
-//   if (!txParams) {
-//     return false
-//   }
-
-//   let currentTxSharesEarliestNonce = false
-//   const currentNonce = txParams.nonce
-//   const currentNonceTxs = transactions.filter(tx => tx.txParams.nonce === currentNonce)
-//   const currentNonceSubmittedTxs = currentNonceTxs.filter(tx => tx.status === 'submitted')
-//   const currentSubmittedTxs = transactions.filter(tx => tx.status === 'submitted')
-//   const lastSubmittedTxWithCurrentNonce = currentNonceSubmittedTxs[0]
-//   const currentTxIsLatestWithNonce = lastSubmittedTxWithCurrentNonce &&
-//     lastSubmittedTxWithCurrentNonce.id === transaction.id
-//   if (currentSubmittedTxs.length > 0) {
-//     const earliestSubmitted = currentSubmittedTxs.reduce((tx1, tx2) => {
-//       if (tx1.submittedTime < tx2.submittedTime) return tx1
-//       return tx2
-//     })
-//     currentTxSharesEarliestNonce = currentNonce === earliestSubmitted.txParams.nonce
-//   }
-
-//   return currentTxSharesEarliestNonce && currentTxIsLatestWithNonce && Date.now() - submittedTime > 30000
-// }
 
 TransactionListItem.prototype.render = function () {
   const { transaction, network, conversionRate, currentCurrency } = this.props
@@ -111,46 +80,21 @@ TransactionListItem.prototype.render = function () {
         global.platform.openWindow({ url })
       },
       style: {
-        padding: '20px 0',
+        padding: '15px 0 5px 0',
         alignItems: 'center',
       },
     }, [
       h(`.flex-row.flex-space-between${isClickable ? '.pointer' : ''}`, {
         style: {
           width: '100%',
-          alignItems:'center'
+          alignItems: 'center',
         },
       }, [
-        h('.identicon-wrapper.flex-column.flex-center.select-none', [
-          h(TransactionIcon, { transaction, isTx, isMsg }),
-        ]),
-
-        // h(Tooltip, {
-        //   title: 'Transaction Number',
-        //   position: 'right',
-        //   id: 'transactionListItem',
-        // }, [
-        //   h('span', {
-        //     style: {
-        //       fontFamily: 'Nunito Bold',
-        //       display: 'flex',
-        //       cursor: 'normal',
-        //       flexDirection: 'column',
-        //       alignItems: 'center',
-        //       justifyContent: 'center',
-        //       padding: '10px',
-        //     },
-        //     'data-tip': '',
-        //     'data-for': 'transactionListItem',
-        //   }, nonce),
-        // ]),
-
         h('.flex-column', {
           style: {
             textAlign: 'left',
           },
         }, [
-          // domainField(txParams),
           h('div.flex-row', [
             recipientField(txParams, transaction, isTx, isMsg, network),
           ]),
@@ -173,37 +117,9 @@ TransactionListItem.prototype.render = function () {
           showFiat: false,
           network,
           style: {
-            // margin: '0px auto 0px 5px',
           },
         }) : h('.flex-column'),
       ]),
-
-      // this.showRetryButton() && h('.transition-list-item__retry.grow-on-hover.error', {
-      //   onClick: event => {
-      //     event.stopPropagation()
-      //     this.resubmit()
-      //   },
-      //   style: {
-      //     height: '22px',
-      //     display: 'flex',
-      //     alignItems: 'center',
-      //     fontSize: '8px',
-      //     cursor: 'pointer',
-      //     width: 'auto',
-      //     backgroundPosition: '10px center',
-      //   },
-      // }, [
-      //   h('div', {
-      //     style: {
-      //       paddingRight: '2px',
-      //     },
-      //   }, 'Taking too long?'),
-      //   h('div', {
-      //     style: {
-      //       textDecoration: 'underline',
-      //     },
-      //   }, 'Retry with a higher gas price here'),
-      // ]),
     ])
   )
 }
@@ -212,20 +128,6 @@ TransactionListItem.prototype.resubmit = function () {
   const { transaction } = this.props
   this.props.retryTransaction(transaction.id)
 }
-
-// function domainField (txParams) {
-//   return h('div', {
-//     style: {
-//       fontSize: 'x-small',
-//       color: '#ABA9AA',
-//       overflow: 'hidden',
-//       textOverflow: 'ellipsis',
-//       width: '100%',
-//     },
-//   }, [
-//     txParams.origin,
-//   ])
-// }
 
 function recipientField (txParams, transaction, isTx, isMsg, network) {
   let message

@@ -89,4 +89,4 @@ setupDappAutoReload(web3, inpageProvider.publicConfigStore)
 // end deprecate:Q1-2020
 //
 
-window.ethereum = proxiedInpageProvider
+window.kardiachain = proxiedInpageProvider

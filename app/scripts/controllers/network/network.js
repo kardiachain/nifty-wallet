@@ -2,7 +2,8 @@ import assert from 'assert'
 import EventEmitter from 'events'
 import ObservableStore from 'obs-store'
 import ComposedStore from 'obs-store/lib/composed'
-import EthQuery from 'eth-query'
+// import EthQuery from 'eth-query'
+// import KardiaQuery from '../../kardiaScript/kardia-query'
 import JsonRpcEngine from 'json-rpc-engine'
 import providerFromEngine from 'eth-json-rpc-middleware/providerFromEngine'
 import log from 'loglevel'
@@ -12,10 +13,11 @@ import createJsonRpcClient from './createJsonRpcClient'
 import createLocalhostClient from './createLocalhostClient'
 const createPocketClient = require('./createPocketClient')
 const { createSwappableProxy, createEventEmitterProxy } = require('swappable-obj-proxy')
-import ethNetProps from 'eth-net-props'
+// import ethNetProps from 'eth-net-props'
 const networks = { networkList: {} }
 const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
+  KARDIA_MAINNET_CHAINID,
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
 import { RPC_ENDPOINT } from '../../../../constant'
@@ -124,18 +126,15 @@ module.exports = class NetworkController extends EventEmitter {
     if (!this._provider) {
       return log.warn('NetworkController - lookupNetwork aborted due to missing provider')
     }
-    const { type, rpcTarget } = this.providerStore.getState()
-    const ethQuery = new EthQuery(this._provider)
+    const { type } = this.providerStore.getState()
+    // const ethQuery = new EthQuery(this._provider)
     const initialNetwork = this.getNetworkState()
-    ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
-      const currentNetwork = this.getNetworkState()
-      if (initialNetwork === currentNetwork) {
-        if (err) {
-          console.log('here err ', err)
-        }
-        this.setNetworkState(network, type)
-      }
-    })
+    // ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
+    const currentNetwork = this.getNetworkState()
+    if (initialNetwork === currentNetwork) {
+      this.setNetworkState(KARDIA_MAINNET_CHAINID, type)
+    }
+    // })
   }
 
   getCurrentChainId () {

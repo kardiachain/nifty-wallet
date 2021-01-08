@@ -4,15 +4,11 @@ const connect = require('react-redux').connect
 import PropTypes from 'prop-types'
 const actions = require('../../ui/app/actions')
 const LoadingIndicator = require('./components/loading')
-const Web3 = require('web3')
-const infuraCurrencies = require('./infura-conversion.json').objects.sort((a, b) => {
-      return a.quote.name.toLocaleLowerCase().localeCompare(b.quote.name.toLocaleLowerCase())
-    })
 const validUrl = require('valid-url')
 const exportAsFile = require('./util').exportAsFile
 const Modal = require('../../ui/app/components/modals/index').Modal
 const {
-  getNetworkDisplayName
+  getNetworkDisplayName,
 } = require('../../app/scripts/controllers/network/enums')
 const { networks } = require('../../app/scripts/controllers/network/util')
 const {
@@ -145,9 +141,9 @@ class ConfigScreen extends Component {
               },
             }, 'Save'),
 
-            h('hr.horizontal-line'),
+            // h('hr.horizontal-line'),
 
-            this.currentConversionInformation(metamaskState),
+            // this.currentConversionInformation(metamaskState),
 
             h('hr.horizontal-line'),
 
@@ -186,40 +182,40 @@ class ConfigScreen extends Component {
               }, 'Reveal Seed Words'),
             ]),
 
-            h('hr.horizontal-line', {
-              style: {
-                marginTop: '20px',
-              },
-            }),
+            // h('hr.horizontal-line', {
+            //   style: {
+            //     marginTop: '20px',
+            //   },
+            // }),
 
-            h('p.config-title', `Provider`),
+            // h('p.config-title', `Provider`),
 
-            h('div', {
-              style: {
-                display: 'table',
-                width: '100%',
-              },
-            }, [
-              h('div', {
-                style: {
-                display: 'table-cell',
-              }}, [
-                h('p.config-description', 'Switch to Decentralized Provider (Pocket)'),
-              ]),
-              h('div', { style: {
-                display: 'table-cell',
-              }}, [
-                h('input', {
-                  type: 'checkbox',
-                  name: 'pocket-checkbox',
-                  checked: this.state.dProvider,
-                  onChange: (event) => {
-                    event.preventDefault()
-                    this.toggleProvider()
-                  },
-                }),
-              ]),
-            ]),
+            // h('div', {
+            //   style: {
+            //     display: 'table',
+            //     width: '100%',
+            //   },
+            // }, [
+            //   h('div', {
+            //     style: {
+            //     display: 'table-cell',
+            //   }}, [
+            //     h('p.config-description', 'Switch to Decentralized Provider (Pocket)'),
+            //   ]),
+            //   h('div', { style: {
+            //     display: 'table-cell',
+            //   }}, [
+            //     h('input', {
+            //       type: 'checkbox',
+            //       name: 'pocket-checkbox',
+            //       checked: this.state.dProvider,
+            //       onChange: (event) => {
+            //         event.preventDefault()
+            //         this.toggleProvider()
+            //       },
+            //     }),
+            //   ]),
+            // ]),
 
             h('hr.horizontal-line'),
 
@@ -282,8 +278,7 @@ class ConfigScreen extends Component {
       this.setState({
         loading: true,
       })
-      const web3 = new Web3(new Web3.providers.HttpProvider(newRpc))
-      web3.eth.getBlockNumber((err, res) => {
+      global.kardiaQuery.blockNumber((err, res) => {
         if (err) {
           props.displayWarning('Invalid RPC endpoint')
         } else {
@@ -302,27 +297,27 @@ class ConfigScreen extends Component {
     }
   }
 
-  currentConversionInformation (metamaskState) {
-    const props = this.props
-    const currentCurrency = metamaskState.currentCurrency
-    const conversionDate = metamaskState.conversionDate
-    return h('div', [
-      h('div.config-title', 'Current Conversion'),
-      h('div.config-description', `Updated ${Date(conversionDate)}`),
-      h('select.config-select-currency#currentCurrency', {
-        onChange (event) {
-          event.preventDefault()
-          const element = document.getElementById('currentCurrency')
-          const newCurrency = element.value
-          props.setCurrentCurrency(newCurrency)
-        },
-        defaultValue: currentCurrency,
-      }, infuraCurrencies.map((currency) => {
-        return h('option', {key: currency.quote.code, value: currency.quote.code}, `${currency.quote.code.toUpperCase()} - ${currency.quote.name}`)
-      }),
-    ),
-    ])
-  }
+  // currentConversionInformation (metamaskState) {
+  //   const props = this.props
+  //   const currentCurrency = metamaskState.currentCurrency
+  //   const conversionDate = metamaskState.conversionDate
+  //   return h('div', [
+  //     h('div.config-title', 'Current Conversion'),
+  //     h('div.config-description', `Updated ${Date(conversionDate)}`),
+  //     h('select.config-select-currency#currentCurrency', {
+  //       onChange (event) {
+  //         event.preventDefault()
+  //         const element = document.getElementById('currentCurrency')
+  //         const newCurrency = element.value
+  //         props.setCurrentCurrency(newCurrency)
+  //       },
+  //       defaultValue: currentCurrency,
+  //     }, infuraCurrencies.map((currency) => {
+  //       return h('option', {key: currency.quote.code, value: currency.quote.code}, `${currency.quote.code.toUpperCase()} - ${currency.quote.name}`)
+  //     }),
+  //   ),
+  //   ])
+  // }
 
   currentProviderDisplay (metamaskState) {
     const props = this.props

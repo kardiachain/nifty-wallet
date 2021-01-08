@@ -15,40 +15,40 @@ function mapStateToProps (state) {
   }
 }
 
-const defaultTokens = []
+// const defaultTokens = []
 
-const contractsETH = require('eth-contract-metadata')
-const contractsPOA = require('poa-contract-metadata')
-const contractsRSK = require('@rsksmart/rsk-contract-metadata')
-const contractsRSKTest = require('@rsksmart/rsk-testnet-contract-metadata')
-for (const address in contractsETH) {
-  const contract = contractsETH[address]
-  if (contract.erc20) {
-    contract.address = address
-    defaultTokens.push(contract)
-  }
-}
-for (const address in contractsPOA) {
-  const contract = contractsPOA[address]
-  if (contract.erc20) {
-    contract.address = address
-    defaultTokens.push(contract)
-  }
-}
-for (const address in contractsRSK) {
-  const contract = contractsRSK[address]
-  if (contract.erc20) {
-    contract.address = address
-    defaultTokens.push(contract)
-  }
-}
-for (const address in contractsRSKTest) {
-  const contract = contractsRSKTest[address]
-  if (contract.erc20) {
-    contract.address = address
-    defaultTokens.push(contract)
-  }
-}
+// const contractsETH = require('eth-contract-metadata')
+// const contractsPOA = require('poa-contract-metadata')
+// const contractsRSK = require('@rsksmart/rsk-contract-metadata')
+// const contractsRSKTest = require('@rsksmart/rsk-testnet-contract-metadata')
+// for (const address in contractsETH) {
+//   const contract = contractsETH[address]
+//   if (contract.erc20) {
+//     contract.address = address
+//     defaultTokens.push(contract)
+//   }
+// }
+// for (const address in contractsPOA) {
+//   const contract = contractsPOA[address]
+//   if (contract.erc20) {
+//     contract.address = address
+//     defaultTokens.push(contract)
+//   }
+// }
+// for (const address in contractsRSK) {
+//   const contract = contractsRSK[address]
+//   if (contract.erc20) {
+//     contract.address = address
+//     defaultTokens.push(contract)
+//   }
+// }
+// for (const address in contractsRSKTest) {
+//   const contract = contractsRSKTest[address]
+//   if (contract.erc20) {
+//     contract.address = address
+//     defaultTokens.push(contract)
+//   }
+// }
 
 module.exports = connect(mapStateToProps)(TokenList)
 
@@ -56,7 +56,7 @@ inherits(TokenList, Component)
 function TokenList () {
   this.state = {
     tokens: [],
-    isLoading: true,
+    isLoading: false,
     network: null,
   }
   Component.call(this)
@@ -176,7 +176,7 @@ TokenList.prototype.message = function (body) {
 }
 
 TokenList.prototype.componentDidMount = function () {
-  this.createFreshTokenTracker()
+  // this.createFreshTokenTracker()
 }
 
 TokenList.prototype.createFreshTokenTracker = function () {
@@ -240,7 +240,7 @@ TokenList.prototype.componentDidUpdate = function (nextProps) {
   if (tokensLengthUnchanged && shouldUpdateTokens) return
 
   this.setState({ isLoading: true })
-  this.createFreshTokenTracker()
+  // this.createFreshTokenTracker()
 }
 
 TokenList.prototype.updateBalances = function (tokens) {
