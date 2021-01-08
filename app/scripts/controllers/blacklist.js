@@ -97,13 +97,13 @@ class BlacklistController {
    *
    */
   scheduleUpdates () {
-    if (this._phishingUpdateIntervalRef) {
-      clearInterval(this._phishingUpdateIntervalRef)
-    }
-    this.updatePhishingList().catch(log.warn)
-    this._phishingUpdateIntervalRef = setInterval(() => {
-      this.updatePhishingList().catch(log.warn)
-    }, POLLING_INTERVAL)
+    // if (this._phishingUpdateIntervalRef) {
+    //   clearInterval(this._phishingUpdateIntervalRef)
+    // }
+    // this.updatePhishingList().catch(log.warn)
+    // this._phishingUpdateIntervalRef = setInterval(() => {
+    //   this.updatePhishingList().catch(log.warn)
+    // }, POLLING_INTERVAL)
   }
 
   /**
@@ -115,7 +115,7 @@ class BlacklistController {
    *
    */
   _setupPhishingDetector (config) {
-    this._phishingDetector = new PhishingDetector(config)
+    // this._phishingDetector = new PhishingDetector(config)
   }
 }
 

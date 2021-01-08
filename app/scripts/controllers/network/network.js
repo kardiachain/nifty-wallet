@@ -16,6 +16,7 @@ import ethNetProps from 'eth-net-props'
 const networks = { networkList: {} }
 const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
+  KARDIA_MAINNET_CHAINID,
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
 import { RPC_ENDPOINT } from '../../../../constant'
@@ -125,17 +126,14 @@ module.exports = class NetworkController extends EventEmitter {
       return log.warn('NetworkController - lookupNetwork aborted due to missing provider')
     }
     const { type, rpcTarget } = this.providerStore.getState()
-    const ethQuery = new EthQuery(this._provider)
+    // const ethQuery = new EthQuery(this._provider)
     const initialNetwork = this.getNetworkState()
-    ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
-      const currentNetwork = this.getNetworkState()
-      if (initialNetwork === currentNetwork) {
-        if (err) {
-          console.log('here err ', err)
-        }
-        this.setNetworkState(network, type)
-      }
-    })
+    // ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
+    const currentNetwork = this.getNetworkState()
+    if (initialNetwork === currentNetwork) {
+      this.setNetworkState(KARDIA_MAINNET_CHAINID, type)
+    }
+    // })
   }
 
   getCurrentChainId () {

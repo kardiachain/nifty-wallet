@@ -5,7 +5,7 @@ const KARDIA_MAINNET = 'kardia_mainnet'
 const KAI_TICK = 'KAI'
 
 // TODO: Update constant
-const KARDIA_MAINNET_CHAINID = '0x0'
+const KARDIA_MAINNET_CHAINID = '0'
 // const KARDIA_TESTNET_CHAINID = '0x1000'
 
 const KARDIA_MAINNET_CODE = 100
