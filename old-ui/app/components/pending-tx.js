@@ -24,7 +24,7 @@ import BigNumber from 'bignumber.js'
 import { getMetaMaskAccounts } from '../../../ui/app/selectors'
 import { MIN_GAS_LIMIT_DEC, MIN_GAS_PRICE_DEC } from '../../../ui/app/components/send/send.constants'
 import * as Toast from './toast'
-import {getNetworkCoinName} from '../../../app/scripts/controllers/network/enums'
+import { getNetworkCoinName } from '../../../app/scripts/controllers/network/enums'
 
 const MIN_GAS_PRICE_BN = new BN(MIN_GAS_PRICE_DEC)
 const MIN_GAS_LIMIT_BN = new BN(MIN_GAS_LIMIT_DEC)
@@ -54,7 +54,7 @@ class PendingTx extends Component {
     unapprovedTxs: PropTypes.object,
   }
 
-  constructor (opts = {}) {
+  constructor(opts = {}) {
     super()
     this.state = {
       valid: true,
@@ -72,7 +72,7 @@ class PendingTx extends Component {
     this.tokenInfoGetter = tokenInfoGetter()
   }
 
-  render () {
+  render() {
     const props = this.props
     if (props.isToken || this.state.isToken) {
       if (!this.state.token.dataRetrieved) return null
@@ -168,599 +168,587 @@ class PendingTx extends Component {
           type: Toast.TOAST_TYPE_ERROR,
         }),
 
-        h('form#pending-tx-form', {
-          onSubmit: this.onSubmit.bind(this),
+        h('.flex-row.flex-center', {
+          style: {
+            margin: '14px 0px 24px 0px',
+            fontWeight: 'bold',
+            fontSize: '18px',
+            lineHeight: '24px',
+            color: '#1C1C28',
+            fontFamily: 'Work Sans, sans-serif'
+          },
+}, [
+  !isNotification ? h('i.fa.fa-arrow-left.fa-lg.cursor-pointer', {
+    onClick: this.goHome.bind(this),
+    style: {
+      position: 'absolute',
+      left: '20px',
+      width: '16px',
+      height: '16px'
+    },
+  }) : null,
+  'Confirm Transaction',
+  isNotification ? h(NetworkIndicator, {
+    network: network,
+    provider: provider,
+    isUnlocked: isUnlocked,
+  }) : null,
+]),
 
+
+h('form#pending-tx-form', {
+  onSubmit: this.onSubmit.bind(this),
+
+}, [
+
+  // tx info
+  h('div', [
+
+    h('.flex-row.flex-center', {
+      style: {
+        position: 'relative',
+        background: '#FFFFFF',
+        boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
+        borderRadius: '8px',
+        padding: '12px',
+        marginBottom:'16px'
+      },
+    }, [
+
+      h('div', {
+        style: {
+          position: 'absolute',
+          bottom: '20px',
+          width: '100%',
+          textAlign: 'center',
+          color: '#333333',
+        },
+      }, [
+        h('h3', {
+          style: {
+            alignSelf: 'center',
+            display: showNavigation ? 'block' : 'none',
+            fontSize: '14px',
+          },
         }, [
+          h('i.fa.white-arrow-left.fa-lg.cursor-pointer', {
+            style: {
+              display: positionOfCurrentTx === 1 ? 'none' : 'inline-block',
+            },
+            onClick: () => props.actions.nextTx(prevTxId),
+          }),
+          ` ${positionOfCurrentTx} of ${totalTx} `,
+          h('i.fa.white-arrow-right.fa-lg.cursor-pointer', {
+            style: {
+              display: positionOfCurrentTx === totalTx ? 'none' : 'inline-block',
+            },
+            onClick: () => props.actions.nextTx(nextTxId),
+          }),
+        ])],
+      ),
 
-          // tx info
-          h('div', [
+      // h(MiniAccountPanel, {
+      // imageSeed: address,
+      // picOrder: 'left',
+      // }, [
+      h('div', {
+        style: {
+          // marginLeft: '10px',
+        },
+      }, [
+        h('div.font-pre-medium', {
+          style: {
+            fontFamily: 'Nunito SemiBold',
+            color: '#333333',
+            whiteSpace: 'nowrap',
+          },
+        }, accountSummary(identity.name, 6, 4)),
 
-            h('.flex-row.flex-center', {
-              style: {
-                maxWidth: '100%',
-                padding: showNavigation ? '20px 20px 50px 20px' : '20px 20px 20px 20px',
-                background: '#E5E5E5',
-                position: 'relative',
-              },
-            }, [
+        h(Copyable, {
+          value: toChecksumAddress(network, address),
+        }, [
+          h('span.font-small', {
+            style: {
+              fontFamily: 'Nunito Regular',
+              color: '#333333',
+            },
+          }, addressSummary(network, address, 6, 4, false)),
+        ]),
+      ]),
 
-              h('div', {
-                style: {
-                  position: 'absolute',
-                  bottom: '20px',
-                  width: '100%',
-                  textAlign: 'center',
-                  color: '#333333',
-                },
-              }, [
-                h('h3', {
-                  style: {
-                    alignSelf: 'center',
-                    display: showNavigation ? 'block' : 'none',
-                    fontSize: '14px',
-                  },
-                }, [
-                  h('i.fa.white-arrow-left.fa-lg.cursor-pointer', {
-                    style: {
-                      display: positionOfCurrentTx === 1 ? 'none' : 'inline-block',
-                    },
-                    onClick: () => props.actions.nextTx(prevTxId),
-                  }),
-                  ` ${positionOfCurrentTx} of ${totalTx} `,
-                  h('i.fa.white-arrow-right.fa-lg.cursor-pointer', {
-                    style: {
-                      display: positionOfCurrentTx === totalTx ? 'none' : 'inline-block',
-                    },
-                    onClick: () => props.actions.nextTx(nextTxId),
-                  }),
-                ])],
-              ),
+      forwardCarrat(),
 
-              h(MiniAccountPanel, {
-                imageSeed: address,
-                picOrder: 'left',
-              }, [
-                h('div', {
-                  style: {
-                    marginLeft: '10px',
-                  },
-                }, [
-                  h('div.font-pre-medium', {
-                    style: {
-                      fontFamily: 'Nunito SemiBold',
-                      color: '#333333',
-                      whiteSpace: 'nowrap',
-                    },
-                  }, accountSummary(identity.name, 6, 4)),
+      this.miniAccountPanelForRecipient(isToken, tokensTransferTo),
+    ]),
 
-                  h(Copyable, {
-                    value: toChecksumAddress(network, address),
-                  }, [
-                    h('span.font-small', {
-                      style: {
-                        fontFamily: 'Nunito Regular',
-                        color: '#333333',
-                      },
-                    }, addressSummary(network, address, 6, 4, false)),
-                  ]),
-
-                  h('span.font-small', {
-                    style: {
-                      fontFamily: 'Nunito Regular',
-                    },
-                  }, [
-                    isToken ? h(TokenBalance, {
-                      token: this.state.token,
-                      fontSize: '12px',
-                    }) : h(KAIBalance, {
-                      fontSize: '12px',
-                      value: balance,
-                      conversionRate,
-                      currentCurrency,
-                      network,
-                      inline: true,
-                    }),
-                  ]),
-                ]),
-              ]),
-
-              forwardCarrat(),
-
-              this.miniAccountPanelForRecipient(isToken, tokensTransferTo),
-            ]),
-
-            h('style', `
+    h('style', `
               .table-box {
                 margin: 7px 0px 0px 0px;
                 width: 100%;
                 position: relative;
               }
+
               .table-box .row {
-                margin: 0px;
-                background: #ffffff;
                 display: flex;
                 justify-content: space-between;
-                font-family: Nunito Regular;
-                font-size: 14px;
-                padding: 5px 30px;
+                align-items: center;
+                margin-bottom:16px;
               }
-              .table-box .row .value {
-                font-family: Nunito Regular;
+
+              .cell.label{
+                font-weight: 600;
+                font-size: 15px;
+                line-height: 20px;
+                font-family: "Work Sans", sans-serif;
+                color: rgba(28, 28, 40, 0.54);
               }
+
             `),
 
-            h('.table-box', [
+    h('.table-box', [
 
-              h('.flex-row.flex-center', {
-                style: {
-                  marginTop: '20px',
-                  marginBottom: '30px',
-                },
-              }, [
-                !isNotification ? h('i.fa.fa-arrow-left.fa-lg.cursor-pointer', {
-                  onClick: this.goHome.bind(this),
-                  style: {
-                    position: 'absolute',
-                    left: '30px',
-                  },
-                }) : null,
-                'Confirm Transaction',
-                isNotification ? h(NetworkIndicator, {
-                  network: network,
-                  provider: provider,
-                  isUnlocked: isUnlocked,
-                }) : null,
-              ]),
+      isError ? h('div', {
+        style: {
+          textAlign: 'center',
+          position: 'absolute',
+          top: '25px',
+          background: 'rgba(255, 255, 255, 0.85)',
+          width: '100%',
+          paddingLeft: '30px',
+          paddingRight: '30px',
+        },
+      }, [
+        txMeta.simulationFails ?
+          h('.error', {
+            style: {
+              fontSize: '12px',
+            },
+          }, 'Transaction Error. Exception thrown in contract code.')
+          : null,
 
-              isError ? h('div', {
-                style: {
-                  textAlign: 'center',
-                  position: 'absolute',
-                  top: '25px',
-                  background: 'rgba(255, 255, 255, 0.85)',
-                  width: '100%',
-                  paddingLeft: '30px',
-                  paddingRight: '30px',
-                },
-              }, [
-                txMeta.simulationFails ?
-                  h('.error', {
-                    style: {
-                      fontSize: '12px',
-                    },
-                  }, 'Transaction Error. Exception thrown in contract code.')
-                : null,
+        !isValidAddress ?
+          h('.error', {
+            style: {
+              fontSize: '12px',
+            },
+          }, 'Recipient address is invalid. Sending this transaction will result in a loss of ETH. ')
+          : null,
 
-                !isValidAddress ?
-                  h('.error', {
-                    style: {
-                      fontSize: '12px',
-                    },
-                  }, 'Recipient address is invalid. Sending this transaction will result in a loss of ETH. ')
-                : null,
+        insufficientBalance ?
+          h('.error', {
+            style: {
+              fontSize: '12px',
+            },
+          }, 'Insufficient balance for transaction. ')
+          : null,
 
-                insufficientBalance ?
-                  h('.error', {
-                    style: {
-                      fontSize: '12px',
-                    },
-                  }, 'Insufficient balance for transaction. ')
-                : null,
+        (dangerousGasLimit && !gasLimitSpecified) ?
+          h('.error', {
+            style: {
+              fontSize: '12px',
+            },
+          }, 'Gas limit set dangerously high. Approving this transaction is liable to fail. ')
+          : null,
+      ]) : null,
 
-                (dangerousGasLimit && !gasLimitSpecified) ?
-                  h('.error', {
-                    style: {
-                      fontSize: '12px',
-                    },
-                  }, 'Gas limit set dangerously high. Approving this transaction is liable to fail. ')
-                : null,
-              ]) : null,
+      // Ether Value
+      // Currently not customizable, but easily modified
+      // in the way that gas and gasLimit currently are.
+      h('.row', [
+        h('.cell.label', 'Amount'),
+        h(KAIBalance, {
+          valueStyle,
+          dimStyle,
+          value: isToken ? tokensToSend/* (new BN(tokensToSend)).mul(1e18)*/ : txParams.value,
+          currentCurrency,
+          conversionRate,
+          network,
+          isToken,
+          tokenSymbol: this.state.token.symbol,
+          showFiat: !isToken,
+        }),
+      ]),
 
-              // Ether Value
-              // Currently not customizable, but easily modified
-              // in the way that gas and gasLimit currently are.
-              h('.row', [
-                h('.cell.label', 'Amount'),
-                h(KAIBalance, {
-                  valueStyle,
-                  dimStyle,
-                  value: isToken ? tokensToSend/* (new BN(tokensToSend)).mul(1e18)*/ : txParams.value,
-                  currentCurrency,
-                  conversionRate,
-                  network,
-                  isToken,
-                  tokenSymbol: this.state.token.symbol,
-                  showFiat: !isToken,
-                }),
-              ]),
+      // Gas Limit (customizable)
+      h('.cell.row', [
+        h('.cell.label', 'Gas Limit'),
+        h('.cell.value', {
+        }, [
+          h(BNInput, {
+            id: 'gas_limit',
+            name: 'Gas Limit',
+            value: gasBn,
+            precision: 0,
+            scale: 0,
+            // The hard lower limit for gas.
+            min: MIN_GAS_LIMIT_BN,
+            max: safeGasLimit,
+            suffix: 'UNITS',
+            style: {
+              position: 'relative',
+              width: '91px',
+            },
+            onChange: this.gasLimitChanged.bind(this),
 
-              // Gas Limit (customizable)
-              h('.cell.row', [
-                h('.cell.label', 'Gas Limit'),
-                h('.cell.value', {
-                }, [
-                  h(BNInput, {
-                    id: 'gas_limit',
-                    name: 'Gas Limit',
-                    value: gasBn,
-                    precision: 0,
-                    scale: 0,
-                    // The hard lower limit for gas.
-                    min: MIN_GAS_LIMIT_BN,
-                    max: safeGasLimit,
-                    suffix: 'UNITS',
-                    style: {
-                      position: 'relative',
-                      width: '91px',
-                    },
-                    onChange: this.gasLimitChanged.bind(this),
+            ref: (hexInput) => { this.inputs.push(hexInput) },
+          }),
+        ]),
+      ]),
 
-                    ref: (hexInput) => { this.inputs.push(hexInput) },
-                  }),
-                ]),
-              ]),
+      // Gas Price (customizable)
+      h('.cell.row', [
+        h('.cell.label', 'Gas Price'),
+        h('.cell.value', {
+        }, [
+          h(BNInput, {
+            id: 'gas_price',
+            name: 'Gas Price',
+            value: gasPriceBn,
+            precision: 9,
+            scale: 0,
+            suffix: 'OXY',
+            min: forceGasMin || MIN_GAS_PRICE_BN,
+            style: {
+              position: 'relative',
+              width: '91px',
+            },
+            onChange: this.gasPriceChanged.bind(this),
+            ref: (hexInput) => { this.inputs.push(hexInput) },
+          }),
+        ]),
+      ]),
 
-              // Gas Price (customizable)
-              h('.cell.row', [
-                h('.cell.label', 'Gas Price'),
-                h('.cell.value', {
-                }, [
-                  h(BNInput, {
-                    id: 'gas_price',
-                    name: 'Gas Price',
-                    value: gasPriceBn,
-                    precision: 9,
-                    scale: 0,
-                    suffix: 'OXY',
-                    min: forceGasMin || MIN_GAS_PRICE_BN,
-                    style: {
-                      position: 'relative',
-                      width: '91px',
-                    },
-                    onChange: this.gasPriceChanged.bind(this),
-                    ref: (hexInput) => { this.inputs.push(hexInput) },
-                  }),
-                ]),
-              ]),
+      // Max Transaction Fee (calculated)
+      h('.cell.row', [
+        h('.cell.label', 'Max Transaction Fee'),
+        h(KAIBalance, {
+          valueStyle,
+          dimStyle,
+          value: txFeeBn,
+          currentCurrency,
+          conversionRate,
+          network,
+        }),
+      ]),
 
-              // Max Transaction Fee (calculated)
-              h('.cell.row', [
-                h('.cell.label', 'Max Transaction Fee'),
-                h(KAIBalance, {
-                  valueStyle,
-                  dimStyle,
-                  value: txFeeBn,
-                  currentCurrency,
-                  conversionRate,
-                  network,
-                }),
-              ]),
+      h('.cell.row', {
+        style: {
+          // fontFamily: 'Nunito Regular',
+        },
+      }, [
+        h('.cell.label', 'Max Total'),
+        h('.cell.value', {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+          },
+        }, [
+          h(KAIBalance, {
+            valueStyle,
+            dimStyle,
+            value: maxCost,
+            currentCurrency,
+            conversionRate,
+            inline: true,
+            network,
+            labelColor: 'black',
+            fontSize: '16px',
+          }),
+        ]),
+      ]),
+    ]), // End of Table
 
-              h('.cell.row', {
-                style: {
-                  fontFamily: 'Nunito Regular',
-                },
-              }, [
-                h('.cell.label', 'Max Total'),
-                h('.cell.value', {
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                  },
-                }, [
-                  h(KAIBalance, {
-                    valueStyle,
-                    dimStyle,
-                    value: maxCost,
-                    currentCurrency,
-                    conversionRate,
-                    inline: true,
-                    network,
-                    labelColor: 'black',
-                    fontSize: '16px',
-                  }),
-                ]),
-              ]),
-            ]), // End of Table
+  ]),
 
-          ]),
-
-          h('style', `
+  h('style', `
             .conf-buttons button {
               margin-left: 10px;
             }
           `),
 
-          // send + cancel
-          h('.flex-row.flex-space-around.conf-buttons', {
-            style: {
-              display: 'flex',
-              justifyContent: 'flex-end',
-              margin: '14px 30px',
-            },
-          }, [
-            h('button.btn-violet', {
-              onClick: (event) => {
-                this.resetGasFields()
-                event.preventDefault()
-              },
-              style: {
-                marginRight: 0,
-              },
-            }, 'Reset'),
+  // send + cancel
+  h('.flex-row.flex-space-around.conf-buttons', {
+    style: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      margin: '14px 30px',
+    },
+  }, [
+    h('button.btn-violet', {
+      onClick: (event) => {
+        this.resetGasFields()
+        event.preventDefault()
+      },
+      style: {
+        marginRight: 0,
+      },
+    }, 'Reset'),
 
-            // Accept Button or Buy Button
-            insufficientBalance ? h('button.btn-green', { onClick: props.buyEth }, `Buy ${this.state.coinName}`) :
-              h('input.confirm', {
-                type: 'submit',
-                value: 'Submit',
-                style: { marginLeft: '10px' },
-                disabled: buyDisabled,
-              }),
+    // Accept Button or Buy Button
+    insufficientBalance ? h('button.btn-green', { onClick: props.buyEth }, `Buy ${this.state.coinName}`) :
+      h('input.confirm', {
+        type: 'submit',
+        value: 'Submit',
+        style: { marginLeft: '10px' },
+        disabled: buyDisabled,
+      }),
 
-            h('button.cancel.btn-red', {
-              onClick: props.actions.goHome,
-            }, 'Reject'),
-          ]),
-          showNavigation ? h('.flex-row.flex-space-around.conf-buttons', {
-            style: {
-              display: 'flex',
-              justifyContent: 'flex-end',
-              margin: '14px 30px',
-            },
-          }, [
-            h('button.cancel.btn-red', {
-              onClick: props.cancelAllTransactions,
-            }, 'Reject All'),
-          ]) : null,
-        ]),
+    h('button.cancel.btn-red', {
+      onClick: props.actions.goHome,
+    }, 'Reject'),
+  ]),
+  showNavigation ? h('.flex-row.flex-space-around.conf-buttons', {
+    style: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      margin: '14px 30px',
+    },
+  }, [
+    h('button.cancel.btn-red', {
+      onClick: props.cancelAllTransactions,
+    }, 'Reject All'),
+  ]) : null,
+]),
       ])
     )
   }
 
-  miniAccountPanelForRecipient (isToken, tokensTransferTo) {
-    const props = this.props
-    const txData = props.txData
-    const txParams = txData.txParams || {}
-    const isContractDeploy = !('to' in txParams)
-    const to = isToken ? tokensTransferTo : txParams.to
-    // If it's not a contract deploy, send to the account
-    if (!isContractDeploy) {
-      return h(MiniAccountPanel, {
-          imageSeed: txParams.to,
-          picOrder: 'right',
-        }, [
-          h('div', {
-            style: {
-              marginRight: '10px',
-            },
-          }, [
-            h('span.font-pre-medium', {
-              style: {
-                fontFamily: 'Nunito SemiBold',
-                color: '#333333',
-                display: 'inline-block',
-                whiteSpace: 'nowrap',
-              },
-            }, accountSummary(nameForAddress(to, props.identities, props.network)), 6, 4),
+miniAccountPanelForRecipient(isToken, tokensTransferTo) {
+  const props = this.props
+  const txData = props.txData
+  const txParams = txData.txParams || {}
+  const isContractDeploy = !('to' in txParams)
+  const to = isToken ? tokensTransferTo : txParams.to
+  // If it's not a contract deploy, send to the account
+  if (!isContractDeploy) {
+    return h('div', {
+      style: {
+        marginRight: '10px',
+      },
+    }, [
+      h('span.font-pre-medium', {
+        style: {
+          fontFamily: 'Nunito SemiBold',
+          color: '#333333',
+          display: 'inline-block',
+          whiteSpace: 'nowrap',
+        },
+      }, accountSummary(nameForAddress(to, props.identities, props.network)), 6, 4),
 
-            h(Copyable, {
-              value: toChecksumAddress(props.network, to),
-            }, [
-              h('span.font-small', {
-                style: {
-                  fontFamily: 'Nunito Regular',
-                  color: '#333333',
-                },
-              }, addressSummary(props.network, to, 6, 4, false)),
-            ]),
-          ]),
-        ])
-    } else {
-      return h(MiniAccountPanel, {
-        picOrder: 'right',
+      h(Copyable, {
+        value: toChecksumAddress(props.network, to),
       }, [
-
         h('span.font-small', {
           style: {
-            fontFamily: 'Nunito Bold',
+            fontFamily: 'Nunito Regular',
             color: '#333333',
           },
-        }, 'New Contract'),
+        }, addressSummary(props.network, to, 6, 4, false)),
+      ]),
+    ])
+  } else {
+    return h(MiniAccountPanel, {
+      picOrder: 'right',
+    }, [
 
-      ])
+      h('span.font-small', {
+        style: {
+          fontFamily: 'Nunito Bold',
+          color: '#333333',
+        },
+      }, 'New Contract'),
+
+    ])
+  }
+}
+
+componentDidMount() {
+  const txMeta = this.gatherTxMeta()
+  const txParams = txMeta.txParams || {}
+  if (this.props.isToken || this.state.isToken) {
+    return this.updateTokenInfo(txParams)
+  }
+  const decodedData = txParams.data && abiDecoder.decodeMethod(txParams.data)
+  if (decodedData && decodedData.name === 'transfer') {
+    return this.updateTokenInfo(txParams)
+  }
+}
+
+componentWillUnmount() {
+  this.setState({
+    token: {
+      address: emptyAddress,
+      symbol: '',
+      decimals: 0,
+      dataRetrieved: false,
+    },
+    isToken: false,
+  })
+}
+
+updateTokenInfo = async function (txParams) {
+  const tokenParams = await this.tokenInfoGetter(txParams.to)
+  this.setState({
+    token: {
+      address: txParams.to,
+      symbol: tokenParams.symbol,
+      decimals: tokenParams.decimals,
+      dataRetrieved: true,
+    },
+    isToken: true,
+  })
+}
+
+gasPriceChanged(newBN, valid) {
+  const txMeta = this.gatherTxMeta()
+  // txMeta.txParams.gasPrice = '0x' + newBN.toString('hex')
+  txMeta.txParams.gasPrice = newBN
+  this.setState({
+    txData: clone(txMeta),
+    valid,
+  })
+}
+
+gasLimitChanged(newBN, valid) {
+  const txMeta = this.gatherTxMeta()
+  // txMeta.txParams.gas = '0x' + newBN.toString('hex')
+  txMeta.txParams.gas = newBN
+  this.setState({
+    txData: clone(txMeta),
+    valid,
+  })
+}
+
+resetGasFields() {
+
+  this.inputs.forEach((hexInput) => {
+    if (hexInput) {
+      hexInput.setValid()
     }
-  }
+  })
 
-  componentDidMount () {
-    const txMeta = this.gatherTxMeta()
-    const txParams = txMeta.txParams || {}
-    if (this.props.isToken || this.state.isToken) {
-      return this.updateTokenInfo(txParams)
+  this.setState({
+    txData: null,
+    valid: true,
+  })
+}
+
+async onSubmit(event) {
+  event.preventDefault()
+  const txMeta = this.gatherTxMeta()
+  const valid = this.checkValidity()
+  this.setState({ valid, submitting: true })
+  // if (valid && this.verifyGasParams()) {
+  if (valid) {
+    const gas = txMeta.txParams.gas || MIN_GAS_LIMIT_BN
+    const gasPrice = txMeta.txParams.gasPrice || MIN_GAS_PRICE_BN
+    txMeta.txParams.gas = '0x' + gas.toString(16)
+    txMeta.txParams.gasPrice = '0x' + gasPrice.toString(16)
+
+    txMeta.txParams.receiver = txMeta.txParams.to
+    delete txMeta.txParams.to
+
+    txMeta.txParams.amount = '0x' + new BN(txMeta.txParams.value).toString(16)
+    delete txMeta.txParams.value
+
+    const txObj = txMeta.txParams
+    console.log('tx params ', txObj)
+    try {
+      await this.props.actions.signKardiaTx(txObj)
+    } catch (error) {
+      this.props.actions.displayWarning(error)
     }
-    const decodedData = txParams.data && abiDecoder.decodeMethod(txParams.data)
-    if (decodedData && decodedData.name === 'transfer') {
-      return this.updateTokenInfo(txParams)
-    }
+  } else {
+    this.props.actions.displayWarning('Invalid Gas Parameters')
+    this.setState({ submitting: false })
   }
+}
 
-  componentWillUnmount () {
-    this.setState({
-      token: {
-        address: emptyAddress,
-        symbol: '',
-        decimals: 0,
-        dataRetrieved: false,
-      },
-      isToken: false,
-    })
+checkValidity() {
+  const form = this.getFormEl()
+  const valid = form.checkValidity()
+  return valid
+}
+
+getFormEl() {
+  const form = document.querySelector('form#pending-tx-form')
+  // Stub out form for unit tests:
+  if (!form) {
+    return { checkValidity() { return true } }
   }
-
-  updateTokenInfo = async function (txParams) {
-    const tokenParams = await this.tokenInfoGetter(txParams.to)
-    this.setState({
-      token: {
-        address: txParams.to,
-        symbol: tokenParams.symbol,
-        decimals: tokenParams.decimals,
-        dataRetrieved: true,
-      },
-      isToken: true,
-    })
-  }
-
-  gasPriceChanged (newBN, valid) {
-    const txMeta = this.gatherTxMeta()
-    // txMeta.txParams.gasPrice = '0x' + newBN.toString('hex')
-    txMeta.txParams.gasPrice = newBN
-    this.setState({
-      txData: clone(txMeta),
-      valid,
-    })
-  }
-
-  gasLimitChanged (newBN, valid) {
-    const txMeta = this.gatherTxMeta()
-    // txMeta.txParams.gas = '0x' + newBN.toString('hex')
-    txMeta.txParams.gas = newBN
-    this.setState({
-      txData: clone(txMeta),
-      valid,
-    })
-  }
-
-  resetGasFields () {
-
-    this.inputs.forEach((hexInput) => {
-      if (hexInput) {
-        hexInput.setValid()
-      }
-    })
-
-    this.setState({
-      txData: null,
-      valid: true,
-    })
-  }
-
-  async onSubmit (event) {
-    event.preventDefault()
-    const txMeta = this.gatherTxMeta()
-    const valid = this.checkValidity()
-    this.setState({ valid, submitting: true })
-    // if (valid && this.verifyGasParams()) {
-    if (valid) {
-      const gas = txMeta.txParams.gas || MIN_GAS_LIMIT_BN
-      const gasPrice = txMeta.txParams.gasPrice || MIN_GAS_PRICE_BN
-      txMeta.txParams.gas = '0x' + gas.toString(16)
-      txMeta.txParams.gasPrice = '0x' + gasPrice.toString(16)
-
-      txMeta.txParams.receiver = txMeta.txParams.to
-      delete txMeta.txParams.to
-
-      txMeta.txParams.amount = '0x' + new BN(txMeta.txParams.value).toString(16)
-      delete txMeta.txParams.value
-
-      const txObj = txMeta.txParams
-      console.log('tx params ', txObj)
-      try {
-        await this.props.actions.signKardiaTx(txObj)
-      } catch (error) {
-        this.props.actions.displayWarning(error)
-      }
-    } else {
-      this.props.actions.displayWarning('Invalid Gas Parameters')
-      this.setState({ submitting: false })
-    }
-  }
-
-  checkValidity () {
-    const form = this.getFormEl()
-    const valid = form.checkValidity()
-    return valid
-  }
-
-  getFormEl () {
-    const form = document.querySelector('form#pending-tx-form')
-    // Stub out form for unit tests:
-    if (!form) {
-      return { checkValidity () { return true } }
-    }
-    return form
-  }
+  return form
+}
 
 // After a customizable state value has been updated,
-  gatherTxMeta () {
-    const props = this.props
-    const state = this.state
-    const txData = clone(state.txData) || clone(props.txData)
+gatherTxMeta() {
+  const props = this.props
+  const state = this.state
+  const txData = clone(state.txData) || clone(props.txData)
 
-    return txData
+  return txData
+}
+
+verifyGasParams() {
+  // We call this in case the gas has not been modified at all
+  if (!this.state) { return true }
+  return (
+    this._notZeroOrEmptyString(this.state.txData.gas.toString()) &&
+    this._notZeroOrEmptyString(this.state.txData.gasPrice.toString())
+  )
+}
+
+_notZeroOrEmptyString(str) {
+  return str !== '' && str !== '0'
+}
+
+bnMultiplyByFraction(targetBN, numerator, denominator) {
+  const numBN = new BN(numerator)
+  const denomBN = new BN(denominator)
+  return targetBN.mul(numBN).div(denomBN)
+}
+
+goHome(event) {
+  this.stopPropagation(event)
+  this.props.actions.goHome()
+}
+
+stopPropagation(event) {
+  if (event.stopPropagation) {
+    event.stopPropagation()
   }
+}
 
-  verifyGasParams () {
-    // We call this in case the gas has not been modified at all
-    if (!this.state) { return true }
-    return (
-      this._notZeroOrEmptyString(this.state.txData.gas.toString()) &&
-      this._notZeroOrEmptyString(this.state.txData.gasPrice.toString())
-    )
-  }
-
-  _notZeroOrEmptyString (str) {
-    return str !== '' && str !== '0'
-  }
-
-  bnMultiplyByFraction (targetBN, numerator, denominator) {
-    const numBN = new BN(numerator)
-    const denomBN = new BN(denominator)
-    return targetBN.mul(numBN).div(denomBN)
-  }
-
-  goHome (event) {
-    this.stopPropagation(event)
-    this.props.actions.goHome()
-  }
-
-  stopPropagation (event) {
-    if (event.stopPropagation) {
-      event.stopPropagation()
-    }
-  }
-
-  getNavigateTxData () {
-    const { unapprovedTxs, network, txData: { id } = {} } = this.props
-    const currentNetworkUnapprovedTxs = Object.keys(unapprovedTxs)
+getNavigateTxData() {
+  const { unapprovedTxs, network, txData: { id } = {} } = this.props
+  const currentNetworkUnapprovedTxs = Object.keys(unapprovedTxs)
     .filter((key) => unapprovedTxs[key].metamaskNetworkId === network)
     .reduce((acc, key) => ({ ...acc, [key]: unapprovedTxs[key] }), {})
-    const enumUnapprovedTxs = Object.keys(currentNetworkUnapprovedTxs)
-    const currentPosition = enumUnapprovedTxs.indexOf(id ? id.toString() : '')
+  const enumUnapprovedTxs = Object.keys(currentNetworkUnapprovedTxs)
+  const currentPosition = enumUnapprovedTxs.indexOf(id ? id.toString() : '')
 
-    return {
-      totalTx: enumUnapprovedTxs.length,
-      positionOfCurrentTx: currentPosition + 1,
-      nextTxId: enumUnapprovedTxs[currentPosition + 1],
-      prevTxId: enumUnapprovedTxs[currentPosition - 1],
-      showNavigation: enumUnapprovedTxs.length > 1,
-    }
+  return {
+    totalTx: enumUnapprovedTxs.length,
+    positionOfCurrentTx: currentPosition + 1,
+    nextTxId: enumUnapprovedTxs[currentPosition + 1],
+    prevTxId: enumUnapprovedTxs[currentPosition - 1],
+    showNavigation: enumUnapprovedTxs.length > 1,
   }
+}
 
 }
 
-function forwardCarrat () {
+function forwardCarrat() {
   return (
     h('img', {
-      src: 'images/forward-carrat-light.svg',
+      src: 'images/to.png',
       style: {
-        padding: '0px 20px 0px',
-        height: '62px',
+        padding: '0px 32px',
       },
     })
   )
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
   const accounts = getMetaMaskAccounts(state)
   const { appState } = state
   const { screenParams } = appState.currentView
