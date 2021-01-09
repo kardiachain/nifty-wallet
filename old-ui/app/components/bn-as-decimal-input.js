@@ -39,8 +39,8 @@ BnAsDecimalInput.prototype.render = function () {
     h('.flex-column', [
       h('.flex-row', {
         style: {
-          alignItems: 'flex-end',
-          lineHeight: '13px',
+          alignItems: 'center',
+          // lineHeight: '13px',
           textRendering: 'geometricPrecision',
         },
       }, [
@@ -53,11 +53,10 @@ BnAsDecimalInput.prototype.render = function () {
           style: extend({
             display: 'block',
             textAlign: 'right',
-            backgroundColor: 'transparent',
+            background: '#F5F5F5',
+            border: '1.5px solid #E2E5E9',
+            borderRadius: '8px',
             height: '32px',
-            borderRadius: '3px',
-            border: '1px solid #e2e2e2',
-            fontFamily: 'Nunito Regular',
             fontSize: '14px',
           }, style),
           value: newValue,
@@ -85,12 +84,15 @@ BnAsDecimalInput.prototype.render = function () {
         }),
         h('div', {
           style: {
-            color: ' #333333',
-            fontFamily: 'Nunito Regular',
+            color: '#1C1C28',
+            // fontFamily: 'Nunito Regular',
             fontSize: '14px',
             marginLeft: '5px',
-            width: '29px',
-            lineHeight: '32px',
+            // width: '29px',
+            // lineHeight: '32px',
+            fontWeight: 500,
+            fontSize: '15px',
+            lineHeight: '20px',
           },
         }, suffix),
       ]),

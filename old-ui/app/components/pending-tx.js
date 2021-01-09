@@ -152,9 +152,11 @@ class PendingTx extends Component {
     }
 
     const dimStyle = {
-      color: '#333333',
-      marginLeft: '5px',
-      fontSize: '14px',
+      marginLeft: '8px',
+      fontWeight: 600,
+      fontSize: '15px',
+      lineHeight: '20px',
+      color: '#1C1C28'
     }
 
 
@@ -258,9 +260,10 @@ h('form#pending-tx-form', {
       }, [
         h('div.font-pre-medium', {
           style: {
-            fontFamily: 'Nunito SemiBold',
-            color: '#333333',
-            whiteSpace: 'nowrap',
+            fontWeight: 600,
+            fontSize: '15px',
+            lineHeight: '20px',
+            color: '#1C1C28'
           },
         }, accountSummary(identity.name, 6, 4)),
 
@@ -269,8 +272,10 @@ h('form#pending-tx-form', {
         }, [
           h('span.font-small', {
             style: {
-              fontFamily: 'Nunito Regular',
-              color: '#333333',
+              fontWeight: 600,
+              fontSize: '12px',
+              lineHeight: '20px',
+              color: 'rgba(28, 28, 40, 0.26)'
             },
           }, addressSummary(network, address, 6, 4, false)),
         ]),
@@ -386,7 +391,7 @@ h('form#pending-tx-form', {
             suffix: 'UNITS',
             style: {
               position: 'relative',
-              width: '91px',
+              width: '80px',
             },
             onChange: this.gasLimitChanged.bind(this),
 
@@ -462,7 +467,6 @@ h('form#pending-tx-form', {
 
   h('style', `
             .conf-buttons button {
-              margin-left: 10px;
             }
           `),
 
@@ -470,32 +474,41 @@ h('form#pending-tx-form', {
   h('.flex-row.flex-space-around.conf-buttons', {
     style: {
       display: 'flex',
-      justifyContent: 'flex-end',
-      margin: '14px 30px',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      padding: '20px 16px',
+      background: '#FFFFFF',
+      boxShadow: '0px -4px 8px rgba(0, 0, 0, 0.1)',
+      borderRadius: '12px 12px 0px 0px'
     },
   }, [
-    h('button.btn-violet', {
-      onClick: (event) => {
-        this.resetGasFields()
-        event.preventDefault()
-      },
-      style: {
-        marginRight: 0,
-      },
-    }, 'Reset'),
+    // h('button.btn-violet', {
+    //   onClick: (event) => {
+    //     this.resetGasFields()
+    //     event.preventDefault()
+    //   },
+    //   style: {
+    //     marginRight: 0,
+    //   },
+    // }, 'Reset'),
 
     // Accept Button or Buy Button
+    h('button.cancel.btn-red', {
+      onClick: props.actions.goHome,
+    }, 'Reject'),
+
     insufficientBalance ? h('button.btn-green', { onClick: props.buyEth }, `Buy ${this.state.coinName}`) :
       h('input.confirm', {
         type: 'submit',
         value: 'Submit',
-        style: { marginLeft: '10px' },
+        style: { marginLeft: '10px', flex: 1 },
         disabled: buyDisabled,
       }),
 
-    h('button.cancel.btn-red', {
-      onClick: props.actions.goHome,
-    }, 'Reject'),
+   
   ]),
   showNavigation ? h('.flex-row.flex-space-around.conf-buttons', {
     style: {
@@ -523,15 +536,16 @@ miniAccountPanelForRecipient(isToken, tokensTransferTo) {
   if (!isContractDeploy) {
     return h('div', {
       style: {
-        marginRight: '10px',
+    display:'flex',
+    flexDirection:'column'        
       },
     }, [
       h('span.font-pre-medium', {
         style: {
-          fontFamily: 'Nunito SemiBold',
-          color: '#333333',
-          display: 'inline-block',
-          whiteSpace: 'nowrap',
+          fontWeight: 600,
+          fontSize: '15px',
+          lineHeight: '20px',
+          color: '#1C1C28'
         },
       }, accountSummary(nameForAddress(to, props.identities, props.network)), 6, 4),
 
@@ -540,8 +554,10 @@ miniAccountPanelForRecipient(isToken, tokensTransferTo) {
       }, [
         h('span.font-small', {
           style: {
-            fontFamily: 'Nunito Regular',
-            color: '#333333',
+            fontWeight: 600,
+            fontSize: '12px',
+            lineHeight: '20px',
+            color: 'rgba(28, 28, 40, 0.26)'
           },
         }, addressSummary(props.network, to, 6, 4, false)),
       ]),

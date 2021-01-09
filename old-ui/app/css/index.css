@@ -127,7 +127,13 @@ button, input[type="submit"] {
 }
 
 .btn-red {
-  background: #df2265;
+  /* background: #df2265; */
+
+border: 1.5px solid #E2E5E9;
+border-radius: 8px;
+background:white;
+color:#1C1C28;
+
 }
 
 .btn-violet {
