@@ -56,11 +56,12 @@ class SendTransactionScreen extends PersistentForm {
     return (
       <div className="send-screen flex-column flex-grow">
         <Toast.ToastComponent type={Toast.TOAST_TYPE_ERROR} />
-        {/* <SendProfile/> */}
 
         <SendHeader
           title= "Send Transaction"
         />
+
+        <SendProfile/>
 
         <ErrorComponent
           error={error}

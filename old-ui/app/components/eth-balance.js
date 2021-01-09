@@ -50,33 +50,41 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
   const { label } = balanceObj
   const valueStyle = props.valueStyle ? props.valueStyle : {
     width: '100%',
-    textAlign: 'right',
     fontWeight: '600',
   }
   const dimStyle = props.dimStyle ? props.dimStyle : {
     marginLeft: '5px',
   }
 
+  const totalAmount = {
+    fontSize:'14px',
+    fontWeight: 600,
+    lineHeight: '16px',
+    color: 'rgba(28, 28, 40, 0.54)'
+  }
+
   return (
     h('div.flex-column', [
       h('.flex-row', {
         style: {
-          alignItems: 'flex-end',
           textRendering: 'geometricPrecision',
           fontSize: '15px',
           lineHeight: '20px',
           color: '#1C1C28',
-          marginTop: '10px',
+          flexDirection:'column'
         },
         'data-tip': '',
         'data-for': 'ethBalance',
       }, [
+        h('div',
+        {
+          style: totalAmount
+        },
+          'Total Amount'
+        ),
         h('div', {
           style: valueStyle,
-        }, incoming ? `+${balance}` : balance),
-        h('div', {
-          style: dimStyle,
-        }, label),
+        }, incoming ? `+${balance} KAI` : `${balance} KAI`)
       ]),
     ]))
 }

@@ -275,7 +275,7 @@ AccountDetailScreen.prototype.render = function () {
         h('.flex-row', {
           style: {
             justifyContent: 'space-between',
-            alignItems: 'flex-start',
+            alignItems: 'center',
             background: '#FFFFFF',
             boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
             borderRadius: '8px',

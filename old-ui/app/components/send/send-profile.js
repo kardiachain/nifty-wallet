@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Identicon from '../identicon'
 import { addressSummary } from '../../util'
@@ -19,7 +19,7 @@ class SendProfile extends Component {
 		token: PropTypes.any,
 	}
 
-	render () {
+	render() {
 		const props = this.props
 		const {
 			address,
@@ -32,63 +32,61 @@ class SendProfile extends Component {
 			token,
 		} = props
 		return (
-			<div
-				className="account-data-subsection flex-row flex-grow"
-				style={{
-					padding: '30px',
-					minHeight: '178px',
-				}}
-			>
-				{/* header - identicon + nav */}
-				<div className="flex-row flex-space-between">
-					{/* large identicon*/}
+			<div className="account-data-subsection">
+				<div style={{display:'flex'}}>
 					<div
-					className="identicon-wrapper flex-column flex-center select-none"
-					style={{ display: 'inline-block' }}
+						className="identicon-wrapper flex-column flex-center select-none"
 					>
-						<Identicon diameter={60} address={address} />
+						<Identicon diameter={40} address={address} />
 					</div>
-					{/* invisible place holder */}
-					<i className="fa fa-users fa-lg invisible" style={{ marginTop: '28px' }} />
-				</div>
-				{/* account label */}
-				<div className="flex-column" style={{ alignItems: 'flex-start' }} >
+
+					{/* address */}
+					<div class="address" style={{marginLeft:'12px'}}>
 					<h2
-						className="send-profile-identity-name font-medium flex-center"
+						className="send-profile-identity-name font-medium"
 						style={{
 							color: '#333333',
-							paddingTop: '8px',
-							marginBottom: '8px',
 						}}
 					>{identity && identity.name}</h2>
-					{/* address and getter actions */}
 					<div
 						className="flex-row flex-center"
 						style={{
 							color: '#333333',
-							marginBottom: '30px',
 						}}
 					>
 						<div className="send-profile-address" style={{ lineHeight: '16px', fontSize: '14px' }}>
 							{addressSummary(network, address)}
 						</div>
 					</div>
-					{/* balance */}
-					<div className="flex-row flex-center">
-						{isToken ? <TokenBalance token={token} /> : <EthBalance {...{
-							value: account && account.balance,
-							conversionRate,
-							currentCurrency,
-							network,
-						}} />}
 					</div>
+
+
+				</div>
+
+				{/* balance */}
+				<div 
+				style={{
+					background: '#FFFFFF',
+					boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
+					borderRadius: '8px',
+					padding: '12px',
+					display: 'flex',
+					margin: '16px 0px'
+				}}
+				>
+					{isToken ? <TokenBalance token={token} /> : <EthBalance {...{
+						value: account && account.balance,
+						conversionRate,
+						currentCurrency,
+						network,
+					}} />}
 				</div>
 			</div>
 		)
 	}
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
 	const accounts = getMetaMaskAccounts(state)
 	const result = {
 		address: state.metamask.selectedAddress,
