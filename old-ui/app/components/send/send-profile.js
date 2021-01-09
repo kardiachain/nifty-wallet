@@ -43,9 +43,11 @@ class SendProfile extends Component {
 					{/* address */}
 					<div class="address" style={{marginLeft:'12px'}}>
 					<h2
-						className="send-profile-identity-name font-medium"
+						className="send-profile-identity-name"
 						style={{
-							color: '#333333',
+							fontWeight: '600',
+							lineHeight: '24px',
+							color: '#1C1C28'
 						}}
 					>{identity && identity.name}</h2>
 					<div
@@ -54,7 +56,12 @@ class SendProfile extends Component {
 							color: '#333333',
 						}}
 					>
-						<div className="send-profile-address" style={{ lineHeight: '16px', fontSize: '14px' }}>
+						<div className="send-profile-address" style={{ 
+							fontSize: '14px',
+							fontWeight: '600',
+							lineHeight: '20px',
+							color: 'rgba(28, 28, 40, 0.26)',
+							}}>
 							{addressSummary(network, address)}
 						</div>
 					</div>
