@@ -158,6 +158,7 @@ class LedgerBridgeKeyring extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.unlock()
         .then((_) => {
+          console.log('Unlock success')
           const _txParams = {
             to: this._normalize(_tx.receiver),
             value: this._normalize(_tx.amount),
@@ -167,11 +168,14 @@ class LedgerBridgeKeyring extends EventEmitter {
             gasLimit: this._normalize(_tx.gas),
             gasPrice: this._normalize(_tx.gasPrice),
           }
+          console.log('Create params success')
 
           const tx = new Transaction(_txParams)
           tx.v = ethUtil.bufferToHex(tx.getChainId())
           tx.r = '0x00'
           tx.s = '0x00'
+
+          console.log('Create eth TX success')
 
           let hdPath
           if (this._isBIP44()) {
@@ -184,6 +188,8 @@ class LedgerBridgeKeyring extends EventEmitter {
             hdPath = this._toLedgerPath(this._pathFromAddress(address))
           }
 
+          console.log('HD Path: ', hdPath)
+
           this._sendMessage({
             action: 'ledger-sign-transaction',
             params: {
@@ -194,7 +200,7 @@ class LedgerBridgeKeyring extends EventEmitter {
           },
           ({ success, payload }) => {
             if (success) {
-
+              console.log('Sign Success')
               tx.v = Buffer.from(payload.v, 'hex')
               tx.r = Buffer.from(payload.r, 'hex')
               tx.s = Buffer.from(payload.s, 'hex')
