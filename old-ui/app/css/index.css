@@ -124,6 +124,8 @@ button, input[type="submit"] {
 
 .btn-green, input[type="submit"].btn-green {
   background: #60db97;
+  margin-left:10px;
+  flex:1;
 }
 
 .btn-red {

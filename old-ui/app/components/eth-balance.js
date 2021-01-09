@@ -76,12 +76,12 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
         'data-tip': '',
         'data-for': 'ethBalance',
       }, [
-        h('div',
-        {
-          style: totalAmount
-        },
-          'Total Amount'
-        ),
+        // h('div',
+        // {
+        //   style: totalAmount
+        // },
+        //   'Total Amount'
+        // ),
         h('div', {
           style: valueStyle,
         }, incoming ? `+${balance} KAI` : `${balance} KAI`)

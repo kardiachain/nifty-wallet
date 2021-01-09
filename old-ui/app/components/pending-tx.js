@@ -316,11 +316,8 @@ h('form#pending-tx-form', {
         style: {
           textAlign: 'center',
           position: 'absolute',
-          top: '25px',
-          background: 'rgba(255, 255, 255, 0.85)',
+          bottom: '-30%',
           width: '100%',
-          paddingLeft: '30px',
-          paddingRight: '30px',
         },
       }, [
         txMeta.simulationFails ?
