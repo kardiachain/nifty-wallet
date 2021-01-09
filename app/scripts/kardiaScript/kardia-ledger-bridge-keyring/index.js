@@ -180,7 +180,9 @@ class LedgerBridgeKeyring extends EventEmitter {
           let hdPath
           if (this._isBIP44()) {
             const checksummedAddress = ethUtil.toChecksumAddress(address)
+            console.log('checksummedAddress ', checksummedAddress)
             if (!Object.keys(this.accountIndexes).includes(checksummedAddress)) {
+              console.log('Checksum address not found')
               reject(new Error(`Ledger: Index for address '${checksummedAddress}' not found`))
             }
             hdPath = this._getPathForIndex(this.accountIndexes[checksummedAddress])
@@ -207,11 +209,14 @@ class LedgerBridgeKeyring extends EventEmitter {
 
               const valid = tx.verifySignature()
               if (valid) {
+                console.log('Verify signature success')
                 resolve(tx)
               } else {
+                console.log('Verify signature fail')
                 reject(new Error('Ledger: The transaction signature is not valid'))
               }
             } else {
+              console.log('Sign Fail')
               reject(new Error(payload.error || 'Ledger: Unknown error while signing transaction'))
             }
           })
