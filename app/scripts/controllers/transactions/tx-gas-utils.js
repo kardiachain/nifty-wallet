@@ -3,6 +3,7 @@ import { hexToBn, BnMultiplyByFraction, bnToHex } from '../../lib/util'
 import { addHexPrefix } from 'ethereumjs-util'
 import { MIN_GAS_LIMIT_HEX } from '../../../../ui/app/components/send/send.constants'
 import log from 'loglevel'
+import pify from 'pify'
 
 /**
 tx-gas-utils are gas utility methods for Transaction manager
@@ -22,8 +23,7 @@ export default class TxGasUtil {
     @returns {GasAnalysisResult} The result of the gas analysis
   */
   async analyzeGasUsage (txMeta) {
-    const block = await this.query.getBlockByNumber('latest', false)
-
+    const block = await pify(this.query.getBlockByNumber).call(this.query, 'latest')
     // fallback to block gasLimit
     const blockGasLimitBN = hexToBn(block.gasLimit)
     const saferGasLimitBN = BnMultiplyByFraction(blockGasLimitBN, 19, 20)
