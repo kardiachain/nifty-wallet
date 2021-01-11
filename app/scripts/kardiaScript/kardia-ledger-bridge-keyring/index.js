@@ -160,9 +160,22 @@ class LedgerBridgeKeyring extends EventEmitter {
 
   // tx is an instance of the ethereumjs-transaction class.
   signTransaction (address, _tx) {
+    let hdPath
+    if (this._isBIP44()) {
+      const checksummedAddress = ethUtil.toChecksumAddress(address)
+      console.log('checksummedAddress ', checksummedAddress)
+      if (!Object.keys(this.accountIndexes).includes(checksummedAddress)) {
+        console.log('Checksum address not found')
+        return Promise.reject(new Error(`Ledger: Index for address '${checksummedAddress}' not found`))
+      }
+      hdPath = this._getPathForIndex(this.accountIndexes[checksummedAddress])
+    } else {
+      hdPath = this._toLedgerPath(this._pathFromAddress(address))
+    }
+
+    console.log('HD Path: ', hdPath)
     return new Promise((resolve, reject) => {
-      // this.unlock(hdPath)
-      this.unlock()
+      this.unlock(hdPath)
         .then((add) => {
           const _txParams = {
             to: this._normalize(_tx.receiver),
@@ -185,21 +198,6 @@ class LedgerBridgeKeyring extends EventEmitter {
           tx.s = Buffer.from('0x00', 'hex')
 
           console.log('Create eth TX success')
-
-          let hdPath
-          if (this._isBIP44()) {
-            const checksummedAddress = ethUtil.toChecksumAddress(address)
-            console.log('checksummedAddress ', checksummedAddress)
-            if (!Object.keys(this.accountIndexes).includes(checksummedAddress)) {
-              console.log('Checksum address not found')
-              reject(new Error(`Ledger: Index for address '${checksummedAddress}' not found`))
-            }
-            hdPath = this._getPathForIndex(this.accountIndexes[checksummedAddress])
-          } else {
-            hdPath = this._toLedgerPath(this._pathFromAddress(address))
-          }
-
-          console.log('HD Path: ', hdPath)
 
           this._sendMessage({
             action: 'ledger-sign-transaction',
