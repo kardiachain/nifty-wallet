@@ -70,11 +70,16 @@ function AccountDetailScreen () {
 AccountDetailScreen.prototype.componentDidMount = function () {
   const props = this.props
   const { address, network, keyrings, identities } = props
-  this.txInterval = setInterval(() => {
+
+  const getTx = () => {
     const selected = props.address || Object.keys(props.accounts)[0]
     const checksumAddress = selected && toChecksumAddress(network, selected)
     props.actions.getKardiaTxHistory(checksumAddress)
-  }, 10000)
+  }
+
+  getTx()
+
+  this.txInterval = setInterval(getTx, 10000)
   props.actions.isCreatedWithCorrectDPath()
   .then(isCreatedWithCorrectDPath => {
     if (!isCreatedWithCorrectDPath) {
