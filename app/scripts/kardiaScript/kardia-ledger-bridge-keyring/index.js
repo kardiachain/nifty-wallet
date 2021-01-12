@@ -53,15 +53,14 @@ class LedgerBridgeKeyring extends EventEmitter {
 
     if (this._isBIP44()) {
       // Remove accounts that don't have corresponding account indexes
-      this.accounts = this.accounts
-        .filter((account) => Object.keys(this.accountIndexes).includes(ethUtil.toChecksumAddress(account)))
+      this.accounts = this.accounts.filter((account) => Object.keys(this.accountIndexes).includes(ethUtil.toChecksumAddress(account)))
     }
 
     return Promise.resolve()
   }
 
   isUnlocked () {
-    return Boolean(this.hdk && this.hdk.publicKey)
+    return !!(this.hdk && this.hdk.publicKey)
   }
 
   setAccountToUnlock (index) {
@@ -81,6 +80,7 @@ class LedgerBridgeKeyring extends EventEmitter {
       return Promise.resolve('already unlocked')
     }
     const path = hdPath ? this._toLedgerPath(hdPath) : this.hdPath
+    // const path = hdPath || this.hdPath
     return new Promise((resolve, reject) => {
       this._sendMessage({
         action: 'ledger-unlock',
@@ -90,8 +90,13 @@ class LedgerBridgeKeyring extends EventEmitter {
       },
       ({ success, payload }) => {
         if (success) {
+          console.log('Unlocked with path ', path)
+          console.log('Payload ', payload)
+          console.log('Unlocked account ', this.unlockedAccount)
           this.hdk.publicKey = Buffer.from(payload.publicKey, 'hex')
           this.hdk.chainCode = Buffer.from(payload.chainCode, 'hex')
+          console.log('Public key to address ', ethUtil.publicToAddress(this.hdk.publicKey, true).toString('hex'))
+          console.log('--------------')
           resolve(payload.address)
         } else {
           reject(payload.error || 'Unknown error')
@@ -172,8 +177,6 @@ class LedgerBridgeKeyring extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.unlock(hdPath)
         .then((add) => {
-          console.log('Unlock success for address ', add)
-          console.log('Same address ', add === address)
           const _txParams = {
             to: this._normalize(_tx.receiver),
             value: this._normalize(_tx.amount),
@@ -186,9 +189,13 @@ class LedgerBridgeKeyring extends EventEmitter {
           console.log('Create params success')
 
           const tx = new Transaction(_txParams)
-          tx.v = ethUtil.bufferToHex(tx.getChainId())
-          tx.r = '0x00'
-          tx.s = '0x00'
+          // tx.v = ethUtil.bufferToHex(tx.getChainId())
+          // tx.r = '0x00'
+          // tx.s = '0x00'
+
+          tx.v = Buffer.from('0x00', 'hex')
+          tx.r = Buffer.from('0x00', 'hex')
+          tx.s = Buffer.from('0x00', 'hex')
 
           console.log('Create eth TX success')
 
@@ -210,6 +217,7 @@ class LedgerBridgeKeyring extends EventEmitter {
               const valid = tx.verifySignature()
               if (valid) {
                 console.log('Verify signature success')
+                console.log(tx.serialize().toString('hex'))
                 resolve(tx)
               } else {
                 console.log('Verify signature fail')
@@ -347,7 +355,7 @@ class LedgerBridgeKeyring extends EventEmitter {
       const address = await this.unlock(path)
       const valid = this.implementFullBIP44 ? await this._hasPreviousTransactions(address) : true
       accounts.push({
-        address,
+        address: address,
         balance: null,
         index: i,
       })
@@ -368,7 +376,7 @@ class LedgerBridgeKeyring extends EventEmitter {
     for (let i = from; i < to; i++) {
       const address = this._addressFromIndex(pathBase, i)
       accounts.push({
-        address,
+        address: address,
         balance: null,
         index: i,
       })
@@ -378,7 +386,7 @@ class LedgerBridgeKeyring extends EventEmitter {
   }
 
   _padLeftEven (hex) {
-    return hex.length % 2 === 0 ? hex : `0${hex}`
+    return hex.length % 2 !== 0 ? `0${hex}` : hex
   }
 
   _normalize (buf) {
