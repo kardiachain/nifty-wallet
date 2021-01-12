@@ -64,11 +64,6 @@ const { LEDGER, TREZOR } = require('../../old-ui/app/components/connect-hardware
 const { getDPath, setDPath } = require('../../old-ui/app/util')
 const { GasPriceOracle } = require('gas-price-oracle')
 
-import {
-  PhishingController,
-} from 'gaba'
-// import KardiaQuery from './kardiaScript/kardia-query'
-
 const {
   KARDIA_MAINNET_CODE } = require('./controllers/network/enums')
 const accountsPerPage = 5
