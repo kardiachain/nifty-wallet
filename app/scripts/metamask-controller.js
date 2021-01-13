@@ -30,7 +30,6 @@ const CurrencyController = require('./controllers/currency')
 const NoticeController = require('./notice-controller')
 const ShapeShiftController = require('./controllers/shapeshift')
 const AddressBookController = require('./controllers/address-book')
-const InfuraController = require('./controllers/infura')
 const CachedBalancesController = require('./controllers/cached-balances')
 const RecentBlocksController = require('./controllers/recent-blocks')
 import MessageManager from './lib/message-manager'
@@ -63,11 +62,6 @@ const { importTypes } = require('../../old-ui/app/accounts/import/enums')
 const { LEDGER, TREZOR } = require('../../old-ui/app/components/connect-hardware/enum')
 const { getDPath, setDPath } = require('../../old-ui/app/util')
 const { GasPriceOracle } = require('gas-price-oracle')
-
-import {
-  PhishingController,
-} from 'gaba'
-// import KardiaQuery from './kardiaScript/kardia-query'
 
 const {
   KARDIA_MAINNET_CODE } = require('./controllers/network/enums')
