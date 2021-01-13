@@ -37,6 +37,7 @@ class ConfirmTxScreen extends Component {
     tokensToSend: PropTypes.objectOf(BigNumber),
     tokensTransferTo: PropTypes.string,
     txData: PropTypes.object,
+    txId: PropTypes.string,
   }
 
   render () {
@@ -123,7 +124,8 @@ class ConfirmTxScreen extends Component {
 
   sendTransaction (txData, event) {
     this.stopPropagation(event)
-    this.props.actions.updateAndApproveTx(txData)
+    // this.props.actions.updateAndApproveTx(txData)
+    this.props.actions.signKardiaTx(txData, this.props.txId)
     this._checkIfContractExecutionAndUnlockContract(txData)
   }
 
@@ -243,6 +245,15 @@ function warningIfExists (warning) {
 function mapStateToProps (state) {
   const { metamask, appState } = state
   const { screenParams, pendingTxIndex } = appState.currentView
+
+  let txId = ''
+
+  if (state.metamask.unapprovedTxs && Object.keys(state.metamask.unapprovedTxs).length > 0) {
+    const keyArr = Object.keys(state.metamask.unapprovedTxs)
+    const latestKey = keyArr[keyArr.length - 1]
+    txId = latestKey
+  }
+
   return {
     identities: metamask.identities,
     accounts: getMetaMaskAccounts(state),
@@ -265,7 +276,8 @@ function mapStateToProps (state) {
     tokensToSend: (screenParams && screenParams.tokensToSend),
     tokensTransferTo: (screenParams && screenParams.tokensTransferTo),
     isContractExecutionByUser: (screenParams && screenParams.isContractExecutionByUser),
-    txData: screenParams.txData ? screenParams.txData : {},
+    txData: screenParams && screenParams.txData ? screenParams.txData : {},
+    txId,
   }
 }
 
@@ -283,6 +295,7 @@ function mapDispatchToProps (dispatch) {
       cancelPersonalMsg: (msgData) => dispatch(actions.cancelPersonalMsg(msgData)),
       cancelTypedMsg: (msgData) => dispatch(actions.cancelTypedMsg(msgData)),
       showAccountDetail: (to) => dispatch(actions.showAccountDetail(to)),
+      signKardiaTx: (txData) => dispatch(actions.signKardiaTx(txData)),
     },
   }
 }

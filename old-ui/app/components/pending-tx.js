@@ -10,7 +10,6 @@ const util = require('../util')
 const MiniAccountPanel = require('./mini-account-panel')
 const Copyable = require('./copy/copyable')
 const KAIBalance = require('./eth-balance')
-const TokenBalance = require('./token-balance')
 const { addressSummary, accountSummary, toChecksumAddress } = util
 const nameForAddress = require('../../lib/contract-namer')
 const BNInput = require('./bn-as-decimal-input')
@@ -52,9 +51,10 @@ class PendingTx extends Component {
     tokensToSend: PropTypes.objectOf(BigNumber),
     tokensTransferTo: PropTypes.string,
     unapprovedTxs: PropTypes.object,
+    txId: PropTypes.string,
   }
 
-  constructor(opts = {}) {
+  constructor (opts = {}) {
     super()
     this.state = {
       valid: true,
@@ -72,7 +72,7 @@ class PendingTx extends Component {
     this.tokenInfoGetter = tokenInfoGetter()
   }
 
-  render() {
+  render () {
     const props = this.props
     if (props.isToken || this.state.isToken) {
       if (!this.state.token.dataRetrieved) return null
@@ -156,7 +156,7 @@ class PendingTx extends Component {
       fontWeight: 600,
       fontSize: '15px',
       lineHeight: '20px',
-      color: '#1C1C28'
+      color: '#1C1C28',
     }
 
 
@@ -177,7 +177,7 @@ class PendingTx extends Component {
             fontSize: '18px',
             lineHeight: '24px',
             color: '#1C1C28',
-            fontFamily: 'Work Sans, sans-serif'
+            fontFamily: 'Work Sans, sans-serif',
           },
 }, [
   !isNotification ? h('i.fa.fa-arrow-left.fa-lg.cursor-pointer', {
@@ -186,7 +186,7 @@ class PendingTx extends Component {
       position: 'absolute',
       left: '20px',
       width: '16px',
-      height: '16px'
+      height: '16px',
     },
   }) : null,
   'Confirm Transaction',
@@ -213,7 +213,7 @@ h('form#pending-tx-form', {
         boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
         borderRadius: '8px',
         padding: '12px',
-        marginBottom:'16px'
+        marginBottom: '16px',
       },
     }, [
 
@@ -263,7 +263,7 @@ h('form#pending-tx-form', {
             fontWeight: 600,
             fontSize: '15px',
             lineHeight: '20px',
-            color: '#1C1C28'
+            color: '#1C1C28',
           },
         }, accountSummary(identity.name, 6, 4)),
 
@@ -275,7 +275,7 @@ h('form#pending-tx-form', {
               fontWeight: 600,
               fontSize: '12px',
               lineHeight: '20px',
-              color: 'rgba(28, 28, 40, 0.26)'
+              color: 'rgba(28, 28, 40, 0.26)',
             },
           }, addressSummary(network, address, 6, 4, false)),
         ]),
@@ -479,7 +479,7 @@ h('form#pending-tx-form', {
       padding: '20px 16px',
       background: '#FFFFFF',
       boxShadow: '0px -4px 8px rgba(0, 0, 0, 0.1)',
-      borderRadius: '12px 12px 0px 0px'
+      borderRadius: '12px 12px 0px 0px',
     },
   }, [
     // h('button.btn-violet', {
@@ -504,8 +504,6 @@ h('form#pending-tx-form', {
         style: { marginLeft: '10px', flex: 1 },
         disabled: buyDisabled,
       }),
-
-   
   ]),
   showNavigation ? h('.flex-row.flex-space-around.conf-buttons', {
     style: {
@@ -523,7 +521,7 @@ h('form#pending-tx-form', {
     )
   }
 
-miniAccountPanelForRecipient(isToken, tokensTransferTo) {
+miniAccountPanelForRecipient (isToken, tokensTransferTo) {
   const props = this.props
   const txData = props.txData
   const txParams = txData.txParams || {}
@@ -533,8 +531,8 @@ miniAccountPanelForRecipient(isToken, tokensTransferTo) {
   if (!isContractDeploy) {
     return h('div', {
       style: {
-    display:'flex',
-    flexDirection:'column'        
+        display: 'flex',
+        flexDirection: 'column',
       },
     }, [
       h('span.font-pre-medium', {
@@ -542,7 +540,7 @@ miniAccountPanelForRecipient(isToken, tokensTransferTo) {
           fontWeight: 600,
           fontSize: '15px',
           lineHeight: '20px',
-          color: '#1C1C28'
+          color: '#1C1C28',
         },
       }, accountSummary(nameForAddress(to, props.identities, props.network)), 6, 4),
 
@@ -554,7 +552,7 @@ miniAccountPanelForRecipient(isToken, tokensTransferTo) {
             fontWeight: 600,
             fontSize: '12px',
             lineHeight: '20px',
-            color: 'rgba(28, 28, 40, 0.26)'
+            color: 'rgba(28, 28, 40, 0.26)',
           },
         }, addressSummary(props.network, to, 6, 4, false)),
       ]),
@@ -575,7 +573,7 @@ miniAccountPanelForRecipient(isToken, tokensTransferTo) {
   }
 }
 
-componentDidMount() {
+componentDidMount () {
   const txMeta = this.gatherTxMeta()
   const txParams = txMeta.txParams || {}
   if (this.props.isToken || this.state.isToken) {
@@ -587,7 +585,7 @@ componentDidMount() {
   }
 }
 
-componentWillUnmount() {
+componentWillUnmount () {
   this.setState({
     token: {
       address: emptyAddress,
@@ -612,7 +610,7 @@ updateTokenInfo = async function (txParams) {
   })
 }
 
-gasPriceChanged(newBN, valid) {
+gasPriceChanged (newBN, valid) {
   const txMeta = this.gatherTxMeta()
   // txMeta.txParams.gasPrice = '0x' + newBN.toString('hex')
   txMeta.txParams.gasPrice = newBN
@@ -622,7 +620,7 @@ gasPriceChanged(newBN, valid) {
   })
 }
 
-gasLimitChanged(newBN, valid) {
+gasLimitChanged (newBN, valid) {
   const txMeta = this.gatherTxMeta()
   // txMeta.txParams.gas = '0x' + newBN.toString('hex')
   txMeta.txParams.gas = newBN
@@ -632,7 +630,7 @@ gasLimitChanged(newBN, valid) {
   })
 }
 
-resetGasFields() {
+resetGasFields () {
 
   this.inputs.forEach((hexInput) => {
     if (hexInput) {
@@ -646,7 +644,7 @@ resetGasFields() {
   })
 }
 
-async onSubmit(event) {
+async onSubmit (event) {
   event.preventDefault()
   const txMeta = this.gatherTxMeta()
   const valid = this.checkValidity()
@@ -665,9 +663,9 @@ async onSubmit(event) {
     delete txMeta.txParams.value
 
     const txObj = txMeta.txParams
-    console.log('tx params ', txObj)
     try {
-      await this.props.actions.signKardiaTx(txObj)
+      console.log('Tx Id: ...........', this.props.txId)
+      await this.props.actions.signKardiaTx(txObj, this.props.txId)
     } catch (error) {
       this.props.actions.displayWarning(error)
     }
@@ -677,31 +675,32 @@ async onSubmit(event) {
   }
 }
 
-checkValidity() {
+checkValidity () {
   const form = this.getFormEl()
   const valid = form.checkValidity()
   return valid
 }
 
-getFormEl() {
+getFormEl () {
   const form = document.querySelector('form#pending-tx-form')
   // Stub out form for unit tests:
   if (!form) {
-    return { checkValidity() { return true } }
+    return { checkValidity () { return true } }
   }
   return form
 }
 
 // After a customizable state value has been updated,
-gatherTxMeta() {
+gatherTxMeta () {
   const props = this.props
   const state = this.state
+
   const txData = clone(state.txData) || clone(props.txData)
 
   return txData
 }
 
-verifyGasParams() {
+verifyGasParams () {
   // We call this in case the gas has not been modified at all
   if (!this.state) { return true }
   return (
@@ -710,28 +709,28 @@ verifyGasParams() {
   )
 }
 
-_notZeroOrEmptyString(str) {
+_notZeroOrEmptyString (str) {
   return str !== '' && str !== '0'
 }
 
-bnMultiplyByFraction(targetBN, numerator, denominator) {
+bnMultiplyByFraction (targetBN, numerator, denominator) {
   const numBN = new BN(numerator)
   const denomBN = new BN(denominator)
   return targetBN.mul(numBN).div(denomBN)
 }
 
-goHome(event) {
+goHome (event) {
   this.stopPropagation(event)
   this.props.actions.goHome()
 }
 
-stopPropagation(event) {
+stopPropagation (event) {
   if (event.stopPropagation) {
     event.stopPropagation()
   }
 }
 
-getNavigateTxData() {
+getNavigateTxData () {
   const { unapprovedTxs, network, txData: { id } = {} } = this.props
   const currentNetworkUnapprovedTxs = Object.keys(unapprovedTxs)
     .filter((key) => unapprovedTxs[key].metamaskNetworkId === network)
@@ -750,7 +749,7 @@ getNavigateTxData() {
 
 }
 
-function forwardCarrat() {
+function forwardCarrat () {
   return (
     h('img', {
       src: 'images/to.png',
@@ -761,10 +760,32 @@ function forwardCarrat() {
   )
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   const accounts = getMetaMaskAccounts(state)
   const { appState } = state
   const { screenParams } = appState.currentView
+
+  let latestParams = {}
+  let txId = ''
+
+  if (screenParams && screenParams.txData) {
+    latestParams = screenParams.txData
+  } else if (state.metamask.unapprovedTxs && Object.keys(state.metamask.unapprovedTxs).length > 0) {
+    const keyArr = Object.keys(state.metamask.unapprovedTxs)
+    const latestKey = keyArr[keyArr.length - 1]
+    latestParams = state.metamask.unapprovedTxs[latestKey].txParams
+    txId = latestKey
+    if (typeof latestParams.gas === 'string') {
+      latestParams.gas = new BN(parseInt(latestParams.gas, 16))
+    }
+    if (typeof latestParams.gasPrice === 'string') {
+      latestParams.gasPrice = new BN(parseInt(latestParams.gasPrice, 16))
+    }
+    if (typeof latestParams.value === 'string') {
+      latestParams.value = util.normalizeEthStringToWei((new BN(parseInt(latestParams.value, 16))).toString())
+    }
+  }
+
   return {
     identities: state.metamask.identities,
     accounts,
@@ -784,8 +805,9 @@ function mapStateToProps(state) {
     computedBalances: state.metamask.computedBalances,
     pendingTxIndex: state.appState.currentView.pendingTxIndex || 0,
     txData: {
-      txParams: screenParams && screenParams.txData ? screenParams.txData : {},
+      txParams: latestParams,
     },
+    txId,
     dPath: state.metamask.dPath,
   }
 }

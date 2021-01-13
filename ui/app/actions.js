@@ -69,6 +69,8 @@ const actions = {
   showNotice: showNotice,
   CLEAR_NOTICES: 'CLEAR_NOTICES',
   clearNotices: clearNotices,
+  CLEAR_UNAPPROVED_TX: 'CLEAR_UNAPPROVED_TX',
+  clearUnapprovedTx,
   markAccountsFound,
   // intialize screen
   CREATE_NEW_VAULT_IN_PROGRESS: 'CREATE_NEW_VAULT_IN_PROGRESS',
@@ -1247,20 +1249,34 @@ function updateTransaction (txData) {
   }
 }
 
-function signKardiaTx (txData) {
+function signKardiaTx (txData, txId) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
-    return new Promise((_, reject) => {
+    return new Promise((resolve, reject) => {
       background.signTransaction(txData, txData.from, (err, txHash) => {
         if (err) {
           reject(err)
         }
-        dispatch(actions.hideLoadingIndication())
-        dispatch(actions.goHome())
-        dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
-          window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
-        }))
+        resolve(txHash)
       })
+    }).then((txHash) => {
+      return new Promise((resolve, reject) => {
+        background.approveKardiaTransaction(txId, (err, response) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(txHash)
+        })
+      })
+    }).then((txHash) => {
+      return updateMetamaskStateFromBackground().then(() => Promise.resolve(txHash))
+    }).then((txHash) => {
+      dispatch(actions.hideLoadingIndication())
+      // dispatch(actions.clearSend())
+      dispatch(actions.goHome())
+      dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
+        window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
+      }))
     })
   }
 }
@@ -1321,6 +1337,12 @@ function completedTx (id) {
   return {
     type: actions.COMPLETED_TX,
     value: id,
+  }
+}
+
+function clearUnapprovedTx () {
+  return {
+    type: actions.CLEAR_UNAPPROVED_TX,
   }
 }
 

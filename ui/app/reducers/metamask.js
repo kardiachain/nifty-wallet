@@ -131,6 +131,15 @@ function reduceMetamask (state, action) {
       }
       return newState
 
+    case actions.CLEAR_UNAPPROVED_TX:
+      newState = extend(metamaskState, {
+        unapprovedTxs: {},
+        unapprovedMsgs: {},
+        unapprovedPersonalMsgs: {},
+        unapprovedTypedMessages: {},
+      })
+      return newState
+
     case actions.EDIT_TX:
       return extend(metamaskState, {
         send: {
