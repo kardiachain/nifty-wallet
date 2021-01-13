@@ -1728,7 +1728,6 @@ function showAccountsPage () {
 }
 
 function showConfTxPage (screenParams) {
-  console.log('here render')
   return {
     type: actions.SHOW_CONF_TX_PAGE,
     transForward: (screenParams.transForward || true),

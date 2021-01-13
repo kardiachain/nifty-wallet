@@ -36,9 +36,6 @@ Network.prototype.render = function () {
       h('i.fa.fa-caret-down'),
     ])
   } else {
-    console.log('rendering header')
-    console.log(networkNumber)
-    console.log(networks[networkNumber])
     if (networkNumber && networks[networkNumber]) {
       displayName = networks[networkNumber].displayNameDropdown
       hoverText = getNetworkDisplayName(networkNumber)

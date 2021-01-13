@@ -36,9 +36,6 @@ networks[KARDIA_MAINNET] = KARDIA_MAINNET_OBJ
 // networks[KARDIA_TESTNET] = KARDIA_TESTNET_OBJ
 
 const getNetworkDisplayName = key => {
-  console.log('key ', key)
-  console.log(networks[key])
-  console.log('------------------------------')
   return networks[key] ? networks[key].displayName : ''
 }
 
