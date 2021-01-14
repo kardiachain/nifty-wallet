@@ -212,6 +212,12 @@ class TransactionStateManager extends EventEmitter {
     this._saveTxList(txList)
   }
 
+  /**
+   * Clear txList
+   */
+  clearTx () {
+    this._saveTxList([])
+  }
 
   /**
     merges txParams obj onto txMeta.txParams

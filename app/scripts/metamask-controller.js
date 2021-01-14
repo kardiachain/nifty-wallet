@@ -30,7 +30,6 @@ const CurrencyController = require('./controllers/currency')
 const NoticeController = require('./notice-controller')
 const ShapeShiftController = require('./controllers/shapeshift')
 const AddressBookController = require('./controllers/address-book')
-const InfuraController = require('./controllers/infura')
 const CachedBalancesController = require('./controllers/cached-balances')
 const RecentBlocksController = require('./controllers/recent-blocks')
 import MessageManager from './lib/message-manager'
@@ -514,6 +513,7 @@ module.exports = class MetamaskController extends EventEmitter {
       getFilteredTxList: nodeify(txController.getFilteredTxList, txController),
       isNonceTaken: nodeify(txController.isNonceTaken, txController),
       estimateGas: nodeify(this.estimateGas, this),
+      approveKardiaTransaction: nodeify(txController.approveKardiaTransaction, txController),
 
       // messageManager
       signMessage: nodeify(this.signMessage, this),

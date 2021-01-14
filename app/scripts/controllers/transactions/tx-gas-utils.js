@@ -24,7 +24,6 @@ export default class TxGasUtil {
   */
   async analyzeGasUsage (txMeta) {
     const block = await pify(this.query.getBlockByNumber).call(this.query, 'latest')
-
     // fallback to block gasLimit
     const blockGasLimitBN = hexToBn(block.gasLimit)
     const saferGasLimitBN = BnMultiplyByFraction(blockGasLimitBN, 19, 20)

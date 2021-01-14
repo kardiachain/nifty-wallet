@@ -451,9 +451,7 @@ class KeyringController extends EventEmitter {
    */
 
   signTransaction (ethTx, _fromAddress, opts = {}) {
-    console.log('_fromAddress ', _fromAddress)
     const fromAddress = normalizeAddress(_fromAddress)
-    console.log('fromAddress ', fromAddress)
     return this.getKeyringForAccount(fromAddress)
       .then((keyring) => {
         return keyring.signTransaction(fromAddress, ethTx, opts)

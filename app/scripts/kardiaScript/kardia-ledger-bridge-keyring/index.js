@@ -153,7 +153,7 @@ class LedgerBridgeKeyring extends EventEmitter {
             to: this._normalize(_tx.receiver),
             value: this._normalize(_tx.amount),
             data: this._normalize(_tx.data),
-            // chainId: tx._chainId,
+            chainId: 0,
             nonce: this._normalize(_tx.nonce),
             gasLimit: this._normalize(_tx.gas),
             gasPrice: this._normalize(_tx.gasPrice),

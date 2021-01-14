@@ -218,17 +218,22 @@ class TransactionController extends EventEmitter {
   @returns {Promise<object>} resolves with txMeta
 */
   async addTxGasDefaults (txMeta) {
-    const txParams = txMeta.txParams
-    // ensure value
-    txParams.value = txParams.value ? ethUtil.addHexPrefix(txParams.value) : '0x0'
-    txMeta.gasPriceSpecified = Boolean(txParams.gasPrice)
-    let gasPrice = txParams.gasPrice
-    if (!gasPrice || gasPrice === '0x0') {
-      gasPrice = this.getGasPrice ? await this.getGasPrice() : await this.query.gasPrice()
+    try {
+      const txParams = txMeta.txParams
+      // ensure value
+      txParams.value = txParams.value ? ethUtil.addHexPrefix(txParams.value) : '0x0'
+      txMeta.gasPriceSpecified = Boolean(txParams.gasPrice)
+      let gasPrice = txParams.gasPrice
+      if (!gasPrice || gasPrice === '0x0') {
+        gasPrice = this.getGasPrice ? await this.getGasPrice() : await this.query.gasPrice()
+      }
+      txParams.gasPrice = ethUtil.addHexPrefix(gasPrice.toString(16))
+      // set gasLimit
+      return await this.txGasUtil.analyzeGasUsage(txMeta)
+      // return txMeta
+    } catch (error) {
+      console.log(error)
     }
-    txParams.gasPrice = ethUtil.addHexPrefix(gasPrice.toString(16))
-    // set gasLimit
-    return await this.txGasUtil.analyzeGasUsage(txMeta)
   }
 
   /**
@@ -303,6 +308,14 @@ class TransactionController extends EventEmitter {
     this.txStateManager.updateTx(txMeta, 'confTx: user approved transaction')
     const customNonce = txMeta.txParams.nonce
     await this.approveTransaction(txMeta.id, customNonce)
+  }
+
+  async approveKardiaTransaction (txId) {
+    if (txId) {
+      this.txStateManager.setTxStatusApproved(txId)
+    } else {
+      this.txStateManager.clearTx()
+    }
   }
 
   /**
