@@ -1,4 +1,4 @@
-const { EventEmitter } = require('events')
+const {EventEmitter} = require('events')
 const HDKey = require('hdkey')
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
@@ -7,14 +7,16 @@ const Transaction = require('ethereumjs-tx')
 const hdPathString = `m/44'/60'/0'`
 const type = 'Ledger Hardware'
 const BRIDGE_URL = 'https://vbaranov.github.io/eth-ledger-bridge-keyring'
-// const BRIDGE_URL = 'https://metamask.github.io/eth-ledger-bridge-keyring'
 const pathBase = 'm'
 const MAX_INDEX = 1000
 const NETWORK_API_URLS = {
-  ropsten: 'http://api-ropsten.etherscan.io',
-  kovan: 'http://api-kovan.etherscan.io',
-  rinkeby: 'https://api-rinkeby.etherscan.io',
-  mainnet: 'https://api.etherscan.io',
+  // ropsten: 'http://api-ropsten.etherscan.io',
+  // kovan: 'http://api-kovan.etherscan.io',
+  // rinkeby: 'https://api-rinkeby.etherscan.io',
+  // mainnet: 'https://api.etherscan.io',
+  // sokol: 'https://blockscout.com/poa/sokol/api',
+  // poa: 'https://blockscout.com/poa/core/api',
+  // xdai: 'https://blockscout.com/poa/dai/api',
 }
 
 class LedgerBridgeKeyring extends EventEmitter {
@@ -48,11 +50,18 @@ class LedgerBridgeKeyring extends EventEmitter {
     this.bridgeUrl = opts.bridgeUrl || BRIDGE_URL
     this.accounts = opts.accounts || []
     this.implementFullBIP44 = opts.implementFullBIP44 || false
+
+    if (this._isBIP44()) {
+      // Remove accounts that don't have corresponding account indexes
+      this.accounts = this.accounts
+        .filter((account) => Object.keys(this.accountIndexes).includes(ethUtil.toChecksumAddress(account)))
+    }
+
     return Promise.resolve()
   }
 
   isUnlocked () {
-    return !!(this.hdk && this.hdk.publicKey)
+    return Boolean(this.hdk && this.hdk.publicKey)
   }
 
   setAccountToUnlock (index) {
@@ -92,6 +101,7 @@ class LedgerBridgeKeyring extends EventEmitter {
   }
 
   addAccounts (n = 1) {
+
     return new Promise((resolve, reject) => {
       this.unlock()
         .then(async _ => {
@@ -145,27 +155,23 @@ class LedgerBridgeKeyring extends EventEmitter {
   }
 
   // tx is an instance of the ethereumjs-transaction class.
-  signTransaction (address, _tx) {
+  signTransaction (address, tx) {
     return new Promise((resolve, reject) => {
       this.unlock()
         .then(_ => {
-          const _txParams = {
-            to: this._normalize(_tx.receiver),
-            value: this._normalize(_tx.amount),
-            data: this._normalize(_tx.data),
+          const rawTx = new Transaction({
             chainId: 0,
-            nonce: this._normalize(_tx.nonce),
-            gasLimit: this._normalize(_tx.gas),
-            gasPrice: this._normalize(_tx.gasPrice),
-            v: Buffer.from('0x00', 'hex'),
-            r: Buffer.from('0x00', 'hex'),
-            s: Buffer.from('0x00', 'hex'),
-          }
+            to: this._normalize(tx.receiver),
+            value: this._normalize(tx.amount),
+            data: this._normalize(tx.data),
+            nonce: this._normalize(tx.nonce),
+            gasLimit: this._normalize(tx.gas),
+            gasPrice: this._normalize(tx.gasPrice),
+          })
 
-          const tx = new Transaction(_txParams)
-          tx.v = ethUtil.bufferToHex(tx.getChainId())
-          // tx.r = '0x00'
-          // tx.s = '0x00'
+          rawTx.v = ethUtil.bufferToHex(rawTx.getChainId()),
+          rawTx.r = '0x00',
+          rawTx.s = '0x00'
 
           let hdPath
           if (this._isBIP44()) {
@@ -173,28 +179,29 @@ class LedgerBridgeKeyring extends EventEmitter {
           } else {
             hdPath = this._toLedgerPath(this._pathFromAddress(address))
           }
-
+          console.log('Raw TX', rawTx.serialize().toString('hex'))
           this._sendMessage({
             action: 'ledger-sign-transaction',
             params: {
-              tx: tx.serialize().toString('hex'),
+              tx: rawTx.serialize().toString('hex'),
               hdPath,
             },
           },
           ({success, payload}) => {
             if (success) {
-              console.log('v from ledger ', Buffer.from(payload.v, 'hex'))
-              tx.v = Buffer.from(payload.v, 'hex')
-              tx.r = Buffer.from(payload.r, 'hex')
-              tx.s = Buffer.from(payload.s, 'hex')
-              console.log('Raw TX ', tx.serialize().toString('hex'))
-              const valid = tx.verifySignature()
+              console.log("TX SUCCESS")
+
+              rawTx.v = Buffer.from(payload.v, 'hex')
+              rawTx.r = Buffer.from(payload.r, 'hex')
+              rawTx.s = Buffer.from(payload.s, 'hex')
+
+              console.log('Raw Singed TX', ethUtil.bufferToHex(rawTx.v), rawTx.serialize().toString('hex'))
+              const valid = rawTx.verifySignature()
               if (valid) {
-                console.log('Verify signature success')
-                console.log(tx.serialize().toString('hex'))
-                resolve(tx)
+                console.log("Success to verfiy signature", payload.v, rawTx.v)
+                resolve(rawTx)
               } else {
-                console.log('Verify signature fail')
+                console.log("Failed to verfiy signature")
                 reject('The transaction signature is not valid')
               }
             } else {
@@ -291,7 +298,7 @@ class LedgerBridgeKeyring extends EventEmitter {
     msg.target = 'LEDGER-IFRAME'
     this.iframe.contentWindow.postMessage(msg, '*')
     window.addEventListener('message', ({ origin, data }) => {
-      // if (origin !== this._getOrigin()) return false
+      if (origin !== this._getOrigin()) return false
       if (data && data.action && data.action === `${msg.action}-reply`) {
         cb(data)
       }
@@ -317,9 +324,9 @@ class LedgerBridgeKeyring extends EventEmitter {
           }
           resolve(accounts)
         })
-        // .catch(e => {
-        //   reject(e)
-        // })
+        .catch(e => {
+          reject(e)
+        })
     })
   }
 

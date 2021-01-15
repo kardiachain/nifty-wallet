@@ -162,10 +162,10 @@ class TrezorKeyring extends EventEmitter {
           .then(status => {
             setTimeout(_ => {
               const _txParams = {
+                // chainId: 0,
                 to: this._normalize(tx.receiver),
                 value: this._normalize(tx.amount),
                 data: this._normalize(tx.data),
-                // chainId: tx._chainId,
                 nonce: this._normalize(tx.nonce),
                 gasLimit: this._normalize(tx.gas),
                 gasPrice: this._normalize(tx.gasPrice),
@@ -177,13 +177,7 @@ class TrezorKeyring extends EventEmitter {
                 if (response.success) {
 
                   const signedTx = new Transaction({
-                    to: this._normalize(tx.receiver),
-                    value: this._normalize(tx.amount),
-                    data: this._normalize(tx.data),
-                    // chainId: tx._chainId,
-                    nonce: this._normalize(tx.nonce),
-                    gasLimit: this._normalize(tx.gas),
-                    gasPrice: this._normalize(tx.gasPrice),
+                    _txParams,
                     v: response.payload.v,
                     r: response.payload.r,
                     s: response.payload.s,
