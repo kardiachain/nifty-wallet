@@ -66,6 +66,7 @@ class SimpleKeyring extends EventEmitter {
         nonce,
         tx.gasPrice,
         tx.gas,
+        tx.data,
       )
       const privKey = this.getPrivateKeyFor(address, opts)
       const signedTx = await kardiaCommon.sign(_tx, `0x${privKey.toString('hex')}`)
