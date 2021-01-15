@@ -494,7 +494,8 @@ h('form#pending-tx-form', {
 
     // Accept Button or Buy Button
     h('button.cancel.btn-red', {
-      onClick: props.actions.goHome,
+      // onClick: props.actions.goHome,
+      onClick: props.cancelAllTransactions,
     }, 'Reject'),
 
     insufficientBalance ? h('button.btn-green', { onClick: props.buyEth }, `Buy ${this.state.coinName}`) :
