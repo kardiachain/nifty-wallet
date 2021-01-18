@@ -35,6 +35,9 @@ Network.prototype.render = function () {
       }),
       h('i.fa.fa-caret-down'),
     ])
+  } else if (provider.type === 'rpc') {
+    displayName = 'Custom RPC'
+    hoverText = provider.rpcTarget
   } else {
     if (networkNumber && networks[networkNumber]) {
       displayName = networks[networkNumber].displayNameDropdown

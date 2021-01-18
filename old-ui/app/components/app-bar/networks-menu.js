@@ -204,32 +204,29 @@ class NetworksMenu extends Component {
       label = label.substr(0, 34) + '...'
     }
 
-    switch (rpcTarget) {
-      default:
-        return (
-          <DropdownMenuItem
-            key={rpcTarget}
-            onClick={() => props.setRpcTarget(rpcTarget)}
-            closeMenu={() => props.updateNetworksMenuOpenState(false)}
-            style={{
-              paddingLeft: '20px',
-              color: '#333333 !important',
-            }}
-          >
-            <div className="selected-network" />
-            <span className="custom-rpc">{label}</span>
-            <div
-              className="remove"
-              onClick={(event) => {
-                event.preventDefault()
-                event.stopPropagation()
-                props.updateNetworksMenuOpenState(false)
-                props.showDeleteRPC(label, true)
-              }}
-            />
-          </DropdownMenuItem>
-        )
-    }
+    return (
+      <DropdownMenuItem
+        key={rpcTarget}
+        onClick={() => props.setRpcTarget(rpcTarget)}
+        closeMenu={() => props.updateNetworksMenuOpenState(false)}
+        style={{
+          paddingLeft: '20px',
+          color: '#333333 !important',
+        }}
+      >
+        <div className="selected-network" />
+        <span className="custom-rpc">{label}</span>
+        <div
+          className="remove"
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            props.updateNetworksMenuOpenState(false)
+            props.showDeleteRPC(label, true)
+          }}
+        />
+      </DropdownMenuItem>
+    )
   }
 }
 
