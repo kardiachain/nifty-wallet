@@ -129,6 +129,7 @@ class PendingTx extends Component {
     const valueBn = txParams.value ? new BN(txParams.value) : new BN('0')
     const maxCost = txFeeBn.add(valueBn)
 
+    const txData = txParams.data
     // const dataLength = txParams.data ? (txParams.data.length - 2) / 2 : 0
 
     const { totalTx, positionOfCurrentTx, nextTxId, prevTxId, showNavigation } = this.getNavigateTxData()
@@ -458,6 +459,11 @@ h('form#pending-tx-form', {
           }),
         ]),
       ]),
+      // Transaction data
+      txData ? h('.cell.row', [
+        h('.cell.label', 'Data'),
+        h('.cell.label', txData),
+      ]) : null,
     ]), // End of Table
 
   ]),
@@ -528,8 +534,45 @@ miniAccountPanelForRecipient (isToken, tokensTransferTo) {
   const txParams = txData.txParams || {}
   const isContractDeploy = !('to' in txParams)
   const to = isToken ? tokensTransferTo : txParams.to
+  const isSmcCall = ('data' in txParams) && txParams.data
   // If it's not a contract deploy, send to the account
-  if (!isContractDeploy) {
+  if (isContractDeploy) {
+    return h(MiniAccountPanel, {
+      picOrder: 'right',
+    }, [
+
+      h('span.font-small', {
+        style: {
+          fontFamily: 'Nunito Bold',
+          color: '#333333',
+        },
+      }, 'New Contract'),
+
+    ])
+  } else if (isSmcCall) {
+    return h(MiniAccountPanel, {
+      picOrder: 'right',
+    }, [
+      h('span.font-small', {
+        style: {
+          fontFamily: 'Nunito Bold',
+          color: '#333333',
+        },
+      }, 'Smart Contract'),
+      h(Copyable, {
+        value: toChecksumAddress(props.network, to),
+      }, [
+        h('span.font-small', {
+          style: {
+            fontWeight: 600,
+            fontSize: '12px',
+            lineHeight: '20px',
+            color: 'rgba(28, 28, 40, 0.26)',
+          },
+        }, addressSummary(props.network, to, 6, 4, false)),
+      ]),
+    ])
+  } else {
     return h('div', {
       style: {
         display: 'flex',
@@ -557,19 +600,6 @@ miniAccountPanelForRecipient (isToken, tokensTransferTo) {
           },
         }, addressSummary(props.network, to, 6, 4, false)),
       ]),
-    ])
-  } else {
-    return h(MiniAccountPanel, {
-      picOrder: 'right',
-    }, [
-
-      h('span.font-small', {
-        style: {
-          fontFamily: 'Nunito Bold',
-          color: '#333333',
-        },
-      }, 'New Contract'),
-
     ])
   }
 }
