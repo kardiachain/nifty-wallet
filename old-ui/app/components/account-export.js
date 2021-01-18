@@ -59,7 +59,7 @@ ExportAccountView.prototype.render = function () {
                 marginTop: '30px',
               },
             }, warning),
-            h('input#exportAccount.sizing-input', {
+            h('input.large-input#exportAccount', {
               type: 'password',
               placeholder: 'Confirm Password',
               onKeyPress: this.onExportKeyPress.bind(this),
@@ -115,7 +115,7 @@ ExportAccountView.prototype.render = function () {
           fontFamily: 'Nunito Semibold',
         },
       }, 'Your private key'),
-      h('div.flex-row', [
+      h('div', [
         h('p', {
           style: {
             paddingTop: '25px',
@@ -126,14 +126,19 @@ ExportAccountView.prototype.render = function () {
             color: '#333333',
             textAlign: 'center',
             marginBottom: '0px',
+            wordBreak: 'break-word',
           },
         }, plainKey),
         h('div', {
             style: {
               paddingTop: '25px',
+              margin: '0 auto',
             },
           }, h(CopyButton, {
             value: accountDetail.privateKey,
+            style: {
+              display: 'block',
+            },
           }),
         ),
       ]),

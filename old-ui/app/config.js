@@ -103,7 +103,7 @@ class ConfigScreen extends Component {
         h('.flex-column.flex-justify-center.flex-grow.select-none', [
           h('.flex-space-around', {
             style: {
-              padding: '30px',
+              padding: '30px 5px',
               overflow: 'auto',
             },
           }, [
@@ -111,7 +111,7 @@ class ConfigScreen extends Component {
             this.currentProviderDisplay(metamaskState),
 
             h('div', { style: {display: 'flex'} }, [
-              h('input#new_rpc', {
+              h('input.large-input#new_rpc', {
                 placeholder: 'New RPC URL',
                 style: {
                   width: 'inherit',
