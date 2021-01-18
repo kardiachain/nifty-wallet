@@ -17,7 +17,7 @@ const { createSwappableProxy, createEventEmitterProxy } = require('swappable-obj
 const networks = { networkList: {} }
 const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
-  KARDIA_MAINNET_CHAINID,
+  KARDIA_MAINNET_CODE,
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
 import { RPC_ENDPOINT } from '../../../../constant'
@@ -132,7 +132,10 @@ module.exports = class NetworkController extends EventEmitter {
     // ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
     const currentNetwork = this.getNetworkState()
     if (initialNetwork === currentNetwork) {
-      this.setNetworkState(KARDIA_MAINNET_CHAINID, type)
+      console.log('here ---------')
+      console.log(initialNetwork)
+      console.log(currentNetwork)
+      this.setNetworkState(KARDIA_MAINNET_CODE, type)
     }
     // })
   }
