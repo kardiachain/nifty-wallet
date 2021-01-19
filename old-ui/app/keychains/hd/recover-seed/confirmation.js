@@ -32,7 +32,6 @@ RevealSeedConfirmation.prototype.render = function () {
 
       h('h3.flex-center.section-title', {
         style: {
-          background: '#ffffff',
           color: '#333333',
           width: '100%',
           fontSize: '16px',
