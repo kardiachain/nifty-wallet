@@ -2,7 +2,8 @@ const {EventEmitter} = require('events')
 const HDKey = require('hdkey')
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
-const Transaction = require('ethereumjs-tx')
+// const Transaction = require('ethereumjs-tx')
+const Transaction = require('../kardia-tx')
 
 const hdPathString = `m/44'/60'/0'`
 const type = 'Ledger Hardware'
@@ -160,18 +161,13 @@ class LedgerBridgeKeyring extends EventEmitter {
       this.unlock()
         .then(_ => {
           const rawTx = new Transaction({
-            chainId: 0,
+            nonce: this._normalize(tx.nonce),
+            gasPrice: this._normalize(tx.gasPrice),
+            gasLimit: this._normalize(tx.gas),
             to: this._normalize(tx.receiver),
             value: this._normalize(tx.amount),
             data: this._normalize(tx.data),
-            nonce: this._normalize(tx.nonce),
-            gasLimit: this._normalize(tx.gas),
-            gasPrice: this._normalize(tx.gasPrice),
           })
-
-          rawTx.v = ethUtil.bufferToHex(rawTx.getChainId()),
-          rawTx.r = '0x00',
-          rawTx.s = '0x00'
 
           let hdPath
           if (this._isBIP44()) {
@@ -183,7 +179,7 @@ class LedgerBridgeKeyring extends EventEmitter {
           this._sendMessage({
             action: 'ledger-sign-transaction',
             params: {
-              tx: rawTx.serialize().toString('hex'),
+              tx: rawTx.kardiaSerialize().toString('hex'),
               hdPath,
             },
           },
@@ -195,13 +191,10 @@ class LedgerBridgeKeyring extends EventEmitter {
               rawTx.r = Buffer.from(payload.r, 'hex')
               rawTx.s = Buffer.from(payload.s, 'hex')
 
-              console.log('Raw Singed TX', ethUtil.bufferToHex(rawTx.v), rawTx.serialize().toString('hex'))
               const valid = rawTx.verifySignature()
               if (valid) {
-                console.log("Success to verfiy signature", payload.v, rawTx.v)
                 resolve(rawTx)
               } else {
-                console.log("Failed to verfiy signature")
                 reject('The transaction signature is not valid')
               }
             } else {
