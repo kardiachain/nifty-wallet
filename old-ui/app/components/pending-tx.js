@@ -813,7 +813,7 @@ function mapStateToProps (state) {
       latestParams.gasPrice = new BN(parseInt(latestParams.gasPrice, 16))
     }
     if (typeof latestParams.value === 'string') {
-      latestParams.value = util.normalizeEthStringToWei((new BN(parseInt(latestParams.value, 16))).toString())
+      latestParams.value = new BN(latestParams.value.replace('0x', ''), 16)
     }
   }
 
