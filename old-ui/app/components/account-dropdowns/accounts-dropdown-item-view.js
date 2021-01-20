@@ -65,7 +65,7 @@ class AccountsDropdownItemView extends Component {
         onClick={() => this.accountOnClick(keyring, address)}
         style={{
           padding: '12px',
-          display:'flex'
+          display: 'flex',
         }}
       >
         {leftBorder}
