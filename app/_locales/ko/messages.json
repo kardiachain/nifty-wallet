@@ -510,7 +510,7 @@
     "message": "계정 가져오기"
   },
   "importDen": {
-    "message": "기존의 DEN 가져오기"
+    "message": "기존의 Seed Phrase 가져오기"
   },
   "imported": {
     "message": "가져온 계정",

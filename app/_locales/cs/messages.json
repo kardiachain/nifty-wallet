@@ -190,7 +190,7 @@
     "message": "Výchozí síť pro Etherové transakce je Main Net."
   },
   "denExplainer": {
-    "message": "Váš DEN je heslem šifrované uložiště v KardiaChain Walletu."
+    "message": "Váš Seed Phrase je heslem šifrované uložiště v KardiaChain Walletu."
   },
   "deposit": {
     "message": "Vklad"
@@ -251,7 +251,7 @@
     "message": "Napište nám e-mail!"
   },
   "encryptNewDen": {
-    "message": "Zašifrujte svůj nový DEN"
+    "message": "Zašifrujte svůj nový Seed Phrase"
   },
   "enterPassword": {
     "message": "Zadejte heslo"
@@ -378,7 +378,7 @@
     "message": "Import účtu"
   },
   "importDen": {
-    "message": "Import existujícího DEN"
+    "message": "Import existujícího Seed Phrase"
   },
   "imported": {
     "message": "Importováno",
