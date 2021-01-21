@@ -84,7 +84,7 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
         // ),
         h('div', {
           style: valueStyle,
-        }, incoming ? `+${balance} KAI` : `${balance} KAI`)
+        }, incoming === true ? `+${balance} KAI` : (incoming === false ? `-${balance} KAI` : `${balance} KAI`)),
       ]),
     ]))
 }

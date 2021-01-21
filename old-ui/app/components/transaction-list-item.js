@@ -31,6 +31,8 @@ function TransactionListItem () {
 
 TransactionListItem.prototype.render = function () {
   const { transaction, network, conversionRate, currentCurrency } = this.props
+  const yourAddress = this.props.address
+  const incoming = this.props.address.toLowerCase() === transaction.to.toLowerCase()
   const { status } = transaction
   if (transaction.key === 'shapeshift') {
     if (Number(network) === KARDIA_MAINNET_CODE) return h(ShiftListItem, transaction)
@@ -44,12 +46,12 @@ TransactionListItem.prototype.render = function () {
   const isMsg = ('msgParams' in transaction)
   const isTx = (transaction.contractAddress === '0x')
   const isPending = status === 'unapproved'
-  let txParams
-  if (isTx) {
-    txParams = transaction
-  } else if (isMsg) {
-    txParams = transaction.msgParams
-  }
+  const txParams = transaction
+  // if (isTx) {
+  //   txParams = transaction
+  // } else if (isMsg) {
+  //   txParams = transaction.msgParams
+  // }
 
   // const nonce = txParams.nonce ? numberToBN(txParams.nonce).toString(10) : ''
 
@@ -96,7 +98,7 @@ TransactionListItem.prototype.render = function () {
           },
         }, [
           h('div.flex-row', [
-            recipientField(txParams, transaction, isTx, isMsg, network),
+            recipientField(txParams, transaction, isTx, isMsg, network, yourAddress),
           ]),
           h('div', {
             style: {
@@ -105,20 +107,20 @@ TransactionListItem.prototype.render = function () {
             },
           }, date),
         ]),
-
-        isTx ? h(EthBalance, {
+        h(EthBalance, {
           valueStyle,
           dimStyle,
-          value: txParams.value,
+          value: txParams.value ? txParams.value : 0,
           conversionRate,
           currentCurrency,
           width: '55px',
           shorten: true,
           showFiat: false,
           network,
+          incoming: incoming,
           style: {
           },
-        }) : h('.flex-column'),
+        }),
       ]),
     ])
   )
@@ -129,18 +131,19 @@ TransactionListItem.prototype.resubmit = function () {
   this.props.retryTransaction(transaction.id)
 }
 
-function recipientField (txParams, transaction, isTx, isMsg, network) {
-  let message
+function recipientField (txParams, transaction, isTx, isMsg, network, yourAddress) {
+  const message = addressSummary(network, transaction.hash)
+  // console.log('Address', this.props.address)
 
-  if (isMsg) {
-    message = 'Signature Requested'
-  // } else if (txParams.to) {
-  } else if (transaction.to) {
-    // message = addressSummary(network, txParams.to)
-    message = addressSummary(network, transaction.to)
-  } else {
-    message = 'Contract Deployment'
-  }
+  // if (transaction.to === '0x' && transaction.toName === '') {
+  //   message = 'Contract creation'
+  // // } else if (txParams.to) {
+  // } else if (transaction.to) {
+  //   // message = addressSummary(network, txParams.to)
+  //   message = addressSummary(network, transaction.to)
+  // } else {
+  //   message = 'Contract Deployment'
+  // }
 
   return h('div', {
     style: {
@@ -148,7 +151,8 @@ function recipientField (txParams, transaction, isTx, isMsg, network) {
       color: '#333333',
     },
   }, [
-    h('span', (!transaction.to ? {style: {whiteSpace: 'nowrap'}} : null), message),
+    h('span', (!transaction.hash ? {style: {whiteSpace: 'nowrap'}} : null), message),
+    // h('span', (!transaction.hash ? {style: {whiteSpace: 'nowrap'}} : null), transaction.hash),
     // Places a copy button if tx is successful, else places a placeholder empty div.
     transaction.hash ? h(CopyButton, { value: transaction.hash, display: 'inline' }) : h('div', {style: { display: 'flex', alignItems: 'center', width: '26px' }}),
     renderErrorOrWarning(transaction, network),

@@ -13,7 +13,7 @@ function TransactionList () {
 }
 
 TransactionList.prototype.render = function () {
-  const { transactions, network, conversionRate } = this.props
+  const { transactions, network, conversionRate, address } = this.props
 
 
   const txsToRender = transactions
@@ -62,6 +62,7 @@ TransactionList.prototype.render = function () {
               showTx: (txId) => {
                 this.props.viewPendingTx(txId)
               },
+              address,
             })
           })
         : h('.flex-center.full-flex-height', {
