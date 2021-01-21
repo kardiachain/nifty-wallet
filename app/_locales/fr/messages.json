@@ -274,7 +274,7 @@
     "message": "Le réseau par défaut pour les transactions Ether est le \"Réseau principal Ethereum\"."
   },
   "denExplainer": {
-    "message": "Votre DEN est votre stockage crypté par mot de passe dans KardiaChain Wallet."
+    "message": "Votre Seed Phrase est votre stockage crypté par mot de passe dans KardiaChain Wallet."
   },
   "deposit": {
     "message": "Déposer"
@@ -344,7 +344,7 @@
     "message": "Envoyez-nous un email !"
   },
   "encryptNewDen": {
-    "message": "Chiffrer votre nouveau DEN"
+    "message": "Chiffrer votre nouveau Seed Phrase"
   },
   "ensNameNotFound": {
     "message": "Nom ENS inconnu"
@@ -507,7 +507,7 @@
     "message": "Importer un compte"
   },
   "importDen": {
-    "message": "Importer DEN existant"
+    "message": "Importer Seed Phrase existant"
   },
   "imported": {
     "message": "Importé",

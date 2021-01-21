@@ -178,7 +178,7 @@
     "message": "Privzeto omrežje za transakcije je Main Net."
   },
   "denExplainer": {
-    "message": "DEN je vaša šifrirana shramba v KardiaChain Walletu."
+    "message": "Seed Phrase je vaša šifrirana shramba v KardiaChain Walletu."
   },
   "deposit": {
     "message": "Vplačaj"
@@ -236,7 +236,7 @@
     "message": "Pišite nam!"
   },
   "encryptNewDen": {
-    "message": "Šifrirajte DEN"
+    "message": "Šifrirajte Seed Phrase"
   },
   "enterPassword": {
     "message": "Vpišite geslo"
@@ -357,7 +357,7 @@
     "message": "Uvozi račun"
   },
   "importDen": {
-    "message": "Uvozi DEN"
+    "message": "Uvozi Seed Phrase"
   },
   "imported": {
     "message": "Uvoženo",

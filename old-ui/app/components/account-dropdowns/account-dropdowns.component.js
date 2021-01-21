@@ -209,7 +209,9 @@ class AccountDropdowns extends Component {
     // const { selected, network } = this.props
     // const networkCode = parseInt(network, 10)
     // const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
-    const url = 'https://explorer.kardiachain.io'
+    const { selected, network } = this.props
+    const checkSumAddress = selected && toChecksumAddress(network, selected)
+    const url = `https://explorer.kardiachain.io/address/${checkSumAddress}`
     // global.platform.openWindow({ url })
     window.open(url)
   }

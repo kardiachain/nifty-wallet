@@ -187,7 +187,7 @@
     "message": "Das Standardnetzwerk für Ether Transaktionen ist das Main Net."
   },
   "denExplainer": {
-    "message": "Dein DEN ist dein passwortverschlüsselter Speicher innerhalb von KardiaChain Wallet."
+    "message": "Dein Seed Phrase ist dein passwortverschlüsselter Speicher innerhalb von KardiaChain Wallet."
   },
   "deposit": {
     "message": "Einzahlen"
@@ -248,7 +248,7 @@
     "message": "Schreib uns eine Mail!"
   },
   "encryptNewDen": {
-    "message": "Verschlüssele deine neue DEN"
+    "message": "Verschlüssele deine neue Seed Phrase"
   },
   "enterPassword": {
     "message": "Passwort eingeben"
@@ -375,7 +375,7 @@
     "message": "Einen Account importieren"
   },
   "importDen": {
-    "message": "Vorhandenes DEN importieren"
+    "message": "Vorhandenes Seed Phrase importieren"
   },
   "imported": {
     "message": "Importiert",

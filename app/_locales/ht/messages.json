@@ -238,7 +238,7 @@
         "message": "Dfo rezo a pou tranzaksyon Ether se Mainnet."
     },
     "denExplainer": {
-        "message": "DEN ou se depo modpas avèk chif ou nan KardiaChain Wallet."
+        "message": "Seed Phrase ou se depo modpas avèk chif ou nan KardiaChain Wallet."
     },
     "deposit": {
         "message": "Depo"
@@ -308,7 +308,7 @@
         "message": "Imèl nou!"
     },
     "encryptNewDen": {
-        "message": "Ankripte nouvo DEN ou"
+        "message": "Ankripte nouvo Seed Phrase ou"
     },
     "ensNameNotFound": {
         "message": "Nou pa jwenn non ENS ou a"
@@ -480,7 +480,7 @@
         "message": "Pòte yon kont"
     },
     "importDen": {
-        "message": "Pòte ki deja egziste DEN"
+        "message": "Pòte ki deja egziste Seed Phrase"
     },
     "imported": {
         "message": "Pòte",

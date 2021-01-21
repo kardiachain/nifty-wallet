@@ -277,7 +277,7 @@
     "message": "La rete predefinita per transazioni in Ether è la Rete Ethereum Principale."
   },
   "denExplainer": {
-    "message": "Il DEN è il tuo archivio crittato con password dentro KardiaChain Wallet."
+    "message": "Il Seed Phrase è il tuo archivio crittato con password dentro KardiaChain Wallet."
   },
   "deposit": {
     "message": "Deposita"
@@ -347,7 +347,7 @@
     "message": "Mandaci una mail!"
   },
   "encryptNewDen": {
-    "message": "Cripta il tuo nuovo DEN"
+    "message": "Cripta il tuo nuovo Seed Phrase"
   },
   "ensNameNotFound": {
     "message": "Nome ENS non trovato"
@@ -513,7 +513,7 @@
     "message": "Importa un account"
   },
   "importDen": {
-    "message": "Importa un DEN Esistente"
+    "message": "Importa un Seed Phrase Esistente"
   },
   "imported": {
     "message": "Importato",
