@@ -79,7 +79,7 @@ TransactionListItem.prototype.render = function () {
         event.stopPropagation()
         if (!transaction.hash || !isLinkable) return
         const url = `${EXPLORER_ENDPOINT}/tx/${transaction.hash}`
-        global.platform.openWindow({ url })
+        window.open(url)
       },
       style: {
         padding: '15px 0 5px 0',
