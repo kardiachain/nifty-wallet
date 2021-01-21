@@ -58,7 +58,8 @@ class ToastComponent extends Component {
 			<div
 				className={classnames('toast', this._getClass(this.props.type))}
 				onClick={(e) => {
-					this.props.onClick ? this.props.onClick() : this.props.hideToast()
+					this.props.onClick && this.props.onClick()
+					this.props.hideToast()
 				}}
 			>{toastMsg}</div>
 		) : null

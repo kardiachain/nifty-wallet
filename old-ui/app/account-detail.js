@@ -139,6 +139,7 @@ AccountDetailScreen.prototype.render = function () {
       h(Toast.ToastComponent, {
         type: Toast.TOAST_TYPE_ERROR,
         hideManually: true,
+        hideToast: true,
       }),
 
     // identicon, label, balance, etc
