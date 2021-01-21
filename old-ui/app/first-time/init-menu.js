@@ -70,6 +70,7 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
 
         h(Tooltip, {
           title: 'Your Seed Phrase is your password-encrypted storage within KardiaChain Wallet.',
+          position: 'top',
           id: 'initMenu',
         },
 

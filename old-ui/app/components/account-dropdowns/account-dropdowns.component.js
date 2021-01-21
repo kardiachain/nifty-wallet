@@ -11,6 +11,7 @@ import { getFullABI } from '../../accounts/import/helpers'
 import log from 'loglevel'
 import Web3 from 'web3'
 import { AccountsDropdownItemView } from './accounts-dropdown-item-view'
+import { EXPLORER_ENDPOINT } from '../../../../constant'
 
 class AccountsDropdownItemWrapper extends DropdownMenuItem {
   render () {
@@ -211,7 +212,7 @@ class AccountDropdowns extends Component {
     // const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
     const { selected, network } = this.props
     const checkSumAddress = selected && toChecksumAddress(network, selected)
-    const url = `https://explorer.kardiachain.io/address/${checkSumAddress}`
+    const url = `${EXPLORER_ENDPOINT}/address/${checkSumAddress}`
     // global.platform.openWindow({ url })
     window.open(url)
   }
