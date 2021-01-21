@@ -462,7 +462,13 @@ h('form#pending-tx-form', {
       // Transaction data
       txData ? h('.cell.row', [
         h('.cell.label', 'Data'),
-        h('.cell.label', txData),
+        h('.cell.label', {
+          style: {
+            overflowX: 'auto',
+            width: '50%',
+            textAlign: 'right',
+          },
+        }, txData),
       ]) : null,
     ]), // End of Table
 
