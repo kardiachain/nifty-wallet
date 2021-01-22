@@ -231,14 +231,23 @@ function currentTxView (opts) {
 }
 
 function warningIfExists (warning) {
-  if (warning &&
+  console.log('Warning ', warning)
+  if (!warning) return;
+  let message = ''
+  if (typeof warning === 'string') {
+    message = warning
+  } else if (warning.data && warning.data.message) {
+    message = warning.data.message
+  }
+
+  if (message &&
      // Do not display user rejections on this screen:
-     warning.indexOf('User denied transaction signature') === -1) {
+     message.indexOf('User denied transaction signature') === -1) {
     return h('.error', {
       style: {
         margin: 'auto',
       },
-    }, warning)
+    }, message)
   }
 }
 
