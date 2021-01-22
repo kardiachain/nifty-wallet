@@ -1253,11 +1253,27 @@ function signKardiaTx (txData, txId) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
-      background.signTransaction(txData, txData.from, (err, txHash) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(txHash)
+      if (txData.nonce) {
+        resolve()
+      } else {
+        global.kardiaQuery.getTransactionCount(txData.from, (err, data) => {
+          if (err) {
+            console.error(err)
+            dispatch(actions.displayWarning(err.message))
+            return reject(err)
+          }
+          txData.nonce = data
+          resolve(data)
+        })
+      }
+    }).then(() => {
+      return new Promise((resolve, reject) => {
+        background.signTransaction(txData, txData.from, (err, txHash) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(txHash)
+        })
       })
     }).then((txHash) => {
       return new Promise((resolve, reject) => {
