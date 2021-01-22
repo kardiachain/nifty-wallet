@@ -168,7 +168,7 @@ class TrezorKeyring extends EventEmitter {
                 data: this._normalize(tx.data),
                 nonce: this._normalize(tx.nonce),
                 gasLimit: this._normalize(tx.gas),
-                gasPrice: this._normalize(tx.gasPrice),
+                gasPrice: this._normalize(tx.gasPrice ? Number(tx.gasPrice) * 10 ** 9 : 10 ** 9),
               }
               TrezorConnect.ethereumSignTransaction({
                 path: this._pathFromAddress(address),
