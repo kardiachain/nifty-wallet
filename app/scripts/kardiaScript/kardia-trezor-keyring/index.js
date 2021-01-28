@@ -157,12 +157,12 @@ class TrezorKeyring extends EventEmitter {
 
   // tx is an instance of the ethereumjs-transaction class.
   signTransaction (address, tx) {
+    console.log('tx ', tx)
       return new Promise((resolve, reject) => {
         this.unlock()
           .then(status => {
             setTimeout(_ => {
               const _txParams = {
-                // chainId: 0,
                 to: this._normalize(tx.receiver),
                 value: this._normalize(tx.amount),
                 data: this._normalize(tx.data),
@@ -170,18 +170,17 @@ class TrezorKeyring extends EventEmitter {
                 gasLimit: this._normalize(tx.gas),
                 gasPrice: this._normalize(tx.gasPrice ? Number(tx.gasPrice) * 10 ** 9 : 10 ** 9),
               }
+              console.log('_txParams ', _txParams)
               TrezorConnect.ethereumSignTransaction({
                 path: this._pathFromAddress(address),
                 transaction: _txParams,
               }).then(response => {
                 if (response.success) {
 
-                  const signedTx = new Transaction({
-                    _txParams,
-                    v: response.payload.v,
-                    r: response.payload.r,
-                    s: response.payload.s,
-                  })
+                  const signedTx = new Transaction(_txParams)
+                  signedTx.v = response.payload.v
+                  signedTx.r = response.payload.r
+                  signedTx.s = response.payload.s
 
                   const addressSignedWith = ethUtil.toChecksumAddress(`0x${signedTx.from.toString('hex')}`)
                   const correctAddress = ethUtil.toChecksumAddress(address)
