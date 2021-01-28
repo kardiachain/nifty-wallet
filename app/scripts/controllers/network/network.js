@@ -132,7 +132,6 @@ module.exports = class NetworkController extends EventEmitter {
     // ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
     const currentNetwork = this.getNetworkState()
     if (initialNetwork === currentNetwork) {
-      console.log('here ---------')
       console.log(initialNetwork)
       console.log(currentNetwork)
       this.setNetworkState(KARDIA_MAINNET_CODE, type)
