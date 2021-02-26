@@ -389,7 +389,7 @@ function setupController (initState, initLangCode) {
         const url = new URL(remotePort.sender.url)
         const origin = url.hostname
 
-        remotePort.onMessage.addListener((msg) => {
+        remotePort.onMessage.addListener((msg, sender, sendResponse) => {
           if (msg.data && msg.data.method === 'eth_requestAccounts') {
             requestAccountTabIds[origin] = tabId
           }

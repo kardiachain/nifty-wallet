@@ -288,7 +288,6 @@ export default class PermissionsLogController {
               acc[method] = { lastApproved: time }
             }
           }
-
           return acc
         }, {})
     }

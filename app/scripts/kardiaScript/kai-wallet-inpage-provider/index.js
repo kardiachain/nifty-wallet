@@ -226,6 +226,9 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
     }
 
     return new Promise((resolve, reject) => {
+      console.log('------------------------------------------')
+      console.log('method ', method)
+      console.log('params ', params)
       this._rpcRequest(
         { method, params },
         getRpcPromiseCallback(resolve, reject),
@@ -478,7 +481,6 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
    * @returns {unknown} - The method result, or a JSON RPC response object.
    */
   send (methodOrPayload, callbackOrArgs) {
-
     if (!this._state.sentWarnings.send) {
       log.warn(messages.warnings.sendDeprecation)
       this._state.sentWarnings.send = true

@@ -112,6 +112,12 @@ class TransactionController extends EventEmitter {
           reject(err)
         }
         resolve(txHash)
+        // Object.values(this.getConnections()).forEach((origin) => {
+        //   Object.values(origin).forEach((conn) => {
+        //     console.log('conn: ', conn)
+        //     conn.engine && conn.engine.emit('notification', txHash)
+        //   })
+        // })
       })
     })
   }

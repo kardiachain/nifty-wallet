@@ -1250,7 +1250,7 @@ function updateTransaction (txData) {
 }
 
 function signKardiaTx (txData, txId) {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
       if (txData.nonce) {
@@ -1293,6 +1293,7 @@ function signKardiaTx (txData, txId) {
       dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
         window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
       }))
+      return Promise.resolve(txHash)
     })
   }
 }

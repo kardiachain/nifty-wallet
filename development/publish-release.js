@@ -47,9 +47,7 @@ async function publishRelease () {
       draft: true,
     }),
   }).then(async function (response) {
-    console.log('response: ' + response)
     releaseId = JSON.parse(response).id
-    console.log(`releaseId: ${releaseId}`)
 
     return uploadAsset(`./builds/niftywallet-chrome-${VERSION}.zip`, `niftywallet-chrome-${VERSION}.zip`, releaseId)
       .then(() => {

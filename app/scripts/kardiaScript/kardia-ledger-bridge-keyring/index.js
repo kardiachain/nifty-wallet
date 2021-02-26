@@ -185,7 +185,6 @@ class LedgerBridgeKeyring extends EventEmitter {
           },
           ({success, payload}) => {
             if (success) {
-              console.log("TX SUCCESS")
 
               rawTx.v = Buffer.from(payload.v, 'hex')
               rawTx.r = Buffer.from(payload.r, 'hex')
