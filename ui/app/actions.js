@@ -1285,15 +1285,19 @@ function signKardiaTx (txData, txId) {
         })
       })
     }).then((txHash) => {
-      return updateMetamaskStateFromBackground().then(() => Promise.resolve(txHash))
+      return updateMetamaskStateFromBackground()
+        .then(newState => dispatch(actions.updateMetamaskState(newState)))
+        .then(() => Promise.resolve(txHash))
     }).then((txHash) => {
+      dispatch(actions.clearSend())
+      dispatch(actions.completedTx(txHash))
       dispatch(actions.hideLoadingIndication())
-      // dispatch(actions.clearSend())
+      // dispatch(actions.closeCurrentNotificationWindow())
       dispatch(actions.goHome())
       dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
         window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
       }))
-      return Promise.resolve(txHash)
+      return txHash
     })
   }
 }

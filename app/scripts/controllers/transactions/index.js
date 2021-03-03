@@ -391,9 +391,9 @@ class TransactionController extends EventEmitter {
   /** sign and send raw Tx */
   async signAndSendRawTx (tx, address) {
     const rs = await this.signEthTx(tx, address)
-    console.log('Raw TX: ', rs)
     const rawTransaction = rs.rawTransaction ? rs.rawTransaction : rs.serialize().toString('hex')
     const txHash = await this.sendRawTx(rawTransaction)
+    this.emit(`tx:status-update`, txHash, 'kai_confirmed')
     return txHash
   }
 

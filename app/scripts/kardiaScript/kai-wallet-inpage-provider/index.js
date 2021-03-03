@@ -144,6 +144,7 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
 
     // json rpc notification listener
     jsonRpcConnection.events.on('notification', (payload) => {
+      console.log('payload', payload)
       if (payload.method === 'wallet_accountsChanged') {
         this._handleAccountsChanged(payload.result)
       } else if (EMITTED_NOTIFICATIONS.includes(payload.method)) {
@@ -226,9 +227,6 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
     }
 
     return new Promise((resolve, reject) => {
-      console.log('------------------------------------------')
-      console.log('method ', method)
-      console.log('params ', params)
       this._rpcRequest(
         { method, params },
         getRpcPromiseCallback(resolve, reject),
@@ -260,9 +258,9 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
    * @param {boolean} [isInternal=false] - Whether the request is internal.
    */
   _rpcRequest (payload, callback, isInternal = false) {
-
+    console.log('payload.method 1', payload.method)
     let cb = callback
-
+    console.log(payload)
     if (!Array.isArray(payload)) {
 
       if (!payload.jsonrpc) {
@@ -290,6 +288,7 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
         }
       }
     }
+    
     this.rpcEngine.handle(payload, cb)
   }
 

@@ -248,6 +248,9 @@ module.exports = class MetamaskController extends EventEmitter {
       if (status === 'confirmed' || status === 'failed') {
         const txMeta = this.txController.txStateManager.getTx(txId)
         this.platform.showTransactionNotification(txMeta)
+      } else if (status === 'kai_confirmed') {
+        console.log('txId ', txId)
+        console.log('status ', status)
       }
     })
 
