@@ -5,7 +5,7 @@ const { getTokenAddressFromTokenObject } = require('./util')
 const {
   calcGasTotal,
   calcTokenBalance,
-  estimateGas,
+  // estimateGas,
 } = require('./components/send/send.utils')
 const ethUtil = require('ethereumjs-util')
 const { fetchLocale } = require('../i18n-helper')

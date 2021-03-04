@@ -7,6 +7,7 @@ import copyToClipboard from 'copy-to-clipboard'
 import { connect } from 'react-redux'
 import { countSignificantDecimals, toChecksumAddress } from '../util'
 import actions from '../../../ui/app/actions'
+import { getRawBalanceOf } from '../../../ui/app/token-util'
 const { MAINNET_CODE } = require('../../../app/scripts/controllers/network/enums')
 
 const tokenCellDropDownPrefix = 'token-cell_dropdown_'
@@ -23,6 +24,7 @@ class TokenCell extends Component {
     userAddress: PropTypes.string,
     menuToTop: PropTypes.bool,
     removeToken: PropTypes.func,
+    decimals: PropTypes.number,
   }
 
   constructor () {
@@ -30,15 +32,25 @@ class TokenCell extends Component {
 
     this.state = {
       optionsMenuActive: false,
+      balanceString: '0.0',
     }
     this.optionsMenuToggleClassName = 'token-dropdown'
   }
 
-  render () {
-    const { address, symbol, string, network, userAddress, isLastTokenCell, menuToTop, ind } = this.props
-    const { optionsMenuActive } = this.state
+  async componentDidMount () {
+    console.log('alo anh binh gold day phai khong ah')
+    const { address, userAddress } = this.props
+    const balance = await getRawBalanceOf(userAddress, address)
+    this.setState({
+      balanceString: (balance / Math.pow(10, this.props.decimals)).toString(),
+    })
+  }
 
-    const tokenBalanceRaw = Number.parseFloat(string)
+  render () {
+    const { address, symbol, network, userAddress, isLastTokenCell, menuToTop, ind } = this.props
+    const { optionsMenuActive, balanceString } = this.state
+
+    const tokenBalanceRaw = Number.parseFloat(balanceString || '0.0')
     const tokenBalance = tokenBalanceRaw.toFixed(countSignificantDecimals(tokenBalanceRaw, 2))
 
     return (

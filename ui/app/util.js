@@ -1,5 +1,6 @@
 const abi = require('human-standard-token-abi')
 const ethUtil = require('ethereumjs-util')
+const {getKRC20ContractAtAddress} = require('./krc20')
 const hexToBn = require('../../app/scripts/lib/hex-to-bn')
 const vreme = new (require('vreme'))()
 
@@ -54,6 +55,7 @@ module.exports = {
   getTxFeeBn,
   shortenBalance,
   getContractAtAddress,
+  getKardiaContract,
   exportAsFile: exportAsFile,
   isInvalidChecksumAddress,
   allNull,
@@ -269,6 +271,10 @@ function getTxFeeBn (gas, gasPrice = MIN_GAS_PRICE_BN.toString(16), blockGasLimi
 
 function getContractAtAddress (tokenAddress) {
   return global.eth.contract(abi).at(tokenAddress)
+}
+
+async function getKardiaContract (tokenAddress) {
+  return await getKRC20ContractAtAddress(tokenAddress)
 }
 
 function exportAsFile (filename, data, type = 'text/csv') {
