@@ -1054,15 +1054,19 @@ function updateGasData ({
     .then(estimateGasPrice => {
       return Promise.all([
         Promise.resolve(estimateGasPrice),
-        estimateGas({
-          estimateGasMethod: background.estimateGas,
-          blockGasLimit,
-          selectedAddress,
-          selectedToken,
-          to,
-          value,
-          estimateGasPrice,
-          data,
+        new Promise((resolve, reject) => {
+          const txParams = {
+            data,
+            value,
+            to,
+            gasPrice: estimateGasPrice,
+            // gasLimit: blockGasLimit,
+          }
+          background.estimateGas(txParams, (err, data) => {
+            if (err) return reject(err)
+            console.log('success estimateGas', data)
+            return resolve(data)
+          })
         }),
       ])
     })
