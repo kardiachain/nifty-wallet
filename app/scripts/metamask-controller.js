@@ -1472,6 +1472,12 @@ module.exports = class MetamaskController extends EventEmitter {
 
   estimateGas (estimateGasParams) {
     return new Promise((resolve, reject) => {
+      if (ethUtil.isHexString(estimateGasParams.value)) {
+        estimateGasParams.value = Number(estimateGasParams.value)
+      }
+      if (ethUtil.isHexString(estimateGasParams.gasPrice)) {
+        estimateGasParams.gasPrice = Number(estimateGasParams.gasPrice)
+      }
       return this.txController.txGasUtil.query.estimateGas(estimateGasParams, (err, res) => {
         if (err) {
           return reject(err)

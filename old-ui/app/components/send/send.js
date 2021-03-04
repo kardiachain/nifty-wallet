@@ -101,7 +101,7 @@ class SendTransactionScreen extends PersistentForm {
           />
 
           <button style={{
-            height:'100%'
+            height: '100%',
           }}
             onClick={this.onSubmit.bind(this)}>
               Next
@@ -182,10 +182,8 @@ class SendTransactionScreen extends PersistentForm {
   }
 
   onSubmit () {
-    console.log('start send tx')
     const state = this.state || {}
     let recipient = state.recipient || document.querySelector('input[name="address"]').value.replace(/^[.\s]+|[.\s]+$/g, '')
-    console.log('recipient ', recipient)
     let nickname = state.nickname || ' '
     if (typeof recipient === 'object') {
       if (recipient.toAddress) {
@@ -196,7 +194,6 @@ class SendTransactionScreen extends PersistentForm {
       }
     }
     const input = document.querySelector('input[name="amount"]').value
-    console.log('input ', input)
     const parts = input.split('.')
 
     let message
@@ -215,7 +212,6 @@ class SendTransactionScreen extends PersistentForm {
     }
 
     const value = normalizeEthStringToWei(input)
-    console.log('value ', value)
     const txData = document.querySelector('input[name="txData"]').value
     const txCustomNonce = document.querySelector('input[name="txCustomNonce"]').value
     const balance = this.props.balance

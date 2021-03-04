@@ -701,7 +701,6 @@ async onSubmit (event) {
 
     const txObj = txMeta.txParams
     try {
-      console.log('Tx Id: ...........', this.props.txId)
       await this.props.actions.signKardiaTx(txObj, this.props.txId)
     } catch (error) {
       this.props.actions.displayWarning(error)
