@@ -7,7 +7,8 @@ import createInflightMiddleware from 'eth-json-rpc-middleware/inflight-cache'
 import createBlockTrackerInspectorMiddleware from 'eth-json-rpc-middleware/block-tracker-inspector'
 import providerFromMiddleware from 'eth-json-rpc-middleware/providerFromMiddleware'
 import createInfuraMiddleware from 'eth-json-rpc-infura'
-import BlockTracker from 'eth-block-tracker'
+// import BlockTracker from 'eth-block-tracker'
+import BlockTracker from '../../kardiaScript/kardia-block-tracker/kardia-block-tracker'
 
 export default createInfuraClient
 

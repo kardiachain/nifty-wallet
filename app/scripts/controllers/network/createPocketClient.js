@@ -7,7 +7,8 @@ const createInflightMiddleware = require('eth-json-rpc-middleware/inflight-cache
 const createBlockTrackerInspectorMiddleware = require('eth-json-rpc-middleware/block-tracker-inspector')
 const providerFromMiddleware = require('eth-json-rpc-middleware/providerFromMiddleware')
 const createPocketMiddleware = require('json-rpc-pocket')
-const BlockTracker = require('eth-block-tracker')
+// const BlockTracker = require('eth-block-tracker')
+const BlockTracker = require('../../kardiaScript/kardia-block-tracker/kardia-block-tracker')
 const { getNetworkID } = require('../../../../old-ui/app/util')
 const devid = 'DEVVGQ8VfHgBBet8CyowHcN'
 

@@ -72,7 +72,7 @@ export async function getRawBalanceOf (address, tokenAddress) {
     const result = await token.balanceOf(address)
     // const decimalsBN = result[0]
     const decimalsBN = result
-    return decimalsBN && decimalsBN.toString()
+    return decimalsBN && decimalsBN.toLocaleString('fullwide', {useGrouping: false})
   } catch (error) {
     log.warn(`balanceOf() call for token at address ${tokenAddress} resulted in error:`, error)
   }

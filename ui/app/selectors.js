@@ -11,6 +11,8 @@ import {
 import {
   calcGasTotal,
 } from './components/send/send.utils'
+import { getRawBalanceOf } from './token-util'
+// import BigNumber from 'bignumber.js'
 
 const selectors = {
   getSelectedAddress,
@@ -277,9 +279,20 @@ function getSendTokenAddress (state) {
 
 function getSendTokenContract (state) {
   const sendTokenAddress = getSendTokenAddress(state)
-  return sendTokenAddress
-    ? global.eth.contract(abi).at(sendTokenAddress)
-    : null
+  if (!sendTokenAddress) return null
+  const contractInstance = global.eth.contract(abi).at(sendTokenAddress)
+
+  // Overide query
+  contractInstance.query = global.kardiaQuery
+  // Overide balanceOf function
+  contractInstance.balanceOf = async (address) => {
+    const balance = await getRawBalanceOf(address, sendTokenAddress)
+    return {
+      balance,
+    }
+  }
+
+  return contractInstance
 }
 
 function getTokenBalance (state) {

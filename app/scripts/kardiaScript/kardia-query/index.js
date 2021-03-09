@@ -19,7 +19,8 @@ KardiaQuery.prototype.getCode = generateFnWithDefaultBlockFor(2, 'account_getCod
 // KardiaQuery.prototype.getTransactionCount = generateFnWithDefaultBlockFor(2, 'account_nonce')
 KardiaQuery.prototype.getTransactionCount = generateFnFor('account_nonce')
 KardiaQuery.prototype.getStorageAt = generateFnWithDefaultBlockFor(3, 'eth_getStorageAt')
-KardiaQuery.prototype.call = generateFnWithDefaultBlockFor(2, 'eth_call')
+// KardiaQuery.prototype.call = generateFnWithDefaultBlockFor(2, 'eth_call')
+KardiaQuery.prototype.call = generateFnWithDefaultBlockFor(2, 'kai_kardiaCall')
 // standard
 KardiaQuery.prototype.protocolVersion = generateFnFor('eth_protocolVersion')
 KardiaQuery.prototype.syncing = generateFnFor('eth_syncing')
@@ -43,7 +44,8 @@ KardiaQuery.prototype.getBlockByNumber = generateFnFor('kai_getBlockByNumber')
 KardiaQuery.prototype.getTransactionByHash = generateFnFor('tx_getTransaction')
 KardiaQuery.prototype.getTransactionByBlockHashAndIndex = generateFnFor('eth_getTransactionByBlockHashAndIndex')
 KardiaQuery.prototype.getTransactionByBlockNumberAndIndex = generateFnFor('eth_getTransactionByBlockNumberAndIndex')
-KardiaQuery.prototype.getTransactionReceipt = generateFnFor('eth_getTransactionReceipt')
+// KardiaQuery.prototype.getTransactionReceipt = generateFnFor('eth_getTransactionReceipt')
+KardiaQuery.prototype.getTransactionReceipt = generateFnFor('tx_getTransactionReceipt')
 KardiaQuery.prototype.getUncleByBlockHashAndIndex = generateFnFor('eth_getUncleByBlockHashAndIndex')
 KardiaQuery.prototype.getUncleByBlockNumberAndIndex = generateFnFor('eth_getUncleByBlockNumberAndIndex')
 KardiaQuery.prototype.getCompilers = generateFnFor('eth_getCompilers')
@@ -65,8 +67,11 @@ KardiaQuery.prototype.submitHashrate = generateFnFor('eth_submitHashrate')
 
 KardiaQuery.prototype.sendAsync = function (opts, cb) {
   const self = this
-  self.currentProvider.sendAsync(createPayload(opts), function (err, response) {
-    if (!err && response.error) err = new Error('KardiaQuery - RPC Error - ' + response.error.message)
+  const payload = createPayload(opts)
+  self.currentProvider.sendAsync(payload, function (err, response) {
+    if (!err && response.error) {
+      err = new Error('KardiaQuery - RPC Error - ' + response.error.message)
+    }
     if (err) return cb(err)
     cb(null, response.result)
   })

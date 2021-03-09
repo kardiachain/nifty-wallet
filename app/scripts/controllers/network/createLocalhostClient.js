@@ -4,7 +4,8 @@ import createBlockRefRewriteMiddleware from 'eth-json-rpc-middleware/block-ref-r
 import createBlockTrackerInspectorMiddleware from 'eth-json-rpc-middleware/block-tracker-inspector'
 import createAsyncMiddleware from 'json-rpc-engine/src/createAsyncMiddleware'
 import providerFromMiddleware from 'eth-json-rpc-middleware/providerFromMiddleware'
-import BlockTracker from 'eth-block-tracker'
+// import BlockTracker from 'eth-block-tracker'
+import BlockTracker from '../../kardiaScript/kardia-block-tracker/kardia-block-tracker'
 
 const inTest = process.env.IN_TEST === 'true'
 

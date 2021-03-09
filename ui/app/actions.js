@@ -21,6 +21,8 @@ const { hasUnconfirmedTransactions } = require('./helpers/confirm-transaction/ut
 const WebcamUtils = require('../lib/webcam-utils')
 import { getEnvironmentType } from '../../app/scripts/lib/util'
 import { API_ENDPOINT, EXPLORER_ENDPOINT } from '../../constant'
+// import KardiaContract from '../../app/scripts/kardiaScript/kai-contract'
+const sleep = require('./util').sleep
 
 const actions = {
   _setBackgroundConnection: _setBackgroundConnection,
@@ -1064,7 +1066,6 @@ function updateGasData ({
           }
           background.estimateGas(txParams, (err, data) => {
             if (err) return reject(err)
-            console.log('success estimateGas', data)
             return resolve(data)
           })
         }),
@@ -1124,7 +1125,7 @@ function updateSendTokenBalance ({
     return tokenBalancePromise
       .then(usersToken => {
         if (usersToken) {
-          const newTokenBalance = calcTokenBalance({ sendToken, usersToken })
+          const newTokenBalance = calcTokenBalance({ selectedToken: sendToken, usersToken })
           dispatch(setSendTokenBalance(newTokenBalance.toString(10)))
         }
       })
@@ -1215,7 +1216,11 @@ function clearSend () {
 function signTokenTx (tokenAddress, toAddress, amount, txData, confTxScreenParams) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
-    const token = global.eth.contract(abi).at(tokenAddress)
+    const token = global.eth.contract(abi, '', {
+        'gas': Number(900000).toString(16),
+        'gasPrice': '0x1',
+        'value': '0x0',
+      }).at(tokenAddress)
     token.transfer(toAddress, ethUtil.addHexPrefix(amount), txData)
       .catch(err => {
         dispatch(actions.hideLoadingIndication())
@@ -1253,51 +1258,143 @@ function updateTransaction (txData) {
   }
 }
 
-function signKardiaTx (txData, txId) {
-  return (dispatch) => {
-    dispatch(actions.showLoadingIndication())
+async function signKardiaTxUtil (txData, txId, waitUntilMined) {
+  const getNonceWrapper = async () => {
     return new Promise((resolve, reject) => {
       if (txData.nonce) {
         resolve()
       } else {
         global.kardiaQuery.getTransactionCount(txData.from, (err, data) => {
           if (err) {
-            console.error(err)
-            dispatch(actions.displayWarning(err.message))
             return reject(err)
           }
-          txData.nonce = data
+          // txData.nonce = data
           resolve(data)
         })
       }
-    }).then(() => {
-      return new Promise((resolve, reject) => {
-        background.signTransaction(txData, txData.from, (err, txHash) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(txHash)
-        })
-      })
-    }).then((txHash) => {
-      return new Promise((resolve, reject) => {
-        background.approveKardiaTransaction(txId, (err, response) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(txHash)
-        })
-      })
-    }).then((txHash) => {
-      return updateMetamaskStateFromBackground().then(() => Promise.resolve(txHash))
-    }).then((txHash) => {
-      dispatch(actions.hideLoadingIndication())
-      // dispatch(actions.clearSend())
-      dispatch(actions.goHome())
-      dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
-        window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
-      }))
     })
+  }
+
+  const signWrapper = async (_txData) => {
+    return new Promise((resolve, reject) => {
+      background.signTransaction(_txData, _txData.from, (err, txHash) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(txHash)
+      })
+    })
+  }
+
+  const getTxReceiptWrapper = async (_txHash) => {
+    return new Promise((resolve, reject) => {
+      global.kardiaQuery.getTransactionReceipt(_txHash, (err, txData) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(txData)
+      })
+    })
+  }
+
+  const approveWrapper = (_txId) => {
+    return new Promise((resolve, reject) => {
+      background.approveKardiaTransaction(_txId, (err, response) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(true)
+      })
+    })
+  }
+
+  const _nonce = await getNonceWrapper()
+  txData.nonce = _nonce
+
+  const txHash = await signWrapper(txData)
+  const approved = await approveWrapper(txId)
+
+  if (approved === true) {
+    await updateMetamaskStateFromBackground()
+  }
+
+  if (!waitUntilMined) return txHash
+  const _waitTimeOut = 10000
+  const breakTimeout = Date.now() + _waitTimeOut
+  while (Date.now() < breakTimeout) {
+    try {
+      const receipt = await getTxReceiptWrapper(txHash)
+      if (receipt) {
+        return txHash
+      } else {
+        await sleep(1000)
+      }
+    } catch (err) {
+      await sleep(1000)
+    }
+  }
+  return txHash
+}
+
+function signKardiaTx (txData, txId) {
+  return (dispatch) => {
+    dispatch(actions.showLoadingIndication())
+    return signKardiaTxUtil(txData, txId, true)
+      .then((txHash) => {
+        dispatch(actions.hideLoadingIndication())
+        // dispatch(actions.clearSend())
+        dispatch(actions.goHome())
+        dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
+          window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
+        }))
+      })
+      .catch((err) => {
+        dispatch(actions.displayWarning(err.message))
+        return Promise.reject(err)
+      })
+    // return new Promise((resolve, reject) => {
+    //   if (txData.nonce) {
+    //     resolve()
+    //   } else {
+    //     global.kardiaQuery.getTransactionCount(txData.from, (err, data) => {
+    //       if (err) {
+    //         console.error(err)
+    //         dispatch(actions.displayWarning(err.message))
+    //         return reject(err)
+    //       }
+    //       txData.nonce = data
+    //       resolve(data)
+    //     })
+    //   }
+    // }).then(() => {
+    //   return new Promise((resolve, reject) => {
+    //     console.log('start sign')
+    //     background.signTransaction(txData, txData.from, (err, txHash) => {
+    //       if (err) {
+    //         reject(err)
+    //       }
+    //       resolve(txHash)
+    //     })
+    //   })
+    // }).then((txHash) => {
+    //   return new Promise((resolve, reject) => {
+    //     background.approveKardiaTransaction(txId, (err, response) => {
+    //       if (err) {
+    //         reject(err)
+    //       }
+    //       resolve(txHash)
+    //     })
+    //   })
+    // }).then((txHash) => {
+    //   return updateMetamaskStateFromBackground().then(() => Promise.resolve(txHash))
+    // }).then((txHash) => {
+    //   dispatch(actions.hideLoadingIndication())
+    //   // dispatch(actions.clearSend())
+    //   dispatch(actions.goHome())
+    //   dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
+    //     window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
+    //   }))
+    // })
   }
 }
 

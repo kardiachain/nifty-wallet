@@ -62,6 +62,7 @@ module.exports = {
   getTokenAddressFromTokenObject,
   checksumAddress,
   addressSlicer,
+  sleep,
 }
 
 function valuesFor (obj) {
@@ -275,6 +276,10 @@ function getContractAtAddress (tokenAddress) {
 
 async function getKardiaContract (tokenAddress) {
   return await getKRC20ContractAtAddress(tokenAddress)
+}
+
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 function exportAsFile (filename, data, type = 'text/csv') {

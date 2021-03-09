@@ -133,7 +133,6 @@ TransactionListItem.prototype.resubmit = function () {
 
 function recipientField (txParams, transaction, isTx, isMsg, network, yourAddress) {
   const message = addressSummary(network, transaction.hash)
-  // console.log('Address', this.props.address)
 
   // if (transaction.to === '0x' && transaction.toName === '') {
   //   message = 'Contract creation'

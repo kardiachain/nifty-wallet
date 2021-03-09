@@ -231,8 +231,7 @@ function currentTxView (opts) {
 }
 
 function warningIfExists (warning) {
-  console.log('Warning ', warning)
-  if (!warning) return;
+  if (!warning) return
   let message = ''
   if (typeof warning === 'string') {
     message = warning

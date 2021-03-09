@@ -64,12 +64,12 @@ function TokenList () {
 
 TokenList.prototype.render = function () {
   const state = this.state
-  const { isLoading, error } = state
+  // const { isLoading, error } = state
+  const { error } = state
   const { userAddress, network, tokens } = this.props
-
-  if (isLoading) {
-    return this.message('Loading...')
-  }
+  // if (isLoading) {
+  //   return this.message('Loading...')
+  // }
 
   if (error) {
     log.error(error)
@@ -96,7 +96,7 @@ TokenList.prototype.render = function () {
   const tokensFromCurrentNetwork = tokens.filter(token => (parseInt(token.network) === parseInt(network) || !token.network))
 
   const tokenViews = tokensFromCurrentNetwork.map((tokenData, ind) => {
-    tokenData.userAddress = userAddress
+    // tokenData.userAddress = userAddress
     const isLastTokenCell = ind === (tokensFromCurrentNetwork.length - 1)
     const menuToTop = true
     return h(TokenCell, {
@@ -167,7 +167,7 @@ TokenList.prototype.renderTokenStatusBar = function () {
         justifyContent: 'space-between',
         alignItems: 'center',
         minHeight: '70px',
-        padding: '30px 30px 10px',
+        // padding: '30px 30px 10px',
       },
     }, [
       h('span', msg),
@@ -259,7 +259,6 @@ TokenList.prototype.componentDidUpdate = function (nextProps) {
     userAddress: newAddress,
     tokens: newTokens,
   } = nextProps
-
   const isLoading = newNet === 'loading'
   const missingInfo = !oldNet || !newNet || !oldAddress || !newAddress
   const sameUserAndNetwork = oldAddress === newAddress && oldNet === newNet

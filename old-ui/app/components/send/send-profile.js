@@ -19,7 +19,7 @@ class SendProfile extends Component {
 		token: PropTypes.any,
 	}
 
-	render() {
+	render () {
 		const props = this.props
 		const {
 			address,
@@ -33,7 +33,7 @@ class SendProfile extends Component {
 		} = props
 		return (
 			<div className="account-data-subsection">
-				<div style={{display:'flex'}}>
+				<div style={{display: 'flex'}}>
 					<div
 						className="identicon-wrapper flex-column flex-center select-none"
 					>
@@ -41,13 +41,13 @@ class SendProfile extends Component {
 					</div>
 
 					{/* address */}
-					<div class="address" style={{marginLeft:'12px'}}>
+					<div className="address" style={{marginLeft: '12px'}}>
 					<h2
 						className="send-profile-identity-name"
 						style={{
 							fontWeight: '600',
 							lineHeight: '24px',
-							color: '#1C1C28'
+							color: '#1C1C28',
 						}}
 					>{identity && identity.name}</h2>
 					<div
@@ -56,7 +56,7 @@ class SendProfile extends Component {
 							color: '#333333',
 						}}
 					>
-						<div className="send-profile-address" style={{ 
+						<div className="send-profile-address" style={{
 							fontSize: '14px',
 							fontWeight: '600',
 							lineHeight: '20px',
@@ -71,14 +71,14 @@ class SendProfile extends Component {
 				</div>
 
 				{/* balance */}
-				<div 
+				<div
 				style={{
 					background: '#FFFFFF',
 					boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
 					borderRadius: '8px',
 					padding: '12px',
 					display: 'flex',
-					margin: '16px 0px'
+					margin: '16px 0px',
 				}}
 				>
 					{isToken ? <TokenBalance token={token} /> : <EthBalance {...{
@@ -93,7 +93,7 @@ class SendProfile extends Component {
 	}
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
 	const accounts = getMetaMaskAccounts(state)
 	const result = {
 		address: state.metamask.selectedAddress,
