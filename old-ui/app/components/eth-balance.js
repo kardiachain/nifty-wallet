@@ -47,21 +47,21 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
     balance = balanceObj.balance
   }
 
-  const { label } = balanceObj
+  // const { label } = balanceObj
   const valueStyle = props.valueStyle ? props.valueStyle : {
     width: '100%',
     fontWeight: '600',
   }
-  const dimStyle = props.dimStyle ? props.dimStyle : {
-    marginLeft: '5px',
-  }
+  // const dimStyle = props.dimStyle ? props.dimStyle : {
+  //   marginLeft: '5px',
+  // }
 
-  const totalAmount = {
-    fontSize:'14px',
-    fontWeight: 600,
-    lineHeight: '16px',
-    color: 'rgba(28, 28, 40, 0.54)'
-  }
+  // const totalAmount = {
+  //   fontSize:'14px',
+  //   fontWeight: 600,
+  //   lineHeight: '16px',
+  //   color: 'rgba(28, 28, 40, 0.54)'
+  // }
 
   return (
     h('div.flex-column', [
@@ -71,7 +71,7 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
           fontSize: '15px',
           lineHeight: '20px',
           color: '#1C1C28',
-          flexDirection:'column'
+          flexDirection: 'column',
         },
         'data-tip': '',
         'data-for': 'ethBalance',

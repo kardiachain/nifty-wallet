@@ -74,7 +74,6 @@ window.logState = function (toClipboard) {
       console.error(err.message)
     } else if (toClipboard) {
       copyToClipboard(result)
-      console.log('State log copied')
     } else {
       console.log(result)
     }

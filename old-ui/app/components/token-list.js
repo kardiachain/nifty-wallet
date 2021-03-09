@@ -64,12 +64,12 @@ function TokenList () {
 
 TokenList.prototype.render = function () {
   const state = this.state
-  const { tokens, isLoading, error } = state
-  const { userAddress, network } = this.props
-
-  if (isLoading) {
-    return this.message('Loading')
-  }
+  // const { isLoading, error } = state
+  const { error } = state
+  const { userAddress, network, tokens } = this.props
+  // if (isLoading) {
+  //   return this.message('Loading...')
+  // }
 
   if (error) {
     log.error(error)
@@ -96,7 +96,7 @@ TokenList.prototype.render = function () {
   const tokensFromCurrentNetwork = tokens.filter(token => (parseInt(token.network) === parseInt(network) || !token.network))
 
   const tokenViews = tokensFromCurrentNetwork.map((tokenData, ind) => {
-    tokenData.userAddress = userAddress
+    // tokenData.userAddress = userAddress
     const isLastTokenCell = ind === (tokensFromCurrentNetwork.length - 1)
     const menuToTop = true
     return h(TokenCell, {
@@ -145,8 +145,20 @@ TokenList.prototype.render = function () {
 }
 
 TokenList.prototype.renderTokenStatusBar = function () {
+  // const { tokens } = this.state
+  const { network, tokens } = this.props
+  const tokensFromCurrentNetwork = tokens.filter(token => (parseInt(token.network) === parseInt(network) || !token.network))
 
-  const msg = 'Coming soon'
+  let msg
+  let noTokens = false
+  if (tokensFromCurrentNetwork.length === 1) {
+    msg = `You own 1 token`
+  } else if (tokensFromCurrentNetwork.length > 1) {
+    msg = `You own ${tokensFromCurrentNetwork.length} tokens`
+  } else {
+    msg = `No tokens found`
+    noTokens = true
+  }
 
   return h('div', [
       h('div', {
@@ -155,11 +167,30 @@ TokenList.prototype.renderTokenStatusBar = function () {
         justifyContent: 'space-between',
         alignItems: 'center',
         minHeight: '70px',
-        padding: '30px 30px 10px',
+        // padding: '30px 30px 10px',
       },
     }, [
       h('span', msg),
+      h('button.btn-primary.wallet-view__add-token-button', {
+        key: 'reveal-account-bar',
+        onClick: (event) => {
+          event.preventDefault()
+          this.props.addToken()
+        },
+        style: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      }, [
+        'Add Token',
+      ]),
     ]),
+    noTokens ? h('div', {
+      style: {
+        height: '70px',
+      },
+    }) : null,
   ])
 }
 
@@ -228,7 +259,6 @@ TokenList.prototype.componentDidUpdate = function (nextProps) {
     userAddress: newAddress,
     tokens: newTokens,
   } = nextProps
-
   const isLoading = newNet === 'loading'
   const missingInfo = !oldNet || !newNet || !oldAddress || !newAddress
   const sameUserAndNetwork = oldAddress === newAddress && oldNet === newNet

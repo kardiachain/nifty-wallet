@@ -7,6 +7,8 @@ import copyToClipboard from 'copy-to-clipboard'
 import { connect } from 'react-redux'
 import { countSignificantDecimals, toChecksumAddress } from '../util'
 import actions from '../../../ui/app/actions'
+const selectors = require('../../../ui/app/selectors')
+import { getRawBalanceOf } from '../../../ui/app/token-util'
 const { MAINNET_CODE } = require('../../../app/scripts/controllers/network/enums')
 
 const tokenCellDropDownPrefix = 'token-cell_dropdown_'
@@ -23,6 +25,7 @@ class TokenCell extends Component {
     userAddress: PropTypes.string,
     menuToTop: PropTypes.bool,
     removeToken: PropTypes.func,
+    decimals: PropTypes.number,
   }
 
   constructor () {
@@ -30,15 +33,32 @@ class TokenCell extends Component {
 
     this.state = {
       optionsMenuActive: false,
+      balanceString: '0.0',
     }
     this.optionsMenuToggleClassName = 'token-dropdown'
   }
 
-  render () {
-    const { address, symbol, string, network, userAddress, isLastTokenCell, menuToTop, ind } = this.props
-    const { optionsMenuActive } = this.state
+  async updateBalance (userAddress, address) {
+    const balance = await getRawBalanceOf(userAddress, address)
+    this.setState({
+      balanceString: (balance / Math.pow(10, this.props.decimals)).toString(),
+    })
+  }
 
-    const tokenBalanceRaw = Number.parseFloat(string)
+  async componentDidMount () {
+    const { address, userAddress } = this.props
+    this.updateBalance(userAddress, address)
+  }
+
+  componentDidUpdate () {
+    this.updateBalance(this.props.userAddress, this.props.address)
+  }
+
+  render () {
+    const { address, symbol, network, userAddress, isLastTokenCell, menuToTop, ind } = this.props
+    const { optionsMenuActive, balanceString } = this.state
+
+    const tokenBalanceRaw = Number.parseFloat(balanceString || '0.0')
     const tokenBalance = tokenBalanceRaw.toFixed(countSignificantDecimals(tokenBalanceRaw, 2))
 
     return (
@@ -49,7 +69,7 @@ class TokenCell extends Component {
           cursor: Number(network) === MAINNET_CODE ? 'pointer' : 'default',
           borderBottom: isLastTokenCell ? 'none' : '1px solid #e2e2e2',
           padding: '20px 0',
-          margin: '0 30px',
+          // margin: '0 30px',
         }}
         key={`token-cell_${ind}`}
         onClick= {this.view.bind(this, address, userAddress, network)}
@@ -181,5 +201,13 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-module.exports = connect(null, mapDispatchToProps)(TokenCell)
+function mapStateToProps (state) {
+  return {
+    network: state.metamask.network,
+    tokens: state.metamask.tokens,
+    userAddress: selectors.getSelectedAddress(state),
+  }
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(TokenCell)
 

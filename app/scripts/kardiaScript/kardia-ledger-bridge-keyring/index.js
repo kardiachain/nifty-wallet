@@ -175,7 +175,6 @@ class LedgerBridgeKeyring extends EventEmitter {
           } else {
             hdPath = this._toLedgerPath(this._pathFromAddress(address))
           }
-          console.log('Raw TX', rawTx.serialize().toString('hex'))
           this._sendMessage({
             action: 'ledger-sign-transaction',
             params: {
@@ -185,7 +184,6 @@ class LedgerBridgeKeyring extends EventEmitter {
           },
           ({success, payload}) => {
             if (success) {
-              console.log("TX SUCCESS")
 
               rawTx.v = Buffer.from(payload.v, 'hex')
               rawTx.r = Buffer.from(payload.r, 'hex')
