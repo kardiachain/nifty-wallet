@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Identicon from './identicon'
-import ethNetProps from 'eth-net-props'
+// import ethNetProps from 'eth-net-props'
 import { Dropdown, DropdownMenuItem } from './dropdown'
 import copyToClipboard from 'copy-to-clipboard'
 import { connect } from 'react-redux'
@@ -10,6 +10,7 @@ import actions from '../../../ui/app/actions'
 const selectors = require('../../../ui/app/selectors')
 import { getRawBalanceOf } from '../../../ui/app/token-util'
 const { MAINNET_CODE } = require('../../../app/scripts/controllers/network/enums')
+const { EXPLORER_ENDPOINT } = require('../../../constant')
 
 const tokenCellDropDownPrefix = 'token-cell_dropdown_'
 
@@ -145,7 +146,8 @@ class TokenCell extends Component {
             closeMenu={() => {}}
             onClick={() => {
               const { network } = this.props
-              const url = ethNetProps.explorerLinks.getExplorerTokenLinkFor(address, userAddress, network)
+              // const url = ethNetProps.explorerLinks.getExplorerTokenLinkFor(address, userAddress, network)
+              const url = `${EXPLORER_ENDPOINT}/token/${toChecksumAddress(network, address)}`
               global.platform.openWindow({ url })
             }}
         >
@@ -180,7 +182,8 @@ class TokenCell extends Component {
   }
 
   view (address, userAddress, network, _event) {
-    const url = ethNetProps.explorerLinks.getExplorerTokenLinkFor(address, userAddress, network)
+    // const url = ethNetProps.explorerLinks.getExplorerTokenLinkFor(address, userAddress, network)
+    const url = `${EXPLORER_ENDPOINT}/token/${toChecksumAddress(network, address)}`
     if (url) {
       navigateTo(url)
     }
