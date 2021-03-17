@@ -36,6 +36,7 @@ KAIBalanceComponent.prototype.render = function () {
 KAIBalanceComponent.prototype.renderBalance = function (value) {
   const props = this.props
   const { shorten, incoming } = props
+  const tokenSymbol = props.tokenSymbol || 'KAI'
   if (value === 'None') return value
   if (value === '...') return value
   const balanceObj = generateBalanceObject(value, shorten ? 1 : 3)
@@ -84,7 +85,7 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
         // ),
         h('div', {
           style: valueStyle,
-        }, incoming === true ? `+${balance} KAI` : (incoming === false ? `-${balance} KAI` : `${balance} KAI`)),
+        }, incoming === true ? `+${balance} ${tokenSymbol}` : (incoming === false ? `-${balance} ${tokenSymbol}` : `${balance} ${tokenSymbol}`)),
       ]),
     ]))
 }
