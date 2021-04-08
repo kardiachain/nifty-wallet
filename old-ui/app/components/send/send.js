@@ -222,7 +222,7 @@ class SendTransactionScreen extends PersistentForm {
     }
 
     if (input < 0) {
-      message = 'Can not send negative amounts of ETH.'
+      message = 'Can not send negative amounts of KAI.'
       return this.props.displayWarning(message)
     }
 

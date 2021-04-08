@@ -1262,11 +1262,11 @@ async function signKardiaTxUtil (txData, txId, waitUntilMined) {
   const getNonceWrapper = async () => {
     return new Promise((resolve, reject) => {
       if (txData.nonce) {
-        resolve()
+        resolve(txData.nonce)
       } else {
         global.kardiaQuery.getTransactionCount(txData.from, (err, data) => {
           if (err) {
-            return reject(err)
+            reject(err)
           }
           // txData.nonce = data
           resolve(data)
@@ -1310,8 +1310,8 @@ async function signKardiaTxUtil (txData, txId, waitUntilMined) {
 
   const _nonce = await getNonceWrapper()
   txData.nonce = _nonce
-
   const txHash = await signWrapper(txData)
+  console.log('success hash', txHash)
   const approved = await approveWrapper(txId)
 
   if (approved === true) {

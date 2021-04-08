@@ -58,12 +58,14 @@ class SimpleKeyring extends EventEmitter {
   // tx is an instance of the ethereumjs-transaction class.
   async signTransaction (address, tx, opts = {}) {
     try {
-      const nonce = await kardiaTool.api.accountNonce(address)
-      tx.nonce = nonce
+      if (!tx.nonce) {
+        tx.nonce = await kardiaTool.api.accountNonce(address)
+      }
       const _tx = await kardiaCommon.txGenerator(
         tx.receiver,
         tx.amount,
-        nonce,
+        // nonce,
+        tx.nonce,
         tx.gasPrice ? Number(tx.gasPrice) * 10 ** 9 : 10 ** 9,
         tx.gas,
         tx.data,
