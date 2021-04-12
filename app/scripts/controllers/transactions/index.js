@@ -68,6 +68,9 @@ class TransactionController extends EventEmitter {
     this.query = new KardiaQuery(this.provider)
     this.txGasUtil = new TxGasUtil(this.provider)
 
+    // Update success Tx Hash
+    this.getPublicState = opts.getPublicState;
+
     this._mapMethods()
     this.txStateManager = new TransactionStateManager({
       initState: opts.initState,
@@ -387,6 +390,12 @@ class TransactionController extends EventEmitter {
     const rs = await this.signEthTx(tx, address)
     const rawTransaction = rs.rawTransaction ? rs.rawTransaction : rs.serialize().toString('hex')
     const txHash = await this.sendRawTx(rawTransaction)
+
+    console.log(this.getPublicState())
+    this.getPublicState().updateState({
+      successTxHash: txHash,
+    })
+
     return txHash
   }
 
