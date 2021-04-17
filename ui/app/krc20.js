@@ -1,12 +1,12 @@
 const KardiaTool = require('kardia-tool')
 const { RPC_ENDPOINT, KRC20ABI } = require('../../constant')
 
-const kardiaTool = KardiaTool.default(RPC_ENDPOINT)
-const kardiaProvider = kardiaTool.provider
-const kardiaContract = kardiaTool.contract
-const krc20ContractInstance = kardiaContract(kardiaProvider, '', KRC20ABI)
-
 export const getKRC20ContractAtAddress = async (address) => {
+  const kardiaTool = KardiaTool.default(global.metamask.rpcTarget)
+  const kardiaProvider = kardiaTool.provider
+  const kardiaContract = kardiaTool.contract
+  const krc20ContractInstance = kardiaContract(kardiaProvider, '', KRC20ABI)
+
   const getSymbolInvoke = krc20ContractInstance.invoke({
     params: [],
     name: 'symbol',

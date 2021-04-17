@@ -2123,6 +2123,7 @@ function setRpcTarget (newRpc) {
         log.error(err)
         return dispatch(actions.displayWarning('Had a problem changing networks!'))
       }
+      global.metamask.rpcTarget = newRpc
       dispatch(actions.setSelectedToken())
     })
   }
