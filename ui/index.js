@@ -71,6 +71,7 @@ async function startApp (metamaskState, accountManager, opts) {
     setProviderType: (type) => {
       store.dispatch(actions.setProviderType(type))
     },
+    rpcTarget: metamaskState.provider.rpcTarget
   }
 
   // start app
