@@ -6,6 +6,7 @@ const configureStore = require('./app/store')
 const txHelper = require('./lib/tx-helper')
 const { fetchLocale } = require('./i18n-helper')
 const log = require('loglevel')
+const constant = require('../constant')
 
 module.exports = launchMetamaskUi
 
@@ -71,7 +72,7 @@ async function startApp (metamaskState, accountManager, opts) {
     setProviderType: (type) => {
       store.dispatch(actions.setProviderType(type))
     },
-    rpcTarget: metamaskState.provider.rpcTarget
+    rpcTarget: metamaskState.provider.rpcTarget || constant.RPC_ENDPOINT
   }
 
   // start app
