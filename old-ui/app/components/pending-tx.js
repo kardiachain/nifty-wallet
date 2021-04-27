@@ -699,9 +699,15 @@ async onSubmit (event) {
     txMeta.txParams.amount = '0x' + new BN(txMeta.txParams.value).toString(16)
     delete txMeta.txParams.value
 
+    const fromExtension = txMeta.txParams.fromExtension
+    delete txMeta.txParams.fromExtension
+
     const txObj = txMeta.txParams
     try {
       await this.props.actions.signKardiaTx(txObj, this.props.txId)
+      if (fromExtension !== true) {
+        window.close()
+      }
     } catch (error) {
       this.props.actions.displayWarning(error)
     }
@@ -806,6 +812,7 @@ function mapStateToProps (state) {
 
   if (screenParams && screenParams.txData) {
     latestParams = screenParams.txData
+    latestParams.fromExtension = true
   } else if (state.metamask.unapprovedTxs && Object.keys(state.metamask.unapprovedTxs).length > 0) {
     const keyArr = Object.keys(state.metamask.unapprovedTxs)
     const latestKey = keyArr[keyArr.length - 1]

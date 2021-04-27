@@ -1311,7 +1311,6 @@ async function signKardiaTxUtil (txData, txId, waitUntilMined) {
   const _nonce = await getNonceWrapper()
   txData.nonce = _nonce
   const txHash = await signWrapper(txData)
-  console.log('success hash', txHash)
   const approved = await approveWrapper(txId)
 
   if (approved === true) {
