@@ -12,7 +12,8 @@ const loggerMiddleware = createLogger({
   predicate: () => global.METAMASK_DEBUG,
 })
 
-const middlewares = [thunkMiddleware, loggerMiddleware]
+// const middlewares = [thunkMiddleware, loggerMiddleware]
+const middlewares = [thunkMiddleware]
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore)
 

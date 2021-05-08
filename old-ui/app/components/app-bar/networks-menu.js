@@ -5,6 +5,7 @@ import actions from '../../../../ui/app/actions'
 import { LOCALHOST } from '../../../../app/scripts/controllers/network/enums'
 import { networks, getNetworkDisplayName } from '../../../../app/scripts/controllers/network/util'
 import { connect } from 'react-redux'
+import { RPC_ENDPOINT } from '../../../../constant'
 
 const LOCALHOST_RPC_URL = 'http://localhost:8545'
 
@@ -109,7 +110,12 @@ class NetworksMenu extends Component {
         <DropdownMenuItem
           key={networkObj.providerName}
           closeMenu={() => props.updateNetworksMenuOpenState(!isOpen)}
-          onClick={() => props.setProviderType(networkObj.providerName)}
+          onClick={() => {
+            if (networkObj.providerName === 'kardia_mainnet') {
+              global.metamask.rpcTarget = RPC_ENDPOINT
+            }
+            props.setProviderType(networkObj.providerName)
+          }}
           style={{
             paddingLeft: '20px',
             color: providerType === networkObj.providerName ? '#333333' : '',

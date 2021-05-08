@@ -233,6 +233,7 @@ module.exports = class MetamaskController extends EventEmitter {
     // tx mgmt
     this.txController = new TransactionController({
       initState: initState.TransactionController || initState.TransactionManager,
+      getPublicState: this.getPublicConfigStore.bind(this),
       networkStore: this.networkController.networkStore,
       preferencesStore: this.preferencesController.store,
       txHistoryLimit: 40,
@@ -386,15 +387,23 @@ module.exports = class MetamaskController extends EventEmitter {
       publicConfigStore.putState(selectPublicState(memState))
     }
 
-    function selectPublicState ({ isUnlocked, network, provider, selectedAddress }) {
+    function selectPublicState ({ isUnlocked, network, provider, selectedAddress, successTxHash }) {
       return {
         isUnlocked,
         selectedAddress: isUnlocked ? selectedAddress : undefined,
         networkVersion: network,
         chainId: selectChainId({ network, provider }),
+        successTxHash: successTxHash,
       }
     }
+
+    this.publicConfigStore = publicConfigStore
+
     return publicConfigStore
+  }
+
+  getPublicConfigStore() {
+    return this.publicConfigStore
   }
 
 //=============================================================================

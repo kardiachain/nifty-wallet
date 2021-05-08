@@ -61,6 +61,9 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
     this.send = this.send.bind(this)
     this.sendAsync = this.sendAsync.bind(this)
 
+    // Success TX callback
+    this.successTxCallback = []
+
     // setup connectionStream multiplexing
     const mux = new ObjectMultiplex()
     pump(
@@ -106,6 +109,15 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
       if ('networkVersion' in state && state.networkVersion !== this.networkVersion) {
         this.networkVersion = state.networkVersion
         this.emit('networkChanged', this.networkVersion)
+      }
+      if ('successTxHash' in state && state.successTxHash !== this.successTxHash) {
+        this.successTxHash = state.successTxHash
+        // this.emit('successTx', this.successTxHash)
+        this.successTxCallback.forEach((cb) => {
+          console.log('Callback with success tx hash', this.successTxHash)
+          cb(this.successTxHash)
+        })
+        this.successTxCallback = []
       }
     })
 
@@ -230,6 +242,9 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
         { method, params },
         getRpcPromiseCallback(resolve, reject),
       )
+      if (method === 'eth_sendTransaction') {
+        this.successTxCallback.push(resolve)
+      }
     })
   }
 

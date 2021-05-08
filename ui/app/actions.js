@@ -1262,11 +1262,11 @@ async function signKardiaTxUtil (txData, txId, waitUntilMined) {
   const getNonceWrapper = async () => {
     return new Promise((resolve, reject) => {
       if (txData.nonce) {
-        resolve()
+        resolve(txData.nonce)
       } else {
         global.kardiaQuery.getTransactionCount(txData.from, (err, data) => {
           if (err) {
-            return reject(err)
+            reject(err)
           }
           // txData.nonce = data
           resolve(data)
@@ -1310,7 +1310,6 @@ async function signKardiaTxUtil (txData, txId, waitUntilMined) {
 
   const _nonce = await getNonceWrapper()
   txData.nonce = _nonce
-
   const txHash = await signWrapper(txData)
   const approved = await approveWrapper(txId)
 
@@ -1352,49 +1351,6 @@ function signKardiaTx (txData, txId) {
         dispatch(actions.displayWarning(err.message))
         return Promise.reject(err)
       })
-    // return new Promise((resolve, reject) => {
-    //   if (txData.nonce) {
-    //     resolve()
-    //   } else {
-    //     global.kardiaQuery.getTransactionCount(txData.from, (err, data) => {
-    //       if (err) {
-    //         console.error(err)
-    //         dispatch(actions.displayWarning(err.message))
-    //         return reject(err)
-    //       }
-    //       txData.nonce = data
-    //       resolve(data)
-    //     })
-    //   }
-    // }).then(() => {
-    //   return new Promise((resolve, reject) => {
-    //     console.log('start sign')
-    //     background.signTransaction(txData, txData.from, (err, txHash) => {
-    //       if (err) {
-    //         reject(err)
-    //       }
-    //       resolve(txHash)
-    //     })
-    //   })
-    // }).then((txHash) => {
-    //   return new Promise((resolve, reject) => {
-    //     background.approveKardiaTransaction(txId, (err, response) => {
-    //       if (err) {
-    //         reject(err)
-    //       }
-    //       resolve(txHash)
-    //     })
-    //   })
-    // }).then((txHash) => {
-    //   return updateMetamaskStateFromBackground().then(() => Promise.resolve(txHash))
-    // }).then((txHash) => {
-    //   dispatch(actions.hideLoadingIndication())
-    //   // dispatch(actions.clearSend())
-    //   dispatch(actions.goHome())
-    //   dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
-    //     window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
-    //   }))
-    // })
   }
 }
 
@@ -2166,6 +2122,7 @@ function setRpcTarget (newRpc) {
         log.error(err)
         return dispatch(actions.displayWarning('Had a problem changing networks!'))
       }
+      global.metamask.rpcTarget = newRpc
       dispatch(actions.setSelectedToken())
     })
   }
