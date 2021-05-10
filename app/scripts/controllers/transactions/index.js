@@ -391,10 +391,12 @@ class TransactionController extends EventEmitter {
     const rawTransaction = rs.rawTransaction ? rs.rawTransaction : rs.serialize().toString('hex')
     const txHash = await this.sendRawTx(rawTransaction)
 
-    console.log(this.getPublicState())
-    this.getPublicState().updateState({
-      successTxHash: txHash,
-    })
+    const publicStore = this.getPublicState()
+    if (publicStore) {
+      publicStore.updateState({
+        successTxHash: txHash,
+      })
+    }
 
     return txHash
   }
