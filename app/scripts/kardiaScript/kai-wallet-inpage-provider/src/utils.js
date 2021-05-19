@@ -57,7 +57,7 @@ const getRpcPromiseCallback = (resolve, reject) => (error, response) => {
  * @param {Error} err - The associated error to log.
  */
 function logStreamDisconnectWarning (remoteLabel, err) {
-  let warningMsg = `MetamaskInpageProvider - lost connection to ${remoteLabel}`
+  let warningMsg = `KardiaWalletInpageProvider - lost connection to ${remoteLabel}`
   if (err) {
     warningMsg += `\n${err.stack}`
   }

@@ -396,6 +396,10 @@ class TransactionController extends EventEmitter {
       publicStore.updateState({
         successTxHash: txHash,
       })
+    } else {
+      console.log('Error getting public store')
+      console.log(publicStore)
+      console.log(this.getPublicState)
     }
 
     return txHash
