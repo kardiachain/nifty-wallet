@@ -66,7 +66,7 @@ class SimpleKeyring extends EventEmitter {
         tx.amount,
         // nonce,
         tx.nonce,
-        tx.gasPrice ? Number(tx.gasPrice) * 10 ** 9 : 10 ** 9,
+        tx.gasPrice ? Number(tx.gasPrice) : 10 ** 9,
         tx.gas,
         tx.data,
       )

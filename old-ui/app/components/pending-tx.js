@@ -410,7 +410,7 @@ h('form#pending-tx-form', {
             name: 'Gas Price',
             value: gasPriceBn,
             precision: 9,
-            scale: 0,
+            scale: 9,
             suffix: 'OXY',
             min: forceGasMin || MIN_GAS_PRICE_BN,
             style: {
@@ -619,7 +619,7 @@ h('form#pending-tx-form', {
     //   rpcGasPrice: Number(rs) / (10**9)
     // })
 
-    this.gasPriceChanged(new BN(Number(rs) / (10**9)))
+    this.gasPriceChanged(new BN(rs))
 
     const txMeta = this.gatherTxMeta()
     const txParams = txMeta.txParams || {}
@@ -698,10 +698,12 @@ h('form#pending-tx-form', {
     this.setState({ valid, submitting: true })
     // if (valid && this.verifyGasParams()) {
     if (valid) {
+      console.log('txMeta.txParams.gasPrice', txMeta.txParams.gasPrice.toString())
       const gas = txMeta.txParams.gas || MIN_GAS_LIMIT_BN
-      const gasPrice = txMeta.txParams.gasPrice || MIN_GAS_PRICE_BN
+      const gasPrice = txMeta.txParams.gasPrice
       txMeta.txParams.gas = '0x' + gas.toString(16)
       txMeta.txParams.gasPrice = '0x' + gasPrice.toString(16)
+      console.log('txMeta.txParams.gasPrice after', txMeta.txParams.gasPrice)
 
       txMeta.txParams.receiver = txMeta.txParams.to
       delete txMeta.txParams.to
@@ -714,6 +716,7 @@ h('form#pending-tx-form', {
 
       const txObj = txMeta.txParams
       try {
+        console.log('txObj', txObj)
         await this.props.actions.signKardiaTx(txObj, this.props.txId)
         if (fromExtension !== true) {
           window.close()
@@ -832,13 +835,7 @@ function mapStateToProps (state) {
       latestParams.gas = new BN(parseInt(latestParams.gas, 16))
     }
     if (typeof latestParams.gasPrice === 'string') {
-      const bnValue = new BN(parseInt(latestParams.gasPrice, 16))
-      const bnOxyValue = bnValue.div(new BN(10**9))
-      if (bnOxyValue.lt(new BN(1))) {
-        latestParams.gasPrice = new BN(1)
-      } else {
-        latestParams.gasPrice = bnValue.div(new BN(10**9))
-      }
+      latestParams.gasPrice = new BN(parseInt(latestParams.gasPrice, 16))
     }
     if (typeof latestParams.value === 'string') {
       latestParams.value = new BN(latestParams.value.replace('0x', ''), 16)

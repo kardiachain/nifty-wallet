@@ -1341,6 +1341,7 @@ function signKardiaTx (txData, txId) {
     dispatch(actions.showLoadingIndication())
     return signKardiaTxUtil(txData, txId, true)
       .then((txHash) => {
+        console.log('finish cccccc')
         dispatch(actions.hideLoadingIndication())
         // dispatch(actions.clearSend())
         dispatch(actions.goHome())
