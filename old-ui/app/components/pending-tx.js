@@ -833,7 +833,12 @@ function mapStateToProps (state) {
     }
     if (typeof latestParams.gasPrice === 'string') {
       const bnValue = new BN(parseInt(latestParams.gasPrice, 16))
-      latestParams.gasPrice = bnValue.div(new BN(10**9))
+      const bnOxyValue = bnValue.div(new BN(10**9))
+      if (bnOxyValue.lt(new BN(1))) {
+        latestParams.gasPrice = new BN(1)
+      } else {
+        latestParams.gasPrice = bnValue.div(new BN(10**9))
+      }
     }
     if (typeof latestParams.value === 'string') {
       latestParams.value = new BN(latestParams.value.replace('0x', ''), 16)
