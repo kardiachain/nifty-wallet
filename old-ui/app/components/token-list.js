@@ -1,7 +1,8 @@
 import { Component } from 'react'
 import h from 'react-hyperscript'
 import { inherits } from 'util'
-import TokenTracker from 'eth-token-watcher'
+// import TokenTracker from 'eth-token-watcher'
+import TokenTracker from '../../../app/scripts/kardiaScript/kardia-token-watcher'
 import log from 'loglevel'
 import { connect } from 'react-redux'
 const TokenCell = require('./token-cell.js')

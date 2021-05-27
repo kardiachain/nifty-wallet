@@ -180,7 +180,7 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
     // the use thereof per EIP 1102
     setTimeout(() => {
       if (this.autoRefreshOnNetworkChange && !this._state.sentWarnings.autoReload) {
-        log.warn(messages.warnings.autoReloadDeprecation)
+        // log.warn(messages.warnings.autoReloadDeprecation)
         this._state.sentWarnings.autoReload = true
       }
     }, 1000)
@@ -193,7 +193,7 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
   isConnected () {
 
     if (!this._state.sentWarnings.isConnected) {
-      log.warn(messages.warnings.isConnectedDeprecation)
+      // log.warn(messages.warnings.isConnectedDeprecation)
       this._state.sentWarnings.isConnected = true
     }
     return this._state.isConnected
@@ -446,7 +446,7 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
         get: (obj, prop) => {
 
           if (!this._state.sentWarnings.experimentalMethods) {
-            log.warn(messages.warnings.experimentalMethods)
+            // log.warn(messages.warnings.experimentalMethods)
             this._state.sentWarnings.experimentalMethods = true
           }
           return obj[prop]
@@ -468,7 +468,7 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
   enable () {
 
     if (!this._state.sentWarnings.enable) {
-      log.warn(messages.warnings.enableDeprecation)
+      // log.warn(messages.warnings.enableDeprecation)
       this._state.sentWarnings.enable = true
     }
     return new Promise((resolve, reject) => {
@@ -495,7 +495,7 @@ module.exports = class MetamaskInpageProvider extends SafeEventEmitter {
   send (methodOrPayload, callbackOrArgs) {
 
     if (!this._state.sentWarnings.send) {
-      log.warn(messages.warnings.sendDeprecation)
+      // log.warn(messages.warnings.sendDeprecation)
       this._state.sentWarnings.send = true
     }
 

@@ -1694,7 +1694,7 @@ module.exports = class MetamaskController extends EventEmitter {
       engine.push(createTabIdMiddleware({ tabId }))
     }
     // logging
-    engine.push(createLoggerMiddleware({ origin }))
+    // engine.push(createLoggerMiddleware({ origin }))
     // filter and subscription polyfills
     engine.push(filterMiddleware)
     engine.push(subscriptionManager.middleware)
