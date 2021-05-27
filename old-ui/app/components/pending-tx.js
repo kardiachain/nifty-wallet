@@ -613,16 +613,14 @@ h('form#pending-tx-form', {
   }
 
   async componentDidMount () {
-    console.log('component did mount')
-    const rs = await this.props.actions.getKardiaRPCGasPrice()
-    // this.setState({
-    //   rpcGasPrice: Number(rs) / (10**9)
-    // })
-
-    this.gasPriceChanged(new BN(rs))
-
     const txMeta = this.gatherTxMeta()
     const txParams = txMeta.txParams || {}
+
+    if (!txParams.gasPrice) {
+      const rs = await this.props.actions.getKardiaRPCGasPrice()
+      this.gasPriceChanged(new BN(rs))
+    }
+
     if (this.props.isToken || this.state.isToken) {
       return this.updateTokenInfo(txParams)
     }
