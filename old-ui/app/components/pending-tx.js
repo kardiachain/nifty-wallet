@@ -68,6 +68,7 @@ class PendingTx extends Component {
       },
       isToken: false,
       coinName: getNetworkCoinName(opts.network),
+      rpcGasPrice: 1
     }
     this.tokenInfoGetter = tokenInfoGetter()
   }
@@ -122,7 +123,8 @@ class PendingTx extends Component {
     const safeGasLimit = safeGasLimitBN.toString(10)
 
     // Gas Price
-    const gasPrice = txParams.gasPrice || MIN_GAS_PRICE_BN
+    // const gasPrice = txParams.gasPrice || MIN_GAS_PRICE_BN
+    const gasPrice = txParams.gasPrice || new BN(this.state.rpcGasPrice)
     const gasPriceBn = gasPrice
 
     const txFeeBn = gasBn.mul(gasPriceBn)
@@ -515,7 +517,7 @@ h('form#pending-tx-form', {
         type: 'submit',
         value: 'Submit',
         style: { marginLeft: '10px', flex: 1 },
-        disabled: buyDisabled,
+        // disabled: buyDisabled,
       }),
   ]),
   showNavigation ? h('.flex-row.flex-space-around.conf-buttons', {
@@ -534,262 +536,270 @@ h('form#pending-tx-form', {
     )
   }
 
-miniAccountPanelForRecipient (isToken, tokensTransferTo) {
-  const props = this.props
-  const txData = props.txData
-  const txParams = txData.txParams || {}
-  const isContractDeploy = !('to' in txParams)
-  const to = isToken ? tokensTransferTo : txParams.to
-  const isSmcCall = ('data' in txParams) && txParams.data
-  // If it's not a contract deploy, send to the account
-  if (isContractDeploy) {
-    return h(MiniAccountPanel, {
-      picOrder: 'right',
-    }, [
+  miniAccountPanelForRecipient (isToken, tokensTransferTo) {
+    const props = this.props
+    const txData = props.txData
+    const txParams = txData.txParams || {}
+    const isContractDeploy = !('to' in txParams)
+    const to = isToken ? tokensTransferTo : txParams.to
+    const isSmcCall = ('data' in txParams) && txParams.data
+    // If it's not a contract deploy, send to the account
+    if (isContractDeploy) {
+      return h(MiniAccountPanel, {
+        picOrder: 'right',
+      }, [
 
-      h('span.font-small', {
-        style: {
-          fontFamily: 'Nunito Bold',
-          color: '#333333',
-        },
-      }, 'New Contract'),
+        h('span.font-small', {
+          style: {
+            fontFamily: 'Nunito Bold',
+            color: '#333333',
+          },
+        }, 'New Contract'),
 
-    ])
-  } else if (isSmcCall) {
-    return h(MiniAccountPanel, {
-      picOrder: 'right',
-    }, [
-      h('span.font-small', {
-        style: {
-          fontFamily: 'Nunito Bold',
-          color: '#333333',
-        },
-      }, 'Smart Contract'),
-      h(Copyable, {
-        value: toChecksumAddress(props.network, to),
+      ])
+    } else if (isSmcCall) {
+      return h(MiniAccountPanel, {
+        picOrder: 'right',
       }, [
         h('span.font-small', {
           style: {
-            fontWeight: 600,
-            fontSize: '12px',
-            lineHeight: '20px',
-            color: 'rgba(28, 28, 40, 0.26)',
+            fontFamily: 'Nunito Bold',
+            color: '#333333',
           },
-        }, addressSummary(props.network, to, 6, 4, false)),
-      ]),
-    ])
-  } else {
-    return h('div', {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
+        }, 'Smart Contract'),
+        h(Copyable, {
+          value: toChecksumAddress(props.network, to),
+        }, [
+          h('span.font-small', {
+            style: {
+              fontWeight: 600,
+              fontSize: '12px',
+              lineHeight: '20px',
+              color: 'rgba(28, 28, 40, 0.26)',
+            },
+          }, addressSummary(props.network, to, 6, 4, false)),
+        ]),
+      ])
+    } else {
+      return h('div', {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+        },
+      }, [
+        h('span.font-pre-medium', {
+          style: {
+            fontWeight: 600,
+            fontSize: '15px',
+            lineHeight: '20px',
+            color: '#1C1C28',
+          },
+        }, accountSummary(nameForAddress(to, props.identities, props.network)), 6, 4),
+
+        h(Copyable, {
+          value: toChecksumAddress(props.network, to),
+        }, [
+          h('span.font-small', {
+            style: {
+              fontWeight: 600,
+              fontSize: '12px',
+              lineHeight: '20px',
+              color: 'rgba(28, 28, 40, 0.26)',
+            },
+          }, addressSummary(props.network, to, 6, 4, false)),
+        ]),
+      ])
+    }
+  }
+
+  async componentDidMount () {
+    console.log('component did mount')
+    const rs = await this.props.actions.getKardiaRPCGasPrice()
+    // this.setState({
+    //   rpcGasPrice: Number(rs) / (10**9)
+    // })
+
+    this.gasPriceChanged(new BN(Number(rs) / (10**9)))
+
+    const txMeta = this.gatherTxMeta()
+    const txParams = txMeta.txParams || {}
+    if (this.props.isToken || this.state.isToken) {
+      return this.updateTokenInfo(txParams)
+    }
+    const decodedData = txParams.data && abiDecoder.decodeMethod(txParams.data)
+    if (decodedData && decodedData.name === 'transfer') {
+      return this.updateTokenInfo(txParams)
+    }
+  }
+
+  componentWillUnmount () {
+    this.setState({
+      token: {
+        address: emptyAddress,
+        symbol: '',
+        decimals: 0,
+        dataRetrieved: false,
       },
-    }, [
-      h('span.font-pre-medium', {
-        style: {
-          fontWeight: 600,
-          fontSize: '15px',
-          lineHeight: '20px',
-          color: '#1C1C28',
-        },
-      }, accountSummary(nameForAddress(to, props.identities, props.network)), 6, 4),
-
-      h(Copyable, {
-        value: toChecksumAddress(props.network, to),
-      }, [
-        h('span.font-small', {
-          style: {
-            fontWeight: 600,
-            fontSize: '12px',
-            lineHeight: '20px',
-            color: 'rgba(28, 28, 40, 0.26)',
-          },
-        }, addressSummary(props.network, to, 6, 4, false)),
-      ]),
-    ])
+      isToken: false,
+    })
   }
-}
 
-componentDidMount () {
-  const txMeta = this.gatherTxMeta()
-  const txParams = txMeta.txParams || {}
-  if (this.props.isToken || this.state.isToken) {
-    return this.updateTokenInfo(txParams)
+  updateTokenInfo = async function (txParams) {
+    const tokenParams = await this.tokenInfoGetter(txParams.to)
+    this.setState({
+      token: {
+        address: txParams.to,
+        symbol: tokenParams.symbol,
+        decimals: tokenParams.decimals,
+        dataRetrieved: true,
+      },
+      isToken: true,
+    })
   }
-  const decodedData = txParams.data && abiDecoder.decodeMethod(txParams.data)
-  if (decodedData && decodedData.name === 'transfer') {
-    return this.updateTokenInfo(txParams)
+
+  gasPriceChanged (newBN, valid) {
+    const txMeta = this.gatherTxMeta()
+    // txMeta.txParams.gasPrice = '0x' + newBN.toString('hex')
+    txMeta.txParams.gasPrice = newBN
+    this.setState({
+      txData: clone(txMeta),
+      valid,
+    })
   }
-}
 
-componentWillUnmount () {
-  this.setState({
-    token: {
-      address: emptyAddress,
-      symbol: '',
-      decimals: 0,
-      dataRetrieved: false,
-    },
-    isToken: false,
-  })
-}
+  gasLimitChanged (newBN, valid) {
+    const txMeta = this.gatherTxMeta()
+    // txMeta.txParams.gas = '0x' + newBN.toString('hex')
+    txMeta.txParams.gas = newBN
+    this.setState({
+      txData: clone(txMeta),
+      valid,
+    })
+  }
 
-updateTokenInfo = async function (txParams) {
-  const tokenParams = await this.tokenInfoGetter(txParams.to)
-  this.setState({
-    token: {
-      address: txParams.to,
-      symbol: tokenParams.symbol,
-      decimals: tokenParams.decimals,
-      dataRetrieved: true,
-    },
-    isToken: true,
-  })
-}
+  resetGasFields () {
 
-gasPriceChanged (newBN, valid) {
-  const txMeta = this.gatherTxMeta()
-  // txMeta.txParams.gasPrice = '0x' + newBN.toString('hex')
-  txMeta.txParams.gasPrice = newBN
-  this.setState({
-    txData: clone(txMeta),
-    valid,
-  })
-}
-
-gasLimitChanged (newBN, valid) {
-  const txMeta = this.gatherTxMeta()
-  // txMeta.txParams.gas = '0x' + newBN.toString('hex')
-  txMeta.txParams.gas = newBN
-  this.setState({
-    txData: clone(txMeta),
-    valid,
-  })
-}
-
-resetGasFields () {
-
-  this.inputs.forEach((hexInput) => {
-    if (hexInput) {
-      hexInput.setValid()
-    }
-  })
-
-  this.setState({
-    txData: null,
-    valid: true,
-  })
-}
-
-async onSubmit (event) {
-  event.preventDefault()
-  const txMeta = this.gatherTxMeta()
-  const valid = this.checkValidity()
-  this.setState({ valid, submitting: true })
-  // if (valid && this.verifyGasParams()) {
-  if (valid) {
-    const gas = txMeta.txParams.gas || MIN_GAS_LIMIT_BN
-    const gasPrice = txMeta.txParams.gasPrice || MIN_GAS_PRICE_BN
-    txMeta.txParams.gas = '0x' + gas.toString(16)
-    txMeta.txParams.gasPrice = '0x' + gasPrice.toString(16)
-
-    txMeta.txParams.receiver = txMeta.txParams.to
-    delete txMeta.txParams.to
-
-    txMeta.txParams.amount = '0x' + new BN(txMeta.txParams.value).toString(16)
-    delete txMeta.txParams.value
-
-    const fromExtension = txMeta.txParams.fromExtension
-    delete txMeta.txParams.fromExtension
-
-    const txObj = txMeta.txParams
-    try {
-      await this.props.actions.signKardiaTx(txObj, this.props.txId)
-      if (fromExtension !== true) {
-        window.close()
+    this.inputs.forEach((hexInput) => {
+      if (hexInput) {
+        hexInput.setValid()
       }
-    } catch (error) {
-      this.props.actions.displayWarning(error)
+    })
+
+    this.setState({
+      txData: null,
+      valid: true,
+    })
+  }
+
+  async onSubmit (event) {
+    event.preventDefault()
+    const txMeta = this.gatherTxMeta()
+    const valid = this.checkValidity()
+    this.setState({ valid, submitting: true })
+    // if (valid && this.verifyGasParams()) {
+    if (valid) {
+      const gas = txMeta.txParams.gas || MIN_GAS_LIMIT_BN
+      const gasPrice = txMeta.txParams.gasPrice || MIN_GAS_PRICE_BN
+      txMeta.txParams.gas = '0x' + gas.toString(16)
+      txMeta.txParams.gasPrice = '0x' + gasPrice.toString(16)
+
+      txMeta.txParams.receiver = txMeta.txParams.to
+      delete txMeta.txParams.to
+
+      txMeta.txParams.amount = '0x' + new BN(txMeta.txParams.value).toString(16)
+      delete txMeta.txParams.value
+
+      const fromExtension = txMeta.txParams.fromExtension
+      delete txMeta.txParams.fromExtension
+
+      const txObj = txMeta.txParams
+      try {
+        await this.props.actions.signKardiaTx(txObj, this.props.txId)
+        if (fromExtension !== true) {
+          window.close()
+        }
+      } catch (error) {
+        this.props.actions.displayWarning(error)
+      }
+    } else {
+      this.props.actions.displayWarning('Invalid Gas Parameters')
+      this.setState({ submitting: false })
     }
-  } else {
-    this.props.actions.displayWarning('Invalid Gas Parameters')
-    this.setState({ submitting: false })
   }
-}
 
-checkValidity () {
-  const form = this.getFormEl()
-  const valid = form.checkValidity()
-  return valid
-}
-
-getFormEl () {
-  const form = document.querySelector('form#pending-tx-form')
-  // Stub out form for unit tests:
-  if (!form) {
-    return { checkValidity () { return true } }
+  checkValidity () {
+    const form = this.getFormEl()
+    const valid = form.checkValidity()
+    return valid
   }
-  return form
-}
+
+  getFormEl () {
+    const form = document.querySelector('form#pending-tx-form')
+    // Stub out form for unit tests:
+    if (!form) {
+      return { checkValidity () { return true } }
+    }
+    return form
+  }
 
 // After a customizable state value has been updated,
-gatherTxMeta () {
-  const props = this.props
-  const state = this.state
+  gatherTxMeta () {
+    const props = this.props
+    const state = this.state
 
-  const txData = clone(state.txData) || clone(props.txData)
+    const txData = clone(state.txData) || clone(props.txData)
 
-  return txData
-}
-
-verifyGasParams () {
-  // We call this in case the gas has not been modified at all
-  if (!this.state) { return true }
-  return (
-    this._notZeroOrEmptyString(this.state.txData.gas.toString()) &&
-    this._notZeroOrEmptyString(this.state.txData.gasPrice.toString())
-  )
-}
-
-_notZeroOrEmptyString (str) {
-  return str !== '' && str !== '0'
-}
-
-bnMultiplyByFraction (targetBN, numerator, denominator) {
-  const numBN = new BN(numerator)
-  const denomBN = new BN(denominator)
-  return targetBN.mul(numBN).div(denomBN)
-}
-
-goHome (event) {
-  this.stopPropagation(event)
-  this.props.actions.goHome()
-}
-
-stopPropagation (event) {
-  if (event.stopPropagation) {
-    event.stopPropagation()
+    return txData
   }
-}
 
-getNavigateTxData () {
-  const { unapprovedTxs, network, txData: { id } = {} } = this.props
-  const currentNetworkUnapprovedTxs = Object.keys(unapprovedTxs)
-    .filter((key) => unapprovedTxs[key].metamaskNetworkId === network)
-    .reduce((acc, key) => ({ ...acc, [key]: unapprovedTxs[key] }), {})
-  const enumUnapprovedTxs = Object.keys(currentNetworkUnapprovedTxs)
-  const currentPosition = enumUnapprovedTxs.indexOf(id ? id.toString() : '')
-
-  return {
-    totalTx: enumUnapprovedTxs.length,
-    positionOfCurrentTx: currentPosition + 1,
-    nextTxId: enumUnapprovedTxs[currentPosition + 1],
-    prevTxId: enumUnapprovedTxs[currentPosition - 1],
-    showNavigation: enumUnapprovedTxs.length > 1,
+  verifyGasParams () {
+    // We call this in case the gas has not been modified at all
+    if (!this.state) { return true }
+    return (
+      this._notZeroOrEmptyString(this.state.txData.gas.toString()) &&
+      this._notZeroOrEmptyString(this.state.txData.gasPrice.toString())
+    )
   }
-}
 
-}
+  _notZeroOrEmptyString (str) {
+    return str !== '' && str !== '0'
+  }
+
+  bnMultiplyByFraction (targetBN, numerator, denominator) {
+    const numBN = new BN(numerator)
+    const denomBN = new BN(denominator)
+    return targetBN.mul(numBN).div(denomBN)
+  }
+
+  goHome (event) {
+    this.stopPropagation(event)
+    this.props.actions.goHome()
+  }
+
+  stopPropagation (event) {
+    if (event.stopPropagation) {
+      event.stopPropagation()
+    }
+  }
+
+  getNavigateTxData () {
+    const { unapprovedTxs, network, txData: { id } = {} } = this.props
+    const currentNetworkUnapprovedTxs = Object.keys(unapprovedTxs)
+      .filter((key) => unapprovedTxs[key].metamaskNetworkId === network)
+      .reduce((acc, key) => ({ ...acc, [key]: unapprovedTxs[key] }), {})
+    const enumUnapprovedTxs = Object.keys(currentNetworkUnapprovedTxs)
+    const currentPosition = enumUnapprovedTxs.indexOf(id ? id.toString() : '')
+
+    return {
+      totalTx: enumUnapprovedTxs.length,
+      positionOfCurrentTx: currentPosition + 1,
+      nextTxId: enumUnapprovedTxs[currentPosition + 1],
+      prevTxId: enumUnapprovedTxs[currentPosition - 1],
+      showNavigation: enumUnapprovedTxs.length > 1,
+    }
+  }
+
+  }
 
 function forwardCarrat () {
   return (
@@ -822,7 +832,8 @@ function mapStateToProps (state) {
       latestParams.gas = new BN(parseInt(latestParams.gas, 16))
     }
     if (typeof latestParams.gasPrice === 'string') {
-      latestParams.gasPrice = new BN(parseInt(latestParams.gasPrice, 16))
+      const bnValue = new BN(parseInt(latestParams.gasPrice, 16))
+      latestParams.gasPrice = bnValue.div(new BN(10**9))
     }
     if (typeof latestParams.value === 'string') {
       latestParams.value = new BN(latestParams.value.replace('0x', ''), 16)
@@ -864,6 +875,7 @@ const mapDispatchToProps = (dispatch) => {
       signKardiaTx: (txData) => dispatch(actions.signKardiaTx(txData)),
       showLoadingIndication: () => dispatch(actions.showLoadingIndication()),
       hideLoadingIndication: () => dispatch(actions.hideLoadingIndication()),
+      getKardiaRPCGasPrice: () => dispatch(actions.getKardiaRPCGasPrice())
     },
   }
 }
