@@ -385,6 +385,7 @@ const actions = {
   isCreatedWithCorrectDPath,
   closeCurrentNotificationWindow,
   closeNotificationWindow,
+  getKardiaRPCGasPrice
 }
 
 module.exports = actions
@@ -1340,6 +1341,7 @@ function signKardiaTx (txData, txId) {
     dispatch(actions.showLoadingIndication())
     return signKardiaTxUtil(txData, txId, true)
       .then((txHash) => {
+        console.log('finish cccccc')
         dispatch(actions.hideLoadingIndication())
         // dispatch(actions.clearSend())
         dispatch(actions.goHome())
@@ -1387,6 +1389,20 @@ function updateAndApproveTx (txData) {
         dispatch(actions.hideLoadingIndication())
         return Promise.reject(err)
       })
+  }
+}
+
+function getKardiaRPCGasPrice() {
+  return () => {
+    return new Promise((resolve, reject) => {
+      global.kardiaQuery.gasPrice((err, data) => {
+        if (err) {
+          console.error(err)
+          return reject(err)
+        }
+        resolve(data)
+      })
+    })
   }
 }
 

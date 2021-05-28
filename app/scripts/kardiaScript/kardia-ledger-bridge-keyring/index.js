@@ -162,7 +162,7 @@ class LedgerBridgeKeyring extends EventEmitter {
         .then(_ => {
           const rawTx = new Transaction({
             nonce: this._normalize(tx.nonce),
-            gasPrice: this._normalize(tx.gasPrice ? Number(tx.gasPrice) * 10 ** 9 : 10 ** 9),
+            gasPrice: this._normalize(tx.gasPrice ? Number(tx.gasPrice) : 10 ** 9),
             gasLimit: this._normalize(tx.gas),
             to: this._normalize(tx.receiver),
             value: this._normalize(tx.amount),
