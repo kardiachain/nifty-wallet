@@ -1,10 +1,8 @@
 import assert from 'assert'
 import EventEmitter from 'events'
-import ObservableStore from 'obs-store'
-import ComposedStore from 'obs-store/lib/composed'
-// import EthQuery from 'eth-query'
-// import KardiaQuery from '../../kardiaScript/kardia-query'
-import JsonRpcEngine from 'json-rpc-engine'
+import { ComposedStore, ObservableStore } from '@metamask/obs-store'
+import EthQuery from 'eth-query'
+import { JsonRpcEngine } from 'json-rpc-engine'
 import providerFromEngine from 'eth-json-rpc-middleware/providerFromEngine'
 import log from 'loglevel'
 import createMetamaskMiddleware from './createMetamaskMiddleware'
@@ -14,43 +12,62 @@ import createLocalhostClient from './createLocalhostClient'
 const createPocketClient = require('./createPocketClient')
 const { createSwappableProxy, createEventEmitterProxy } = require('swappable-obj-proxy')
 // import ethNetProps from 'eth-net-props'
+import ethNetProps from '../../../../kardia-libs/kai-net-props'
+import parse from 'url-parse'
 const networks = { networkList: {} }
 const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
-  KARDIA_MAINNET_CODE,
+  KARDIA,
+  KARDIA_CODE,
+  KARDIA_TICK,
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
-import { RPC_ENDPOINT } from '../../../../constant'
-// import { composeP } from 'ramda'
 
 const {
+  ROPSTEN,
+  RINKEBY,
+  KOVAN,
+  MAINNET,
   LOCALHOST,
-  KARDIA_MAINNET,
-  KAI_TICK,
+  POA_SOKOL,
+  POA,
+  DAI,
+  GOERLI_TESTNET,
+  CLASSIC,
+  RSK,
+  RSK_TESTNET,
+  POA_CODE,
+  DAI_CODE,
+  POA_SOKOL_CODE,
+  GOERLI_TESTNET_CODE,
+  CLASSIC_CODE,
+  RSK_CODE,
+  RSK_TESTNET_CODE,
 } = require('./enums')
-const INFURA_PROVIDER_TYPES = []
-const POCKET_PROVIDER_TYPES = []
+const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN]
+const POCKET_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, POA, DAI, GOERLI_TESTNET, POA_SOKOL]
 
 const env = process.env.METAMASK_ENV
 const METAMASK_DEBUG = process.env.METAMASK_DEBUG
 const testMode = (METAMASK_DEBUG || env === 'test')
 
 let defaultProviderConfigType
-if (process.env.IN_TEST === 'true') {
-  defaultProviderConfigType = LOCALHOST
-} else if (testMode) {
-  defaultProviderConfigType = KARDIA_MAINNET
-} else {
-  // defaultProviderConfigType = POA
-  defaultProviderConfigType = KARDIA_MAINNET
-}
+// if (process.env.IN_TEST === 'true') {
+//   defaultProviderConfigType = LOCALHOST
+// } else if (testMode) {
+//   defaultProviderConfigType = POA_SOKOL
+// } else {
+//   defaultProviderConfigType = POA
+// }
+
+defaultProviderConfigType = KARDIA
 
 const defaultProviderConfig = {
   type: defaultProviderConfigType,
 }
 
 const defaultNetworkConfig = {
-  ticker: KAI_TICK,
+  ticker: KARDIA_TICK,
 }
 
 module.exports = class NetworkController extends EventEmitter {
@@ -73,6 +90,21 @@ module.exports = class NetworkController extends EventEmitter {
     // provider and block tracker proxies - because the network changes
     this._providerProxy = null
     this._blockTrackerProxy = null
+  }
+
+  /**
+   * Sets the Infura project ID
+   *
+   * @param {string} projectId - The Infura project ID
+   * @throws {Error} if the project ID is not a valid string
+   * @return {void}
+   */
+  setInfuraProjectId (projectId) {
+    if (!projectId || typeof projectId !== 'string') {
+      throw new Error('Invalid Infura project ID')
+    }
+
+    this._infuraProjectId = projectId
   }
 
   initializeProvider (providerParams) {
@@ -126,17 +158,24 @@ module.exports = class NetworkController extends EventEmitter {
     if (!this._provider) {
       return log.warn('NetworkController - lookupNetwork aborted due to missing provider')
     }
-    const { type } = this.providerStore.getState()
-    // const ethQuery = new EthQuery(this._provider)
+    const { type, rpcTarget } = this.providerStore.getState()
+    const ethQuery = new EthQuery(this._provider)
     const initialNetwork = this.getNetworkState()
-    // ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
-    const currentNetwork = this.getNetworkState()
-    if (initialNetwork === currentNetwork) {
-      console.log(initialNetwork)
-      console.log(currentNetwork)
-      this.setNetworkState(KARDIA_MAINNET_CODE, type)
-    }
-    // })
+    ethQuery.sendAsync({ method: 'net_version' }, (err, network) => {
+      const targetHost = parse(rpcTarget, true).host
+      const classicHost = parse(ethNetProps.RPCEndpoints(CLASSIC_CODE)[0], true).host
+      if (type === CLASSIC || targetHost === classicHost) {
+        network = CLASSIC_CODE.toString()
+      } // workaround to avoid Mainnet and Classic are having the same network ID
+      const currentNetwork = this.getNetworkState()
+      if (initialNetwork === currentNetwork) {
+        if (err) {
+          return this.setNetworkState('loading')
+        }
+        log.info('web3.getNetwork returned ' + network)
+        this.setNetworkState(network, type)
+      }
+    })
   }
 
   getCurrentChainId () {
@@ -144,7 +183,7 @@ module.exports = class NetworkController extends EventEmitter {
     return NETWORK_TYPE_TO_ID_MAP[type] ? NETWORK_TYPE_TO_ID_MAP[type].chainId : configChainId
   }
 
-  setRpcTarget (rpcTarget, chainId, ticker = 'KAI', nickname = '', rpcPrefs) {
+  setRpcTarget (rpcTarget, chainId = '0', ticker = 'KAI', nickname = '', rpcPrefs) {
     const providerConfig = {
       type: 'rpc',
       rpcTarget,
@@ -156,9 +195,18 @@ module.exports = class NetworkController extends EventEmitter {
     this.providerConfig = providerConfig
   }
 
-  async setProviderType (type, rpcTarget = '', ticker = 'KAI', nickname = '') {
+  async setProviderType (type, rpcTarget, ticker, nickname = '') {
     assert.notEqual(type, 'rpc', `NetworkController - cannot call "setProviderType" with type 'rpc'. use "setRpcTarget"`)
     assert(isKnownProvider(type), `NetworkController - Unknown rpc type "${type}"`)
+
+    if (!rpcTarget) {
+      rpcTarget = ethNetProps.RPCEndpoints(KARDIA_CODE)[0]
+    }
+
+    if (!ticker) {
+      ticker = ethNetProps.props.getNetworkCoinName(KARDIA_CODE)
+    }
+
     const providerConfig = { type, rpcTarget, ticker, nickname }
     this.providerConfig = providerConfig
   }
@@ -213,13 +261,29 @@ module.exports = class NetworkController extends EventEmitter {
     if (isPocket && this.dProviderStore.getState().dProvider) {
       this._configurePocketProvider(opts)
     } else if (isInfura) {
-      this._configureInfuraProvider(opts)
+        this._configureInfuraProvider(type, this._infuraProjectId)
     // other type-based rpc endpoints
+    } else if (type === MAINNET) {
+      this._configureStandardProvider({ rpcUrl: this._ethMainnetRpcEndpoint, chainId, ticker, nickname })
+    } else if (type === POA) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(POA_CODE)[0], chainId, ticker, nickname })
+    } else if (type === DAI) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(DAI_CODE)[0], chainId, ticker, nickname })
+    } else if (type === POA_SOKOL) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(POA_SOKOL_CODE)[0], chainId, ticker, nickname })
+    } else if (type === GOERLI_TESTNET) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(GOERLI_TESTNET_CODE)[0], chainId, ticker, nickname })
+    } else if (type === CLASSIC) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(CLASSIC_CODE)[0], chainId, ticker, nickname })
+    } else if (type === RSK) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(RSK_CODE)[0], chainId, ticker, nickname })
+    } else if (type === RSK_TESTNET) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(RSK_TESTNET_CODE)[0], chainId, ticker, nickname })
+    } else if (type === KARDIA) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(KARDIA_CODE)[0], chainId, ticker, nickname })
     } else if (type === LOCALHOST) {
       this._configureLocalhostProvider()
     // url-based rpc endpoints
-    } else if (type === 'kardia_mainnet') {
-      this._configureStandardProvider({ rpcUrl: RPC_ENDPOINT, chainId, ticker, nickname })
     } else if (type === 'rpc') {
       this._configureStandardProvider({ rpcUrl: rpcTarget, chainId, ticker, nickname })
     } else {
@@ -227,35 +291,50 @@ module.exports = class NetworkController extends EventEmitter {
     }
   }
 
-  _configureInfuraProvider ({ type }) {
+  /**
+   * Sets the Ethereum Mainnet RPC endpoint
+   *
+   * @param {string} endpoint - Ethereum Mainnet RPC endpoint
+   * @throws {Error} if the endpoint is not a valid string
+   * @return {void}
+   */
+  setEthMainnetRPCEndpoint (endpoint) {
+    if (!endpoint || typeof endpoint !== 'string') {
+      throw new Error('Invalid ETH Mainnet RPC Endpoint')
+    }
+
+    this._ethMainnetRpcEndpoint = endpoint
+  }
+
+  _configureInfuraProvider (type, projectId) {
+    log.info('NetworkController - configureInfuraProvider', type)
     const networkClient = createInfuraClient({
       network: type,
+      projectId,
     })
     this._setNetworkClient(networkClient)
-    // setup networkConfig
-    const settings = {
-      ticker: 'ETH',
-    }
-    this.networkConfig.putState(settings)
   }
 
   _configurePocketProvider ({ type }) {
+    log.info('NetworkController - configurePocketProvider', type)
     const networkClient = createPocketClient({ network: type })
     this._setNetworkClient(networkClient)
   }
 
   _configureLocalhostProvider () {
+    log.info('NetworkController - configureLocalhostProvider')
     const networkClient = createLocalhostClient()
     this._setNetworkClient(networkClient)
   }
 
   _configureStandardProvider ({ rpcUrl, chainId, ticker, nickname }) {
+    log.info('NetworkController - configureStandardProvider', rpcUrl)
     const networkClient = createJsonRpcClient({ rpcUrl })
     // hack to add a 'rpc' network with chainId
     networks.networkList['rpc'] = {
       chainId: chainId,
       rpcUrl,
-      ticker: ticker || 'KAI',
+      ticker: ticker || 'ETH',
       nickname,
     }
     // setup networkConfig

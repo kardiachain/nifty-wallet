@@ -1,9 +1,9 @@
 const ethUtil = require('ethereumjs-util')
 const { conversionUtil, multiplyCurrencies } = require('../../conversion-util')
 
-const MIN_GAS_PRICE_DEC = '1'
+const MIN_GAS_PRICE_DEC = '1000000000'
 const MIN_GAS_PRICE_HEX = (parseInt(MIN_GAS_PRICE_DEC)).toString(16)
-const MIN_GAS_LIMIT_DEC = '29000'
+const MIN_GAS_LIMIT_DEC = '50000'
 const MIN_GAS_LIMIT_HEX = (parseInt(MIN_GAS_LIMIT_DEC)).toString(16)
 
 const MIN_GAS_PRICE_GWEI = ethUtil.addHexPrefix(conversionUtil(MIN_GAS_PRICE_HEX, {
@@ -35,7 +35,7 @@ const ONE_GWEI_IN_WEI_HEX = ethUtil.addHexPrefix(conversionUtil('0x1', {
   toNumericBase: 'hex',
 }))
 
-const SIMPLE_GAS_COST = '0x5208' // Hex for 21000, cost of a simple send.
+const SIMPLE_GAS_COST = '0x7148' // Hex for 21000, cost of a simple send.
 const BASE_TOKEN_GAS_COST = '0x186a0' // Hex for 100000, a base estimate for token transfers.
 
 module.exports = {

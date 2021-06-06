@@ -178,7 +178,7 @@
     "message": "Het standaardnetwerk voor Ether-transacties is Main Net."
   },
   "denExplainer": {
-    "message": "Uw Seed Phrase is uw wachtwoord-gecodeerde opslag binnen KardiaChain Wallet."
+    "message": "Uw DEN is uw wachtwoord-gecodeerde opslag binnen KardiaChain Wallet."
   },
   "deposit": {
     "message": "Storting"
@@ -236,7 +236,7 @@
     "message": "Email ons!"
   },
   "encryptNewDen": {
-    "message": "Versleutel je nieuwe Seed Phrase"
+    "message": "Versleutel je nieuwe DEN"
   },
   "enterPassword": {
     "message": "Voer wachtwoord in"
@@ -357,7 +357,7 @@
     "message": "Importeer een account"
   },
   "importDen": {
-    "message": "Bestaande Seed Phrase importeren"
+    "message": "Bestaande DEN importeren"
   },
   "imported": {
     "message": "geïmporteerde",

@@ -14,7 +14,8 @@ import Web3EthContract from 'web3-eth-contract'
 import copyToClipboard from 'copy-to-clipboard'
 import CopyButton from '../copy/copy-button'
 import { normalizeEthStringToWei } from '../../util'
-import ethNetProps from 'eth-net-props'
+// import ethNetProps from 'eth-net-props'
+import ethNetProps from '../../../../kardia-libs/kai-net-props'
 
 class SendTransactionField extends Component {
 	constructor (props) {
@@ -147,6 +148,11 @@ class SendTransactionScreen extends PersistentForm {
 		PersistentForm.call(this)
 	}
 
+	// eslint-disable-next-line camelcase
+	UNSAFE_componentWillMount () {
+		this.getContractMethods()
+	}
+
 	render () {
 		this.persistentFormParentId = 'send-contract-tx-form'
 
@@ -155,8 +161,8 @@ class SendTransactionScreen extends PersistentForm {
 		} = this.props
 		return (
 			<div className="send-screen flex-column flex-grow">
-				<SendProfile />
 				<SendHeader title="Execute Method" />
+				<SendProfile />
 				<ErrorComponent error={error} />
 				<Toast.ToastComponent type={Toast.TOAST_TYPE_SUCCESS} />
 				<div style={{ padding: '0 30px' }}>
@@ -190,7 +196,6 @@ class SendTransactionScreen extends PersistentForm {
 	}
 
 	componentDidMount () {
-		this.getContractMethods()
 		if (this.props.methodSelected) {
 			this.generateMethodFieldsView(this.props.methodABI)
 		}

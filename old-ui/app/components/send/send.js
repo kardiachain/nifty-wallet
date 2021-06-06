@@ -19,8 +19,11 @@ import * as Toast from '../toast'
 import AmountMaxButton from './amount-max-button'
 
 const optionalDataLabelStyle = {
+  background: 'transparent',
+  paddingLeft: '14px',
+  paddingRight: '14px',
   color: '#333333',
-  // marginTop: '16px',
+  marginTop: '16px',
 }
 const optionalDataValueStyle = {
   width: '100%',
@@ -56,11 +59,9 @@ class SendTransactionScreen extends PersistentForm {
     return (
       <div className="send-screen flex-column flex-grow">
         <Toast.ToastComponent type={Toast.TOAST_TYPE_ERROR} />
-
         <SendHeader
           title= "Send Transaction"
         />
-
         <SendProfile/>
 
         <ErrorComponent
@@ -100,9 +101,7 @@ class SendTransactionScreen extends PersistentForm {
             }}
           />
 
-          <button style={{
-            height: '100%',
-          }}
+          <button
             onClick={this.onSubmit.bind(this)}>
               Next
           </button>
@@ -199,7 +198,7 @@ class SendTransactionScreen extends PersistentForm {
     let message
 
     if (isNaN(input) || input === '') {
-      message = 'Invalid KAI value.'
+      message = 'Invalid kai value.'
       return this.props.displayWarning(message)
     }
 
@@ -247,13 +246,13 @@ class SendTransactionScreen extends PersistentForm {
 
     const txParams = {
       from: this.props.address,
-      // value: '0x' + value.toString(16),
-      value: value.toString(),
+      value: '0x' + value.toString(16),
     }
 
     if (recipient) txParams.to = ethUtil.addHexPrefix(recipient)
     if (txData) txParams.data = txData
     if (txCustomNonce) txParams.nonce = '0x' + parseInt(txCustomNonce, 10).toString(16)
+
     this.props.signTx(txParams)
   }
 }

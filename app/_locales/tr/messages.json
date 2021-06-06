@@ -190,7 +190,7 @@
     "message": "Ether işlemleri için varsayılan ağ Main Net."
   },
   "denExplainer": {
-    "message": "Seed Phrase'iniz KardiaChain Wallet içersinde parola-şifrelenmiş deponuzdur."
+    "message": "DEN'iniz KardiaChain Wallet içersinde parola-şifrelenmiş deponuzdur."
   },
   "deposit": {
     "message": "Yatır"
@@ -251,7 +251,7 @@
     "message": "Bize e-posta atın!"
   },
   "encryptNewDen": {
-    "message": "Yeni Seed Phrase'inizi şifreleyin"
+    "message": "Yeni DEN'inizi şifreleyin"
   },
   "enterPassword": {
     "message": "Parolanızı girin"
@@ -378,7 +378,7 @@
     "message": "Hesap al"
   },
   "importDen": {
-    "message": "Varolan Seed Phrase al"
+    "message": "Varolan DEN al"
   },
   "imported": {
     "message": "Alındı",

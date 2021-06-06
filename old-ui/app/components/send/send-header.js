@@ -16,20 +16,15 @@ class SendHeader extends Component {
 			<h3
 				className="flex-center send-header"
 				style={{
-					marginTop: '14px',
+					marginTop: '18px',
 					marginBottom: '14px',
-					fontSize: '18px',
-					fontFamily: 'Work Sans, sans-serif',
-					color: '#1C1C28',
-					fontWeight: 'bold',
-					lineHeight: '24px',
 				}}
 			>
 				<i
 					className="fa fa-arrow-left fa-lg cursor-pointer"
 					style={{
 						position: 'absolute',
-						left: '30px',
+						left: '14px',
 					}}
 					onClick={() => { this.props.back ? this.props.back() : this.back() }}
 				/>

@@ -73,7 +73,7 @@ Notice.prototype.render = function () {
         h('h3.flex-center.terms-header', {
           key: 'notice-key',
           style: {
-            color: '#333333',
+            color: '#000000',
             width: '100%',
             fontSize: '16px',
             textAlign: 'center',
@@ -91,9 +91,9 @@ Notice.prototype.render = function () {
             }
           },
           style: {
-            background: '#ffffff',
-            color: '#333333',
-            height: '340px',
+            background: '#FFFFFF',
+            color: '#000000',
+            height: '430px',
             width: '90%',
             overflowY: 'scroll',
             scroll: 'auto',

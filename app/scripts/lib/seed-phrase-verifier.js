@@ -1,4 +1,5 @@
-import KeyringController from '../kardiaScript/kardia-keychain-controller'
+import KeyringController from 'eth-keychain-controller'
+import log from 'loglevel'
 const { getDPath } = require('../../../old-ui/app/util')
 
 const seedPhraseVerifier = {
@@ -35,6 +36,9 @@ const seedPhraseVerifier = {
       const keyring = new Keyring(opts)
       keyring.getAccounts()
         .then((restoredAccounts) => {
+
+          // log.debug('Created accounts: ' + JSON.stringify(createdAccounts))
+          // log.debug('Restored accounts: ' + JSON.stringify(restoredAccounts))
 
           if (restoredAccounts.length !== createdAccounts.length) {
             // this should not happen...

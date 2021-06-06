@@ -3,6 +3,7 @@ const h = require('react-hyperscript')
 const inherits = require('util').inherits
 
 const TransactionListItem = require('./transaction-list-item')
+const { MAINNET_CODE } = require('../../../app/scripts/controllers/network/enums')
 
 module.exports = TransactionList
 
@@ -13,10 +14,14 @@ function TransactionList () {
 }
 
 TransactionList.prototype.render = function () {
-  const { transactions, network, conversionRate, address } = this.props
+  const { transactions, network, unapprovedMsgs, conversionRate } = this.props
 
-
-  const txsToRender = transactions
+  let shapeShiftTxList
+  if (Number(network) === MAINNET_CODE) {
+    shapeShiftTxList = this.props.shapeShiftTxList
+  }
+  const txsToRender = !shapeShiftTxList ? transactions.concat(unapprovedMsgs) : transactions.concat(unapprovedMsgs, shapeShiftTxList)
+  .sort((a, b) => b.time - a.time)
 
   return (
 
@@ -40,8 +45,8 @@ TransactionList.prototype.render = function () {
         style: {
           overflowY: 'auto',
           height: '100%',
+          padding: '0 30px',
           textAlign: 'center',
-
         },
       }, [
 
@@ -62,29 +67,17 @@ TransactionList.prototype.render = function () {
               showTx: (txId) => {
                 this.props.viewPendingTx(txId)
               },
-              address,
             })
           })
         : h('.flex-center.full-flex-height', {
           style: {
             flexDirection: 'column',
             justifyContent: 'center',
-            backgroundImage: 'url("./images/no-tx.png")',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            marginTop: '80px',
-            width: '100%',
-            height: '174px',
           },
         }, [
           h('p', {
             style: {
-              fontWeight: 600,
-              fontSize: '14px',
-              lineHeight: '16px',
-              color: 'rgba(28, 28, 40, 0.54)',
-              position: 'absolute',
-              bottom: '2%',
+              margin: '50px 0',
             },
           }, 'No transaction history.'),
         ]),

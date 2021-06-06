@@ -3,9 +3,6 @@ import ethUtil from 'ethereumjs-util'
 import BigNumber from 'bignumber.js'
 
 export function calcMaxAmount ({ balance, gasTotal, sendToken, tokenBalance }) {
-  if (!ethUtil.isHexString(balance)) {
-    balance = (+balance).toString(16)
-  }
   const { decimals } = sendToken || {}
   const multiplier = Math.pow(10, Number(decimals || 0))
 

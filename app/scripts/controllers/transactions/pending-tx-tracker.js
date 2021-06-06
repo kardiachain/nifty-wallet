@@ -1,6 +1,6 @@
-const EventEmitter = require('events')
-const log = require('loglevel')
-const KardiQuery = require('../../kardiaScript/kardia-query')
+import EventEmitter from 'safe-event-emitter'
+import log from 'loglevel'
+import EthQuery from 'ethjs-query'
 
 /**
 
@@ -22,7 +22,7 @@ const KardiQuery = require('../../kardiaScript/kardia-query')
 class PendingTransactionTracker extends EventEmitter {
   constructor (config) {
     super()
-    this.query = new KardiQuery(config.provider)
+    this.query = new EthQuery(config.provider)
     this.nonceTracker = config.nonceTracker
     this.getPendingTransactions = config.getPendingTransactions
     this.getCompletedTransactions = config.getCompletedTransactions
@@ -148,6 +148,7 @@ class PendingTransactionTracker extends EventEmitter {
 
     // get latest transaction status
     try {
+      console.log('here background', txHash)
       const txParams = await this.query.getTransactionByHash(txHash)
       if (!txParams) return
       if (txParams.blockNumber) {

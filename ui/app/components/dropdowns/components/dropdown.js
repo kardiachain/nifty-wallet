@@ -41,11 +41,11 @@ class Dropdown extends Component {
           'style',
           `
           li.dropdown-menu-item:hover {
-            color: #333333;
-            background-color: #E5E5E5;
+            color:rgb(225, 225, 225);
+            background-color: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
           }
-          li.dropdown-menu-item { color: #333333; }
+          li.dropdown-menu-item { color: rgba(28, 28, 40, 1); }
           `,
         ),
         ...children,
@@ -91,7 +91,7 @@ class DropdownMenuItem extends Component {
           display: 'flex',
           justifyContent: 'flex-start',
           alignItems: 'center',
-          color: '#333333 !important',
+          color: 'white',
         }, style),
       },
       children,

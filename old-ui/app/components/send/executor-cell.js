@@ -40,7 +40,8 @@ class ExecutorCell extends Component {
 				<div
 					className="account-data-subsection flex-row flex-grow"
 					style={{
-						background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
+						// background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
+						background: 'transparent',
 						padding: '20px',
 						borderRadius: '5px',
 					}}
@@ -52,7 +53,7 @@ class ExecutorCell extends Component {
 							className="identicon-wrapper flex-column flex-center select-none"
 							style={{ display: 'inline-block' }}
 						>
-							<Identicon diameter={60} address={address} />
+							<Identicon diameter={40} address={address} />
 						</div>
 						{/* invisible place holder */}
 						<i className="fa fa-users fa-lg invisible" style={{ marginTop: '28px' }} />
@@ -62,7 +63,7 @@ class ExecutorCell extends Component {
 						<h2
 							className="font-medium flex-center"
 							style={{
-								color: '#333333',
+								color: '#ffffff',
 								marginBottom: '8px',
 							}}
 						>{identity && identity.name}</h2>

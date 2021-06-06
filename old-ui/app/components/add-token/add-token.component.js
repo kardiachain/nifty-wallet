@@ -62,11 +62,6 @@ export default class AddTokenScreen extends Component {
   }
 
   componentDidMount () {
-    if (typeof global.ethereumProvider === 'undefined') return
-
-    this.eth = new Eth(global.ethereumProvider)
-    this.contract = new EthContract(this.eth)
-    this.TokenContract = this.contract(abi)
     this.tokenInfoGetter = tokenInfoGetter()
     const { pendingTokens = {} } = this.props
     const pendingTokenKeys = Object.keys(pendingTokens)
@@ -319,6 +314,15 @@ export default class AddTokenScreen extends Component {
         ]),
       ]),
     ])
+  }
+
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount () {
+    if (typeof global.ethereumProvider === 'undefined') return
+
+    this.eth = new Eth(global.ethereumProvider)
+    this.contract = new EthContract(this.eth)
+    this.TokenContract = this.contract(abi)
   }
 
   componentWillUnmount () {

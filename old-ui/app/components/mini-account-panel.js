@@ -14,7 +14,7 @@ function AccountPanel () {
 AccountPanel.prototype.render = function () {
   const props = this.props
   const picOrder = props.picOrder || 'left'
-  const { imageSeed } = props
+  const { imageSeed, showIcon = true } = props
 
   return (
 
@@ -25,7 +25,7 @@ AccountPanel.prototype.render = function () {
       onClick: props.onClick,
     }, [
 
-      this.genIcon(imageSeed, picOrder),
+      showIcon && this.genIcon(imageSeed, picOrder),
 
       h('div.flex-column.flex-justify-center', {
         style: {

@@ -53,7 +53,7 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
         style: {
           paddingTop: '50px',
           fontSize: '1.3em',
-          color: '#333333',
+          // color: '#ffffff',
           marginBottom: 10,
         },
       }, 'KardiaChain Wallet'),
@@ -63,14 +63,13 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
         h('h3', {
           style: {
             fontSize: '0.8em',
-            color: '#333333',
+            // color: '#ffffff',
             display: 'inline',
           },
-        }, 'Encrypt your new Seed Phrase'),
+        }, 'Encrypt your new DEN'),
 
         h(Tooltip, {
-          title: 'Your Seed Phrase is your password-encrypted storage within KardiaChain Wallet.',
-          position: 'top',
+          title: 'Your DEN is your password-encrypted storage within KardiaChain Wallet.',
           id: 'initMenu',
         },
 
@@ -136,7 +135,7 @@ InitializeMenuScreen.prototype.renderMenu = function (state) {
             fontSize: '0.8em',
             color: '#60db97',
           },
-        }, 'Import Existing Seed Phrase'),
+        }, 'Import Existing DEN'),
       ]),
 
     ])

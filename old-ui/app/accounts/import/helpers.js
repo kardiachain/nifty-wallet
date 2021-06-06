@@ -1,7 +1,8 @@
 import log from 'loglevel'
 import { importTypes } from './enums'
 import Web3 from 'web3'
-import ethNetProps from 'eth-net-props'
+// import ethNetProps from 'eth-net-props'
+import ethNetProps from '../../../../kardia-libs/kai-net-props'
 import abi from 'web3-eth-abi'
 
 const nestedJsonObjToArray = (jsonObj) => {
@@ -21,28 +22,58 @@ const jsonObjToArray = (jsonObj) => {
 
 const getBlockscoutApiNetworkPrefix = (network) => {
 	switch (Number(network)) {
+		case 1:
+		case 42:
+		case 3:
+		case 4:
+		return 'eth'
+		case 99:
+		case 77:
 		case 100:
-			return 'kai'
+		return 'poa'
+		case NaN:
+		return 'etc'
 		default:
-			return ''
+		return ''
 	}
 }
 
 const getBlockscoutApiNetworkSuffix = (network) => {
 	switch (Number(network)) {
+		case 1:
+		return 'mainnet'
+		case 99:
+		return 'core'
+		case 77:
+		return 'sokol'
 		case 100:
-			return 'kai'
+		return 'dai'
+		case 42:
+		return 'kovan'
+		case 3:
+		return 'ropsten'
+		case 4:
+		return 'rinkeby'
+		case NaN:
+		return 'mainnet'
 		default:
-			return ''
+		return ''
 	}
 }
 
 const _isBlockscoutInstanceForThisChain = (network) => {
 	switch (Number(network)) {
+		case 1:
+		case 99:
+		case 77:
 		case 100:
-			return true
+		return true
+		case 42:
+		case 3:
+		case 4:
+		return false
 		default:
-			return false
+		return false
 	}
 }
 

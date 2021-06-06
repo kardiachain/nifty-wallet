@@ -238,7 +238,7 @@
     "message": "Domyślna sieć dla Eteru to Main Net."
   },
   "denExplainer": {
-    "message": "Twój Seed Phrase to chroniony hasłem schowek w MetaMasku."
+    "message": "Twój DEN to chroniony hasłem schowek w MetaMasku."
   },
   "deposit": {
     "message": "Zdeponuj"
@@ -308,7 +308,7 @@
     "message": "Napisz do nas!"
   },
   "encryptNewDen": {
-    "message": "Zaszyfruj swój nowy Seed Phrase"
+    "message": "Zaszyfruj swój nowy DEN"
   },
   "ensNameNotFound": {
     "message": "Nie znaleziono nazwy ENS"
@@ -480,7 +480,7 @@
     "message": "Importuj konto"
   },
   "importDen": {
-    "message": "Importuj istniejące Seed Phrase"
+    "message": "Importuj istniejące DEN"
   },
   "imported": {
     "message": "Zaimportowane",

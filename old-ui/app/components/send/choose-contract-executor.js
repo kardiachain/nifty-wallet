@@ -72,8 +72,8 @@ class ChooseContractExecutor extends Component {
 		const { error } = this.props
 		return (
 			<div className="send-screen flex-column flex-grow">
-				<SendProfile />
 				<SendHeader title="Choose contract executor" back={() => this.back()} />
+				<SendProfile />
 				<ErrorComponent error={error} />
 				<div style={{ padding: '0 30px' }}>
 					<span className="hw-connect__header__msg">Contract transaction will be executed from selected account</span>

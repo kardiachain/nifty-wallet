@@ -1,4 +1,4 @@
-const ObservableStore = require('obs-store')
+import { ObservableStore } from '@metamask/obs-store'
 const extend = require('xtend')
 const PhishingDetector = require('eth-phishing-detect/src/detector')
 const log = require('loglevel')
@@ -83,12 +83,11 @@ class BlacklistController {
    *
    */
   async updatePhishingList () {
-    // const response = await fetch('https://api.infura.io/v2/blacklist')
-    // const phishing = await response.json()
-    // this.store.updateState({ phishing })
-    // this._setupPhishingDetector(phishing)
-    // return phishing
-    return {}
+    const response = await fetch('https://api.infura.io/v2/blacklist')
+    const phishing = await response.json()
+    this.store.updateState({ phishing })
+    this._setupPhishingDetector(phishing)
+    return phishing
   }
 
   /**
@@ -97,13 +96,13 @@ class BlacklistController {
    *
    */
   scheduleUpdates () {
-    // if (this._phishingUpdateIntervalRef) {
-    //   clearInterval(this._phishingUpdateIntervalRef)
-    // }
-    // this.updatePhishingList().catch(log.warn)
-    // this._phishingUpdateIntervalRef = setInterval(() => {
-    //   this.updatePhishingList().catch(log.warn)
-    // }, POLLING_INTERVAL)
+    if (this._phishingUpdateIntervalRef) {
+      clearInterval(this._phishingUpdateIntervalRef)
+    }
+    this.updatePhishingList().catch(log.warn)
+    this._phishingUpdateIntervalRef = setInterval(() => {
+      this.updatePhishingList().catch(log.warn)
+    }, POLLING_INTERVAL)
   }
 
   /**
@@ -115,7 +114,7 @@ class BlacklistController {
    *
    */
   _setupPhishingDetector (config) {
-    // this._phishingDetector = new PhishingDetector(config)
+    this._phishingDetector = new PhishingDetector(config)
   }
 }
 

@@ -1,8 +1,7 @@
 import { Component } from 'react'
 import h from 'react-hyperscript'
 import { inherits } from 'util'
-// import TokenTracker from 'eth-token-watcher'
-import TokenTracker from '../../../app/scripts/kardiaScript/kardia-token-watcher'
+import TokenTracker from '@metamask/eth-token-tracker'
 import log from 'loglevel'
 import { connect } from 'react-redux'
 const TokenCell = require('./token-cell.js')
@@ -16,40 +15,40 @@ function mapStateToProps (state) {
   }
 }
 
-// const defaultTokens = []
+const defaultTokens = []
 
-// const contractsETH = require('eth-contract-metadata')
-// const contractsPOA = require('poa-contract-metadata')
-// const contractsRSK = require('@rsksmart/rsk-contract-metadata')
-// const contractsRSKTest = require('@rsksmart/rsk-testnet-contract-metadata')
-// for (const address in contractsETH) {
-//   const contract = contractsETH[address]
-//   if (contract.erc20) {
-//     contract.address = address
-//     defaultTokens.push(contract)
-//   }
-// }
-// for (const address in contractsPOA) {
-//   const contract = contractsPOA[address]
-//   if (contract.erc20) {
-//     contract.address = address
-//     defaultTokens.push(contract)
-//   }
-// }
-// for (const address in contractsRSK) {
-//   const contract = contractsRSK[address]
-//   if (contract.erc20) {
-//     contract.address = address
-//     defaultTokens.push(contract)
-//   }
-// }
-// for (const address in contractsRSKTest) {
-//   const contract = contractsRSKTest[address]
-//   if (contract.erc20) {
-//     contract.address = address
-//     defaultTokens.push(contract)
-//   }
-// }
+const contractsETH = require('@metamask/contract-metadata')
+const contractsPOA = require('poa-contract-metadata')
+const contractsRSK = require('@rsksmart/rsk-contract-metadata')
+const contractsRSKTest = require('@rsksmart/rsk-testnet-contract-metadata')
+for (const address in contractsETH) {
+  const contract = contractsETH[address]
+  if (contract.erc20) {
+    contract.address = address
+    defaultTokens.push(contract)
+  }
+}
+for (const address in contractsPOA) {
+  const contract = contractsPOA[address]
+  if (contract.erc20) {
+    contract.address = address
+    defaultTokens.push(contract)
+  }
+}
+for (const address in contractsRSK) {
+  const contract = contractsRSK[address]
+  if (contract.erc20) {
+    contract.address = address
+    defaultTokens.push(contract)
+  }
+}
+for (const address in contractsRSKTest) {
+  const contract = contractsRSKTest[address]
+  if (contract.erc20) {
+    contract.address = address
+    defaultTokens.push(contract)
+  }
+}
 
 module.exports = connect(mapStateToProps)(TokenList)
 
@@ -57,7 +56,7 @@ inherits(TokenList, Component)
 function TokenList () {
   this.state = {
     tokens: [],
-    isLoading: false,
+    isLoading: true,
     network: null,
   }
   Component.call(this)
@@ -65,12 +64,12 @@ function TokenList () {
 
 TokenList.prototype.render = function () {
   const state = this.state
-  // const { isLoading, error } = state
-  const { error } = state
-  const { userAddress, network, tokens } = this.props
-  // if (isLoading) {
-  //   return this.message('Loading...')
-  // }
+  const { tokens, isLoading, error } = state
+  const { userAddress, network } = this.props
+
+  if (isLoading) {
+    return this.message('Loading')
+  }
 
   if (error) {
     log.error(error)
@@ -97,7 +96,7 @@ TokenList.prototype.render = function () {
   const tokensFromCurrentNetwork = tokens.filter(token => (parseInt(token.network) === parseInt(network) || !token.network))
 
   const tokenViews = tokensFromCurrentNetwork.map((tokenData, ind) => {
-    // tokenData.userAddress = userAddress
+    tokenData.userAddress = userAddress
     const isLastTokenCell = ind === (tokensFromCurrentNetwork.length - 1)
     const menuToTop = true
     return h(TokenCell, {
@@ -146,8 +145,8 @@ TokenList.prototype.render = function () {
 }
 
 TokenList.prototype.renderTokenStatusBar = function () {
-  // const { tokens } = this.state
-  const { network, tokens } = this.props
+  const { tokens } = this.state
+  const { network } = this.props
   const tokensFromCurrentNetwork = tokens.filter(token => (parseInt(token.network) === parseInt(network) || !token.network))
 
   let msg
@@ -168,7 +167,7 @@ TokenList.prototype.renderTokenStatusBar = function () {
         justifyContent: 'space-between',
         alignItems: 'center',
         minHeight: '70px',
-        // padding: '30px 30px 10px',
+        padding: '30px 30px 10px',
       },
     }, [
       h('span', msg),
@@ -208,7 +207,7 @@ TokenList.prototype.message = function (body) {
 }
 
 TokenList.prototype.componentDidMount = function () {
-  // this.createFreshTokenTracker()
+  this.createFreshTokenTracker()
 }
 
 TokenList.prototype.createFreshTokenTracker = function () {
@@ -260,6 +259,7 @@ TokenList.prototype.componentDidUpdate = function (nextProps) {
     userAddress: newAddress,
     tokens: newTokens,
   } = nextProps
+
   const isLoading = newNet === 'loading'
   const missingInfo = !oldNet || !newNet || !oldAddress || !newAddress
   const sameUserAndNetwork = oldAddress === newAddress && oldNet === newNet
@@ -271,7 +271,7 @@ TokenList.prototype.componentDidUpdate = function (nextProps) {
   if (tokensLengthUnchanged && shouldUpdateTokens) return
 
   this.setState({ isLoading: true })
-  // this.createFreshTokenTracker()
+  this.createFreshTokenTracker()
 }
 
 TokenList.prototype.updateBalances = function (tokens) {

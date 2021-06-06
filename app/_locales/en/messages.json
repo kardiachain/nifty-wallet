@@ -48,7 +48,7 @@
     "message": "Amount + Gas"
   },
   "appDescription": {
-    "message": "KardiaChain Web3 Extension",
+    "message": "KardiaChain Browser Extension",
     "description": "The description of the application"
   },
   "appName": {
@@ -280,7 +280,7 @@
     "message": "The default network for Ether transactions is Main Net."
   },
   "denExplainer": {
-    "message": "Your Seed Phrase is your password-encrypted storage within KardiaChain Wallet."
+    "message": "Your DEN is your password-encrypted storage within KardiaChain Wallet."
   },
   "deposit": {
     "message": "Deposit"
@@ -350,7 +350,7 @@
     "message": "Email us!"
   },
   "encryptNewDen": {
-    "message": "Encrypt your new Seed Phrase"
+    "message": "Encrypt your new DEN"
   },
   "ensNameNotFound": {
     "message": "ENS name not found"
@@ -522,7 +522,7 @@
     "message": "Import an account"
   },
   "importDen": {
-    "message": "Import Existing Seed Phrase"
+    "message": "Import Existing DEN"
   },
   "imported": {
     "message": "Imported",

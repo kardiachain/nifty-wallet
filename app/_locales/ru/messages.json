@@ -190,7 +190,7 @@
     "message": "Основная сеть Ethereum – это сеть по умолчанию для Ether транзакций."
   },
   "denExplainer": {
-    "message": "Seed Phrase – это зашифрованное паролем хранилище внутри KardiaChain Wallet."
+    "message": "DEN – это зашифрованное паролем хранилище внутри KardiaChain Wallet."
   },
   "deposit": {
     "message": "Пополнить"
@@ -251,7 +251,7 @@
     "message": "Свяжитесь с нами по электронной почте!"
   },
   "encryptNewDen": {
-    "message": "Зашифровать ваш новый Seed Phrase"
+    "message": "Зашифровать ваш новый DEN"
   },
   "enterPassword": {
     "message": "Введите пароль"
@@ -372,7 +372,7 @@
     "message": "Импортировать аккаунт"
   },
   "importDen": {
-    "message": "Импортировать существующий Seed Phrase"
+    "message": "Импортировать существующий DEN"
   },
   "imported": {
     "message": "Импортирован",

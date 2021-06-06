@@ -199,7 +199,7 @@
     "message": "默认以太坊交易网络为主网。"
   },
   "denExplainer": {
-    "message": "你的 Seed Phrase 是存储在 KardiaChain Wallet 中的已加密密码。"
+    "message": "你的 DEN 是存储在 KardiaChain Wallet 中的已加密密码。"
   },
   "deposit": {
     "message": "存入"
@@ -260,7 +260,7 @@
     "message": "联系我们"
   },
   "encryptNewDen": {
-    "message": "加密你的新 Seed Phrase"
+    "message": "加密你的新 DEN"
   },
   "enterPassword": {
     "message": "请输入密码"
@@ -393,7 +393,7 @@
     "message": "导入一个账户"
   },
   "importDen": {
-    "message": "导入存在的 Seed Phrase"
+    "message": "导入存在的 DEN"
   },
   "imported": {
     "message": "已导入",

@@ -36,7 +36,7 @@ AccountPanel.prototype.render = function () {
 
     h('.identity-panel.flex-row.flex-space-between', {
       style: {
-        background: ((state.style && state.style.background) || '#E5E5E5'),
+        background: ((state.style && state.style.background) || 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))'),
         padding: '30px',
         flex: '1 0 auto',
         cursor: panelState.onClick ? 'pointer' : undefined,
@@ -57,7 +57,7 @@ AccountPanel.prototype.render = function () {
       h('.identity-data.flex-column.flex-justify-center.flex-grow.select-none', [
         h('h2.font-medium', {
           style: {
-            color: '#333333',
+            color: '#ffffff',
             marginBottom: '20px',
             lineHeight: '16px',
           },
@@ -68,14 +68,14 @@ AccountPanel.prototype.render = function () {
           }, [
             h('label.font-pre-medium.no-select', {
               style: {
-                color: '#333333',
+                color: '#ffffff',
                 marginBottom: i === 0 ? '10px' : '0px',
                 lineHeight: '14px',
               },
             }, attr.key),
             h('span.font-pre-medium', {
               style: {
-                color: '#333333',
+                color: '#ffffff',
                 lineHeight: '14px',
               },
             }, attr.value),

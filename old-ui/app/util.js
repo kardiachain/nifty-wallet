@@ -1,11 +1,53 @@
 const ethUtil = require('ethereumjs-util')
+// const ethNetProps = require('eth-net-props')
+const ethNetProps = require('../../kardia-libs/kai-net-props')
 const {
-  LOCALHOST,
-  RPC,
-  KARDIA_MAINNET,
-  KARDIA_MAINNET_CHAINID,
+  ROPSTEN,
+  ROPSTEN_CODE,
+  ROPSTEN_CHAINID,
+  RINKEBY_CODE,
+  RINKEBY_CHAINID,
+  RINKEBY,
+  KOVAN,
+  KOVAN_CODE,
+  KOVAN_CHAINID,
+  MAINNET,
+  MAINNET_CODE,
+  MAINNET_CHAINID,
+  ETH_TICK,
+  POA_SOKOL,
+  POA_CODE,
+  POA_CHAINID,
+  POA_TICK,
+  POA,
+  KARDIA,
+  KARDIA_CHAINID,
+  KARDIA_CODE,
   KARDIA_TICK,
+  DAI,
+  DAI_CODE,
+  DAI_CHAINID,
+  GOERLI_TESTNET,
+  GOERLI_TESTNET_CODE,
+  GOERLI_TESTNET_CHAINID,
+  POA_SOKOL_CODE,
+  POA_SOKOL_CHAINID,
+  RSK_CODE,
+  RSK_CHAINID,
+  RSK_TESTNET_CODE,
+  RSK_TESTNET_CHAINID,
+  LOCALHOST,
+  CLASSIC,
+  CLASSIC_CODE,
+  CLASSIC_CHAINID,
+  CLASSIC_TICK,
+  RSK,
+  RSK_TESTNET,
+  RSK_TICK,
+  customDPaths,
 } = require('../../app/scripts/controllers/network/enums')
+
+const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN]
 
 const valueTable = {
   wei: '1000000000000000000',
@@ -53,6 +95,11 @@ module.exports = {
   ifContractAcc,
   ifHardwareAcc,
   getAllKeyRingsAccounts,
+  ifRSK,
+  ifETC,
+  ifRSKByProviderType,
+  ifPOA,
+  ifXDai,
   toChecksumAddress,
   isValidChecksumAddress,
   isInfuraProvider,
@@ -88,8 +135,13 @@ function accountSummary (acc, firstSegLength = 6, lastSegLength = 4) {
 
 function isValidAddress (address, network) {
   const prefixed = ethUtil.addHexPrefix(address)
-  if (address === '0x0000000000000000000000000000000000000000') return false
-  return (isAllOneCase(prefixed) && ethUtil.isValidAddress(prefixed)) || ethUtil.isValidChecksumAddress(prefixed)
+  if (ifRSK(network)) {
+    if (address === '0x0000000000000000000000000000000000000000') return false
+    return (ethUtil.isValidAddress(prefixed))
+  } else {
+    if (address === '0x0000000000000000000000000000000000000000') return false
+    return (isAllOneCase(prefixed) && ethUtil.isValidAddress(prefixed)) || ethUtil.isValidChecksumAddress(prefixed)
+  }
 }
 
 function isValidENSAddress (address) {
@@ -123,11 +175,12 @@ function numericBalance (balance) {
 // Takes  hex, returns [beforeDecimal, afterDecimal]
 function parseBalance (balance) {
   let afterDecimal
-  const hydroString = balance.toString()
+  const wei = numericBalance(balance)
+  const weiString = wei.toString()
   const trailingZeros = /0+$/
 
-  const beforeDecimal = hydroString.length > 18 ? hydroString.slice(0, hydroString.length - 18) : '0'
-  afterDecimal = ('000000000000000000' + balance).slice(-18).replace(trailingZeros, '')
+  const beforeDecimal = weiString.length > 18 ? weiString.slice(0, weiString.length - 18) : '0'
+  afterDecimal = ('000000000000000000' + wei).slice(-18).replace(trailingZeros, '')
   if (afterDecimal === '') { afterDecimal = '0' }
   return [beforeDecimal, afterDecimal]
 }
@@ -135,7 +188,7 @@ function parseBalance (balance) {
 // Takes wei hex, returns an object with three properties.
 // Its "formatted" property is what we generally use to render values.
 function formatBalance (balance, decimalsToKeep, needsParse = true, network, isToken, tokenSymbol) {
-  const coinName = 'KAI'
+  const coinName = ethNetProps.props.getNetworkCoinName(network)
   const assetName = isToken ? tokenSymbol : coinName
   const parsed = needsParse ? parseBalance(balance) : balance.split('.')
   const beforeDecimal = parsed[0]
@@ -374,6 +427,7 @@ function ifHardwareAcc (keyring) {
   return false
 }
 
+
 function getAllKeyRingsAccounts (keyrings, network) {
   const accountOrder = keyrings.reduce((list, keyring) => {
     if (ifContractAcc(keyring) && keyring.network === network) {
@@ -386,8 +440,57 @@ function getAllKeyRingsAccounts (keyrings, network) {
   return accountOrder
 }
 
+function ifRSK (network) {
+  if (!network) return false
+  const numericNet = isNaN(network) ? network : parseInt(network)
+  return numericNet === RSK_CODE || numericNet === RSK_TESTNET_CODE
+}
+
+function ifETC (network) {
+  if (!network) return false
+  const numericNet = isNaN(network) ? network : parseInt(network)
+  return numericNet === CLASSIC_CODE
+}
+
+function ifRSKByProviderType (type) {
+  if (!type) return false
+  return type === RSK || type === RSK_TESTNET
+}
+
+function ifPOA (network) {
+  if (!network) return false
+  const numericNet = isNaN(network) ? network : parseInt(network)
+  return numericNet === POA_SOKOL_CODE || numericNet === POA_CODE
+}
+
+function ifXDai (network) {
+  if (!network) return false
+  const numericNet = isNaN(network) ? network : parseInt(network)
+  return numericNet === DAI_CODE
+}
+
+function toChecksumAddressRSK (address, chainId = null) {
+  const zeroX = '0x'
+  const stripAddress = ethUtil.stripHexPrefix(address).toLowerCase()
+  const prefix = chainId !== null ? (chainId.toString() + zeroX) : ''
+  const keccakHash = ethUtil.sha3(prefix + stripAddress).toString('hex')
+  let output = zeroX
+
+  for (let i = 0; i < stripAddress.length; i++) {
+   output += parseInt(keccakHash[i], 16) >= 8 ?
+              stripAddress[i].toUpperCase() :
+              stripAddress[i]
+  }
+
+  return output
+}
+
 function toChecksumAddress (network, address, chainId = null) {
-  return ethUtil.toChecksumAddress(address, chainId)
+  if (ifRSK(network)) {
+    return toChecksumAddressRSK(address, parseInt(network))
+  } else {
+    return ethUtil.toChecksumAddress(address, chainId)
+  }
 }
 
 function isValidChecksumAddress (network, address) {
@@ -395,15 +498,21 @@ function isValidChecksumAddress (network, address) {
 }
 
 function isInfuraProvider (type) {
-  const INFURA_PROVIDER_TYPES = []
   return INFURA_PROVIDER_TYPES.includes(type)
 }
 
 function isKnownProvider (type) {
-  const INFURA_PROVIDER_TYPES = []
   return INFURA_PROVIDER_TYPES.includes(type) ||
-  type === KARDIA_MAINNET ||
-  type === LOCALHOST
+  type === LOCALHOST ||
+  type === MAINNET ||
+  type === POA_SOKOL ||
+  type === POA ||
+  type === DAI ||
+  type === GOERLI_TESTNET ||
+  type === CLASSIC ||
+  type === RSK ||
+  type === RSK_TESTNET ||
+  type === KARDIA
 }
 
 function getNetworkID ({ network }) {
@@ -411,16 +520,66 @@ function getNetworkID ({ network }) {
   let netId
   let ticker
   switch (network) {
-    case KARDIA_MAINNET:
-      netId = KARDIA_MAINNET.toString()
-      chainId = KARDIA_MAINNET_CHAINID
+    case KARDIA:
+      console.log('here get getNetworkID correct')
+      netId = KARDIA_CODE.toString()
+      chainId = KARDIA_CHAINID
       ticker = KARDIA_TICK
       break
-    case RPC:
-      // TODO: update for custom RPC
-      netId = RPC
-      chainId = RPC
-      ticker = KARDIA_TICK
+    case MAINNET:
+      netId = MAINNET_CODE.toString()
+      chainId = MAINNET_CHAINID
+      ticker = ETH_TICK
+      break
+    case ROPSTEN:
+      netId = ROPSTEN_CODE.toString()
+      chainId = ROPSTEN_CHAINID
+      ticker = ETH_TICK
+      break
+    case RINKEBY:
+      netId = RINKEBY_CODE.toString()
+      chainId = RINKEBY_CHAINID
+      ticker = ETH_TICK
+      break
+    case KOVAN:
+      netId = KOVAN_CODE.toString()
+      chainId = KOVAN_CHAINID
+      ticker = ETH_TICK
+      break
+    case GOERLI_TESTNET:
+      netId = GOERLI_TESTNET_CODE.toString()
+      chainId = GOERLI_TESTNET_CHAINID
+      ticker = ETH_TICK
+      break
+    case POA:
+      netId = POA_CODE.toString()
+      chainId = POA_CHAINID
+      ticker = POA_TICK
+      break
+    case DAI:
+      netId = DAI_CODE.toString()
+      chainId = DAI_CHAINID
+      ticker = POA_TICK
+      break
+    case POA_SOKOL:
+      netId = POA_SOKOL_CODE.toString()
+      chainId = POA_SOKOL_CHAINID
+      ticker = POA_TICK
+      break
+    case RSK:
+      netId = RSK_CODE.toString()
+      chainId = RSK_CHAINID
+      ticker = RSK_TICK
+      break
+    case RSK_TESTNET:
+      netId = RSK_TESTNET_CODE.toString()
+      chainId = RSK_TESTNET_CHAINID
+      ticker = RSK_TICK
+      break
+    case CLASSIC:
+      netId = CLASSIC_CODE.toString()
+      chainId = CLASSIC_CHAINID
+      ticker = CLASSIC_TICK
       break
     default:
       console.error(`getNetworkID - unknown network "${network}"`)
@@ -431,7 +590,11 @@ function getNetworkID ({ network }) {
 }
 
 function getDPath (networkType, isCreatedWithCorrectDPath) {
+  if (isCreatedWithCorrectDPath) {
+    return customDPaths[networkType] || `m/44'/60'/0'/0`
+  } else {
     return `m/44'/60'/0'/0`
+  }
 }
 
 function setDPath (keyring, networkType, isCreatedWithCorrectDPath) {
@@ -443,6 +606,14 @@ function setDPath (keyring, networkType, isCreatedWithCorrectDPath) {
 
 function getTokenImageFolder (networkID) {
   switch (networkID) {
+    case MAINNET_CODE:
+      return 'images/contract'
+    case POA_CODE:
+      return 'images/contractPOA'
+    case RSK_CODE:
+      return 'images/contractRSK'
+    case RSK_TESTNET_CODE:
+      return 'images/contractRSKTest'
     default:
       return 'images/contractPOA'
   }

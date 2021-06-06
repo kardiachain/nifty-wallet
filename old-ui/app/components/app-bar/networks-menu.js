@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import { Dropdown, DropdownMenuItem } from '../dropdown'
 import actions from '../../../../ui/app/actions'
 import { LOCALHOST } from '../../../../app/scripts/controllers/network/enums'
-import { networks, getNetworkDisplayName } from '../../../../app/scripts/controllers/network/util'
+import { networks } from '../../../../app/scripts/controllers/network/util'
+// import ethNetProps from 'eth-net-props'
+import ethNetProps from '../../../../kardia-libs/kai-net-props'
 import { connect } from 'react-redux'
-import { RPC_ENDPOINT } from '../../../../constant'
 
 const LOCALHOST_RPC_URL = 'http://localhost:8545'
 
@@ -53,17 +54,16 @@ class NetworksMenu extends Component {
             props.updateNetworksMenuOpenState(false)
           }
         }}
-        zIndex={99}
+        zIndex={11}
         style={{
           position: 'absolute',
           left: '2px',
           top: '38px',
-          width: '169px',
+          width: '270px',
           maxHeight: isOpen ? '524px' : '0px',
-          zIndex: 99,
         }}
         innerStyle={{
-          // padding: '2px 16px 2px 0px',
+          padding: '2px 16px 2px 0px',
         }}
       >
 
@@ -79,7 +79,7 @@ class NetworksMenu extends Component {
           style={{
             paddingLeft: '20px',
             fontSize: '16px',
-            color: providerType === LOCALHOST ? '#333333' : '',
+            color: providerType === LOCALHOST ? 'white' : '',
           }}
         >
           {providerType === LOCALHOST ? <div className="selected-network" /> : null}
@@ -103,6 +103,7 @@ class NetworksMenu extends Component {
     const { provider: { type: providerType } } = props
     const state = this.state || {}
     const isOpen = state.isNetworkMenuOpen
+
     const networkDropdownItems = _networks
     .map((networkID) => {
       const networkObj = networks[networkID]
@@ -110,19 +111,14 @@ class NetworksMenu extends Component {
         <DropdownMenuItem
           key={networkObj.providerName}
           closeMenu={() => props.updateNetworksMenuOpenState(!isOpen)}
-          onClick={() => {
-            if (networkObj.providerName === 'kardia_mainnet') {
-              global.metamask.rpcTarget = RPC_ENDPOINT
-            }
-            props.setProviderType(networkObj.providerName)
-          }}
+          onClick={() => props.setProviderType(networkObj.providerName)}
           style={{
             paddingLeft: '20px',
-            color: providerType === networkObj.providerName ? '#333333' : '',
+            color: providerType === networkObj.providerName ? 'white' : '',
           }}
         >
           {providerType === networkObj.providerName ? <div className="selected-network" /> : null}
-          {getNetworkDisplayName(networkID)}
+          {ethNetProps.props.getNetworkDisplayName(networkID)}
         </DropdownMenuItem>
       )
     })
@@ -210,29 +206,32 @@ class NetworksMenu extends Component {
       label = label.substr(0, 34) + '...'
     }
 
-    return (
-      <DropdownMenuItem
-        key={rpcTarget}
-        onClick={() => props.setRpcTarget(rpcTarget)}
-        closeMenu={() => props.updateNetworksMenuOpenState(false)}
-        style={{
-          paddingLeft: '20px',
-          color: '#333333 !important',
-        }}
-      >
-        <div className="selected-network" />
-        <span className="custom-rpc">{label}</span>
-        <div
-          className="remove"
-          onClick={(event) => {
-            event.preventDefault()
-            event.stopPropagation()
-            props.updateNetworksMenuOpenState(false)
-            props.showDeleteRPC(label, true)
-          }}
-        />
-      </DropdownMenuItem>
-    )
+    switch (rpcTarget) {
+      default:
+        return (
+          <DropdownMenuItem
+            key={rpcTarget}
+            onClick={() => props.setRpcTarget(rpcTarget)}
+            closeMenu={() => props.updateNetworksMenuOpenState(false)}
+            style={{
+              paddingLeft: '20px',
+              color: 'white',
+            }}
+          >
+            <div className="selected-network" />
+            <span className="custom-rpc">{label}</span>
+            <div
+              className="remove"
+              onClick={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                props.updateNetworksMenuOpenState(false)
+                props.showDeleteRPC(label, true)
+              }}
+            />
+          </DropdownMenuItem>
+        )
+    }
   }
 }
 

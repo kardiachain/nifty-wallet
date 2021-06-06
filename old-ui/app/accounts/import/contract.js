@@ -55,6 +55,7 @@ class ContractImportView extends Component {
       }
     } catch (e) {
       this.clearABI()
+      log.debug('ABI can not be parsed')
     }
   }
 

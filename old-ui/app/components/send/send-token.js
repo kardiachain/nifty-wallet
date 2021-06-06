@@ -10,13 +10,12 @@ import {
 import EnsInput from '../ens-input'
 import ethUtil from 'ethereumjs-util'
 import { tokenInfoGetter, calcTokenAmountWithDec } from '../../../../ui/app/token-util'
-// import TokenTracker from 'eth-token-watcher'
-import TokenTracker from '../../../../app/scripts/kardiaScript/kardia-token-watcher'
+import TokenTracker from '@metamask/eth-token-tracker'
 import Loading from '../loading'
 import BigNumber from 'bignumber.js'
 BigNumber.config({ ERRORS: false })
 import log from 'loglevel'
-// import SendProfile from './send-profile'
+import SendProfile from './send-profile'
 import SendHeader from './send-header'
 import ErrorComponent from '../error'
 import { getMetaMaskAccounts, getSendToken, getSendTo, getTokenBalance, getSendTokenContract } from '../../../../ui/app/selectors'
@@ -58,8 +57,8 @@ class SendTransactionScreen extends PersistentForm {
     return (
 
       <div className="send-screen flex-column flex-grow">
-        {/* <SendProfile isToken={true} token={token} /> */}
         <SendHeader title={`Send ${this.state.token.symbol} Tokens`} />
+        <SendProfile isToken={true} token={token} />
         <ErrorComponent error={error} />
         <section className="flex-row flex-center">
           <EnsInput
@@ -237,7 +236,7 @@ class SendTransactionScreen extends PersistentForm {
     }
 
     if (amount < 0) {
-      message = 'Can not send negative amounts of KAI.'
+      message = 'Can not send negative amounts of ETH.'
       return this.props.displayWarning(message)
     }
 

@@ -5,7 +5,7 @@ const { getTokenAddressFromTokenObject } = require('./util')
 const {
   calcGasTotal,
   calcTokenBalance,
-  // estimateGas,
+  estimateGas,
 } = require('./components/send/send.utils')
 const ethUtil = require('ethereumjs-util')
 const { fetchLocale } = require('../i18n-helper')
@@ -16,13 +16,11 @@ const { POA,
   POA_SOKOL,
   RSK,
   RSK_TESTNET,
-  CLASSIC } = require('../../app/scripts/controllers/network/enums')
+  CLASSIC, 
+  KARDIA} = require('../../app/scripts/controllers/network/enums')
 const { hasUnconfirmedTransactions } = require('./helpers/confirm-transaction/util')
 const WebcamUtils = require('../lib/webcam-utils')
 import { getEnvironmentType } from '../../app/scripts/lib/util'
-import { API_ENDPOINT, EXPLORER_ENDPOINT } from '../../constant'
-// import KardiaContract from '../../app/scripts/kardiaScript/kai-contract'
-const sleep = require('./util').sleep
 
 const actions = {
   _setBackgroundConnection: _setBackgroundConnection,
@@ -71,8 +69,6 @@ const actions = {
   showNotice: showNotice,
   CLEAR_NOTICES: 'CLEAR_NOTICES',
   clearNotices: clearNotices,
-  CLEAR_UNAPPROVED_TX: 'CLEAR_UNAPPROVED_TX',
-  clearUnapprovedTx,
   markAccountsFound,
   // intialize screen
   CREATE_NEW_VAULT_IN_PROGRESS: 'CREATE_NEW_VAULT_IN_PROGRESS',
@@ -193,10 +189,6 @@ const actions = {
   signTokenTx: signTokenTx,
   updateTransaction,
   updateAndApproveTx,
-  signKardiaTx,
-  getKardiaTxHistory,
-  UPDATE_KARDIA_TX_LIST: 'UPDATE_KARDIA_TX_LIST',
-  updateKardiaTx,
   getPendingNonce,
   cancelTx,
   cancelTxs,
@@ -385,7 +377,8 @@ const actions = {
   isCreatedWithCorrectDPath,
   closeCurrentNotificationWindow,
   closeNotificationWindow,
-  getKardiaRPCGasPrice
+
+  getGasPrice
 }
 
 module.exports = actions
@@ -407,6 +400,7 @@ function tryUnlockMetamask (password, dPath) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
     dispatch(actions.unlockInProgress())
+    log.debug(`background.submitPassword`)
 
     return new Promise((resolve, reject) => {
       background.submitPassword(password, dPath, error => {
@@ -484,7 +478,7 @@ function transitionBackward () {
 function confirmSeedWords () {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
-
+    log.debug(`background.clearSeedWordCache`)
     return new Promise((resolve, reject) => {
       background.clearSeedWordCache((err, account) => {
         dispatch(actions.hideLoadingIndication())
@@ -493,6 +487,7 @@ function confirmSeedWords () {
           return reject(err)
         }
 
+        log.info('Seed word cache cleared. ' + account)
         dispatch(actions.showAccountsPage())
         resolve(account)
       })
@@ -503,6 +498,7 @@ function confirmSeedWords () {
 function createNewVaultAndRestore (password, seed, dPath) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.createNewVaultAndRestore`)
 
     return new Promise((resolve, reject) => {
       background.clearSeedWordCache((err) => {
@@ -539,6 +535,7 @@ function createNewVaultAndRestore (password, seed, dPath) {
 function createNewVaultAndKeychain (password) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.createNewVaultAndKeychain`)
 
     return new Promise((resolve, reject) => {
       background.createNewVaultAndKeychain(password, err => {
@@ -546,6 +543,8 @@ function createNewVaultAndKeychain (password) {
           dispatch(actions.displayWarning(err.message))
           return reject(err)
         }
+
+        log.debug(`background.placeSeedWords`)
 
         background.placeSeedWords((err) => {
           if (err) {
@@ -596,6 +595,7 @@ function verifySeedPhrase () {
 function requestRevealSeed (password, dPath) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.submitPassword`)
     return new Promise((resolve, reject) => {
       background.submitPassword(password, dPath, err => {
         if (err) {
@@ -603,6 +603,7 @@ function requestRevealSeed (password, dPath) {
           return reject(err)
         }
 
+        log.debug(`background.placeSeedWords`)
         background.placeSeedWords((err, result) => {
           if (err) {
             dispatch(actions.displayWarning(err.message))
@@ -625,6 +626,7 @@ function requestRevealSeed (password, dPath) {
 function requestRevealSeedWords (password, dPath) {
   return async dispatch => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.submitPassword`)
 
     try {
       await verifyPassword(password, dPath)
@@ -651,6 +653,7 @@ function resetAccount () {
           return reject(err)
         }
 
+        log.info('Transaction history reset for ' + account)
         dispatch(actions.showAccountsPage())
         resolve(account)
       })
@@ -669,6 +672,7 @@ function changePassword (oldPassword, newPassword, dPath) {
           log.error(err)
           return reject(err)
         }
+        log.info('Password is changed for ' + account)
         dispatch(actions.showAccountsPage())
         resolve(account)
       })
@@ -684,6 +688,7 @@ function getContract (address) {
           log.error(err)
           return reject(err)
         }
+        log.info('Contract retrieved: ' + JSON.stringify(props))
         resolve(props)
       })
     })
@@ -702,6 +707,7 @@ function removeAccount (address, network) {
           return reject(err)
         }
 
+        log.info('Account removed: ' + account)
         dispatch(actions.showAccountsPage())
         resolve()
       })
@@ -721,6 +727,7 @@ function updateABI (address, network, newABI) {
           return reject(err)
         }
 
+        log.info('Implementation ABI for proxy updated: ' + account)
         dispatch(actions.showAccountsPage())
         resolve()
       })
@@ -731,6 +738,7 @@ function updateABI (address, network, newABI) {
 function addNewKeyring (type, opts) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.addNewKeyring`)
     background.addNewKeyring(type, opts, (err) => {
       dispatch(actions.hideLoadingIndication())
       if (err) return dispatch(actions.displayWarning(err.message))
@@ -744,7 +752,9 @@ function importNewAccount (strategy, args) {
     let newState
     dispatch(actions.showLoadingIndication('This may take a while, please be patient.'))
     try {
+      log.debug(`background.importAccountWithStrategy`)
       await pify(background.importAccountWithStrategy).call(background, strategy, args)
+      log.debug(`background.getState`)
       newState = await pify(background.getState).call(background)
     } catch (err) {
       dispatch(actions.hideLoadingIndication())
@@ -770,6 +780,7 @@ function navigateToNewAccountScreen () {
 }
 
 function addNewAccount () {
+  log.debug(`background.addNewAccount`)
   return (dispatch, getState) => {
     const oldIdentities = getState().metamask.identities
     dispatch(actions.showLoadingIndication())
@@ -791,6 +802,7 @@ function addNewAccount () {
 }
 
 function checkHardwareStatus (deviceName, hdPath) {
+  log.debug(`background.checkHardwareStatus`, deviceName, hdPath)
   return (dispatch, getState) => {
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
@@ -811,6 +823,7 @@ function checkHardwareStatus (deviceName, hdPath) {
 }
 
 function forgetDevice (deviceName, clearAccounts) {
+  log.debug(`background.forgetDevice`, deviceName)
   return (dispatch, getState) => {
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
@@ -831,6 +844,7 @@ function forgetDevice (deviceName, clearAccounts) {
 }
 
 function connectHardware (deviceName, page, hdPath) {
+  log.debug(`background.connectHardware`, deviceName, page, hdPath)
   return (dispatch, getState) => {
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
@@ -851,6 +865,7 @@ function connectHardware (deviceName, page, hdPath) {
 }
 
 function connectHardwareAndUnlockAddress (deviceName, hdPath, addressToUnlock) {
+  log.debug(`background.connectHardwareAndUnlockAddress`, deviceName, hdPath, addressToUnlock)
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       background.connectHardwareAndUnlockAddress(deviceName, hdPath, addressToUnlock, (err, accounts) => {
@@ -867,6 +882,7 @@ function connectHardwareAndUnlockAddress (deviceName, hdPath, addressToUnlock) {
 }
 
 function unlockHardwareWalletAccount (index, deviceName, hdPath) {
+  log.debug(`background.unlockHardwareWalletAccount`, index, deviceName, hdPath)
   return (dispatch, getState) => {
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
@@ -915,6 +931,7 @@ function showQrScanner (ROUTE) {
 function setCurrentCurrency (currencyCode) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.setCurrentCurrency`)
     background.setCurrentCurrency(currencyCode, (err, data) => {
       dispatch(actions.hideLoadingIndication())
       if (err) {
@@ -934,10 +951,13 @@ function setCurrentCurrency (currencyCode) {
 }
 
 function signMsg (msgData) {
+  log.debug('action - signMsg')
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
+      log.debug(`actions calling background.signMessage`)
       background.signMessage(msgData, (err, newState) => {
+        log.debug('signMessage called back')
         dispatch(actions.updateMetamaskState(newState))
         dispatch(actions.hideLoadingIndication())
 
@@ -957,11 +977,14 @@ function signMsg (msgData) {
 }
 
 function signPersonalMsg (msgData) {
+  log.debug('action - signPersonalMsg')
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
 
     return new Promise((resolve, reject) => {
+      log.debug(`actions calling background.signPersonalMessage`)
       background.signPersonalMessage(msgData, (err, newState) => {
+        log.debug('signPersonalMessage called back')
         dispatch(actions.updateMetamaskState(newState))
         dispatch(actions.hideLoadingIndication())
 
@@ -982,11 +1005,14 @@ function signPersonalMsg (msgData) {
 }
 
 function signTypedMsg (msgData) {
+  log.debug('action - signTypedMsg')
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
 
     return new Promise((resolve, reject) => {
+      log.debug(`actions calling background.signTypedMessage`)
       background.signTypedMessage(msgData, (err, newState) => {
+        log.debug('signTypedMessage called back')
         dispatch(actions.updateMetamaskState(newState))
         dispatch(actions.hideLoadingIndication())
 
@@ -1008,12 +1034,12 @@ function signTypedMsg (msgData) {
 
 function signTx (txData) {
   return (dispatch) => {
-    // global.kardiaQuery.sendTransaction(txData, (err, _data) => {
-    //   if (err) {
-    //     return dispatch(actions.displayWarning(err.message))
-    //   }
-    // })
-    dispatch(actions.showConfTxPage({isContractExecutionByUser: txData && txData.isContractExecutionByUser, txData}))
+    global.ethQuery.sendTransaction(txData, (err, _data) => {
+      if (err) {
+        return dispatch(actions.displayWarning(err.message))
+      }
+    })
+    dispatch(actions.showConfTxPage({isContractExecutionByUser: txData && txData.isContractExecutionByUser}))
   }
 }
 
@@ -1057,18 +1083,15 @@ function updateGasData ({
     .then(estimateGasPrice => {
       return Promise.all([
         Promise.resolve(estimateGasPrice),
-        new Promise((resolve, reject) => {
-          const txParams = {
-            data,
-            value,
-            to,
-            gasPrice: estimateGasPrice,
-            // gasLimit: blockGasLimit,
-          }
-          background.estimateGas(txParams, (err, data) => {
-            if (err) return reject(err)
-            return resolve(data)
-          })
+        estimateGas({
+          estimateGasMethod: background.estimateGas,
+          blockGasLimit,
+          selectedAddress,
+          selectedToken,
+          to,
+          value,
+          estimateGasPrice,
+          data,
         }),
       ])
     })
@@ -1126,7 +1149,7 @@ function updateSendTokenBalance ({
     return tokenBalancePromise
       .then(usersToken => {
         if (usersToken) {
-          const newTokenBalance = calcTokenBalance({ selectedToken: sendToken, usersToken })
+          const newTokenBalance = calcTokenBalance({ sendToken, usersToken })
           dispatch(setSendTokenBalance(newTokenBalance.toString(10)))
         }
       })
@@ -1217,11 +1240,7 @@ function clearSend () {
 function signTokenTx (tokenAddress, toAddress, amount, txData, confTxScreenParams) {
   return dispatch => {
     dispatch(actions.showLoadingIndication())
-    const token = global.eth.contract(abi, '', {
-        'gas': Number(900000).toString(16),
-        'gasPrice': '0x1',
-        'value': '0x0',
-      }).at(tokenAddress)
+    const token = global.eth.contract(abi).at(tokenAddress)
     token.transfer(toAddress, ethUtil.addHexPrefix(amount), txData)
       .catch(err => {
         dispatch(actions.hideLoadingIndication())
@@ -1232,7 +1251,9 @@ function signTokenTx (tokenAddress, toAddress, amount, txData, confTxScreenParam
 }
 
 function updateTransaction (txData) {
+  log.info('actions: updateTx: ' + JSON.stringify(txData))
   return dispatch => {
+    log.debug(`actions calling background.updateTx`)
     dispatch(actions.showLoadingIndication())
 
     return new Promise((resolve, reject) => {
@@ -1259,105 +1280,10 @@ function updateTransaction (txData) {
   }
 }
 
-async function signKardiaTxUtil (txData, txId, waitUntilMined) {
-  const getNonceWrapper = async () => {
-    return new Promise((resolve, reject) => {
-      if (txData.nonce) {
-        resolve(txData.nonce)
-      } else {
-        global.kardiaQuery.getTransactionCount(txData.from, (err, data) => {
-          if (err) {
-            reject(err)
-          }
-          // txData.nonce = data
-          resolve(data)
-        })
-      }
-    })
-  }
-
-  const signWrapper = async (_txData) => {
-    return new Promise((resolve, reject) => {
-      background.signTransaction(_txData, _txData.from, (err, txHash) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(txHash)
-      })
-    })
-  }
-
-  const getTxReceiptWrapper = async (_txHash) => {
-    return new Promise((resolve, reject) => {
-      global.kardiaQuery.getTransactionReceipt(_txHash, (err, txData) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(txData)
-      })
-    })
-  }
-
-  const approveWrapper = (_txId) => {
-    return new Promise((resolve, reject) => {
-      background.approveKardiaTransaction(_txId, (err, response) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(true)
-      })
-    })
-  }
-
-  const _nonce = await getNonceWrapper()
-  txData.nonce = _nonce
-  const txHash = await signWrapper(txData)
-  const approved = await approveWrapper(txId)
-
-  if (approved === true) {
-    await updateMetamaskStateFromBackground()
-  }
-
-  if (!waitUntilMined) return txHash
-  const _waitTimeOut = 10000
-  const breakTimeout = Date.now() + _waitTimeOut
-  while (Date.now() < breakTimeout) {
-    try {
-      const receipt = await getTxReceiptWrapper(txHash)
-      if (receipt) {
-        return txHash
-      } else {
-        await sleep(1000)
-      }
-    } catch (err) {
-      await sleep(1000)
-    }
-  }
-  return txHash
-}
-
-function signKardiaTx (txData, txId) {
-  return (dispatch) => {
-    dispatch(actions.showLoadingIndication())
-    return signKardiaTxUtil(txData, txId, true)
-      .then((txHash) => {
-        console.log('finish cccccc')
-        dispatch(actions.hideLoadingIndication())
-        // dispatch(actions.clearSend())
-        dispatch(actions.goHome())
-        dispatch(actions.displayToast(`Tx Hash: ${txHash}`, 'success', () => {
-          window.open(`${EXPLORER_ENDPOINT}/tx/${txHash}`)
-        }))
-      })
-      .catch((err) => {
-        dispatch(actions.displayWarning(err.message))
-        return Promise.reject(err)
-      })
-  }
-}
-
 function updateAndApproveTx (txData) {
+  log.info('actions: updateAndApproveTx: ' + JSON.stringify(txData))
   return (dispatch) => {
+    log.debug(`actions calling background.updateAndApproveTx`)
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
       background.updateAndApproveTransaction(txData, err => {
@@ -1392,22 +1318,10 @@ function updateAndApproveTx (txData) {
   }
 }
 
-function getKardiaRPCGasPrice() {
-  return () => {
-    return new Promise((resolve, reject) => {
-      global.kardiaQuery.gasPrice((err, data) => {
-        if (err) {
-          console.error(err)
-          return reject(err)
-        }
-        resolve(data)
-      })
-    })
-  }
-}
-
 function getPendingNonce (address) {
+  log.info('actions: getPendingNonce')
   return (dispatch) => {
+    log.debug(`actions calling background.getPendingNonce`)
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
       background.getPendingNonce(address, (err, nonce) => {
@@ -1426,12 +1340,6 @@ function completedTx (id) {
   return {
     type: actions.COMPLETED_TX,
     value: id,
-  }
-}
-
-function clearUnapprovedTx () {
-  return {
-    type: actions.CLEAR_UNAPPROVED_TX,
   }
 }
 
@@ -1455,6 +1363,7 @@ function cancelMsg (msgData) {
     dispatch(actions.showLoadingIndication())
 
     return new Promise((resolve, reject) => {
+      log.debug(`background.cancelMessage`)
       background.cancelMessage(msgData.id, (err, newState) => {
         dispatch(actions.updateMetamaskState(newState))
         dispatch(actions.hideLoadingIndication())
@@ -1523,6 +1432,7 @@ function cancelTypedMsg (msgData) {
 
 function cancelTx (txData) {
   return (dispatch) => {
+    log.debug(`background.cancelTransaction`)
     dispatch(actions.showLoadingIndication())
     return new Promise((resolve, reject) => {
       background.cancelTransaction(txData.id, (err) => {
@@ -1748,6 +1658,7 @@ const backgroundSetLocked = () => {
 }
 
 const updateMetamaskStateFromBackground = () => {
+  log.debug(`background.getState`)
 
   return new Promise((resolve, reject) => {
     background.getState((error, newState) => {
@@ -1761,6 +1672,7 @@ const updateMetamaskStateFromBackground = () => {
 }
 
 function lockMetamask () {
+  log.debug(`background.setLocked`)
 
   return dispatch => {
     dispatch(actions.showLoadingIndication())
@@ -1784,6 +1696,7 @@ function lockMetamask () {
 }
 
 function setCurrentAccountTab (newTabName) {
+  log.debug(`background.setCurrentAccountTab: ${newTabName}`)
   return callBackgroundThenUpdateNoSpinner(background.setCurrentAccountTab, newTabName)
 }
 
@@ -1797,6 +1710,7 @@ function setSelectedToken (tokenAddress) {
 function setSelectedAddress (address) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.setSelectedAddress`)
     background.setSelectedAddress(address, (err) => {
       dispatch(actions.hideLoadingIndication())
       if (err) {
@@ -1809,6 +1723,7 @@ function setSelectedAddress (address) {
 function showAccountDetail (address) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.setSelectedAddress`)
     background.setSelectedAddress(address, (err, tokens) => {
       dispatch(actions.hideLoadingIndication())
       if (err) {
@@ -2005,6 +1920,7 @@ function goBackToInitView () {
 function markNoticeRead (notice) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.markNoticeRead`)
     return new Promise((resolve, reject) => {
       background.markNoticeRead(notice, (err, notice) => {
         dispatch(actions.hideLoadingIndication())
@@ -2039,10 +1955,12 @@ function clearNotices () {
 }
 
 function markAccountsFound () {
+  log.debug(`background.markAccountsFound`)
   return callBackgroundThenUpdate(background.markAccountsFound)
 }
 
 function retryTransaction (txId) {
+  log.debug(`background.retryTransaction`)
   let newTxId
 
   return (dispatch) => {
@@ -2065,6 +1983,7 @@ function retryTransaction (txId) {
 }
 
 function createCancelTransaction (txId, customGasPrice) {
+  log.debug('background.cancelTransaction')
   let newTxId
 
   return dispatch => {
@@ -2092,11 +2011,13 @@ function createCancelTransaction (txId, customGasPrice) {
 
 function setProviderType (type) {
   return (dispatch) => {
+    // log.debug(`background.setProviderType`, type)
     background.setProviderType(type, (err, result) => {
       if (err) {
         log.error(err)
         return dispatch(actions.displayWarning('Had a problem changing networks!'))
       }
+      console.log('result from background', result)
       dispatch(actions.updateProviderType(type))
       dispatch(actions.setSelectedToken())
     })
@@ -2105,7 +2026,9 @@ function setProviderType (type) {
                     'poa' : type === DAI ?
                     'dai' : type === CLASSIC ?
                     'etc' : type === RSK || type === RSK_TESTNET ?
-                    'rbtc' : 'eth'
+                    'rbtc' : type === KARDIA ? 
+                    'KAI' : 'eth'
+    
     background.setCurrentCoin(newCoin, (err, data) => {
       if (err) {
         log.error(err.stack)
@@ -2133,12 +2056,12 @@ function updateProviderType (type) {
 
 function setRpcTarget (newRpc) {
   return (dispatch) => {
+    log.debug(`background.setRpcTarget: ${newRpc}`)
     background.setCustomRpc(newRpc, (err, result) => {
       if (err) {
         log.error(err)
         return dispatch(actions.displayWarning('Had a problem changing networks!'))
       }
-      global.metamask.rpcTarget = newRpc
       dispatch(actions.setSelectedToken())
     })
   }
@@ -2146,6 +2069,7 @@ function setRpcTarget (newRpc) {
 
 function delRpcTarget (oldRpc) {
   return (dispatch) => {
+    log.debug(`background.delRpcTarget: ${oldRpc}`)
     background.delCustomRpc(oldRpc, (err, result) => {
       if (err) {
         log.error(err)
@@ -2159,6 +2083,7 @@ function delRpcTarget (oldRpc) {
 
 // Calls the addressBookController to add a new address.
 function addToAddressBook (recipient, nickname = '') {
+  log.debug(`background.addToAddressBook`)
   return (dispatch) => {
     background.setAddressBook(recipient, nickname, (err, result) => {
       if (err) {
@@ -2170,6 +2095,7 @@ function addToAddressBook (recipient, nickname = '') {
 }
 
 function useEtherscanProvider () {
+  log.debug(`background.useEtherscanProvider`)
   background.useEtherscanProvider()
   return {
     type: actions.USE_ETHERSCAN_PROVIDER,
@@ -2306,10 +2232,10 @@ function hideWarning () {
   }
 }
 
-function displayToast (text, type, onClick) {
+function displayToast (text) {
   return {
     type: actions.DISPLAY_TOAST,
-    value: {text, type, onClick},
+    value: text,
   }
 }
 
@@ -2331,6 +2257,7 @@ function exportAccount (password, address, dPath) {
   return function (dispatch) {
     dispatch(self.showLoadingIndication())
 
+    log.debug(`background.submitPassword`)
     return new Promise((resolve, reject) => {
       background.submitPassword(password, dPath, function (err) {
         if (err) {
@@ -2339,6 +2266,7 @@ function exportAccount (password, address, dPath) {
           dispatch(self.displayWarning('Incorrect Password.'))
           return reject(err)
         }
+        log.debug(`background.exportAccount`)
         return background.exportAccount(address, function (err, result) {
           dispatch(self.hideLoadingIndication())
 
@@ -2374,6 +2302,7 @@ function showPrivateKey (key) {
 function setAccountLabel (account, label) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.setAccountLabel`)
 
     return new Promise((resolve, reject) => {
       background.setAccountLabel(account, label, (err) => {
@@ -2496,6 +2425,7 @@ function coinShiftRquest (data, marketData) {
       if (response.error) return dispatch(actions.displayWarning(response.error))
       const message = `
         Deposit your ${response.depositType} to the address below:`
+      log.debug(`background.createShapeShiftTx`)
       background.createShapeShiftTx(response.deposit, response.depositType)
       dispatch(actions.showQrView(response.deposit, [message].concat(marketData)))
     })
@@ -2639,9 +2569,8 @@ function setNetworkNonce (networkNonce) {
 function updateNetworkNonce (address) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      global.kardiaQuery.getTransactionCount(address, (err, data) => {
+      global.ethQuery.getTransactionCount(address, (err, data) => {
         if (err) {
-          console.error(err)
           dispatch(actions.displayWarning(err.message))
           return reject(err)
         }
@@ -2649,38 +2578,6 @@ function updateNetworkNonce (address) {
         resolve(data)
       })
     })
-  }
-}
-
-function getKardiaTxHistory (address) {
-
-  const requestOptions = {
-    method: 'GET',
-  }
-  return (dispatch) => {
-    return fetch(`${API_ENDPOINT}/addresses/${address}/txs?page=0&limit=10`, requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        if (result.msg !== 'Success') {
-          return Promise.reject(result.msg)
-        }
-        let rawTxList = []
-        if (result.data.data) {
-          rawTxList = result.data.data
-        }
-        dispatch(updateKardiaTx(rawTxList.map((txObj) => {
-          txObj.time = new Date(txObj.time)
-          return txObj
-        })))
-      })
-      .catch(error => console.log('error', error))
-  }
-}
-
-function updateKardiaTx (txList) {
-  return {
-    type: actions.UPDATE_KARDIA_TX_LIST,
-    value: txList,
   }
 }
 
@@ -2724,6 +2621,7 @@ function callBackgroundThenUpdate (method, ...args) {
 }
 
 function forceUpdateMetamaskState (dispatch) {
+  log.debug(`background.getState`)
   return new Promise((resolve, reject) => {
     background.getState((err, newState) => {
       if (err) {
@@ -2746,6 +2644,7 @@ function toggleAccountMenu () {
 function setUseBlockie (val) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.setUseBlockie`)
     background.setUseBlockie(val, (err) => {
       dispatch(actions.hideLoadingIndication())
       if (err) {
@@ -2762,6 +2661,7 @@ function setUseBlockie (val) {
 function setUsePhishDetect (val) {
   return (dispatch) => {
     dispatch(showLoadingIndication())
+    log.debug(`background.setUsePhishDetect`)
     background.setUsePhishDetect(val, (err) => {
       dispatch(hideLoadingIndication())
       if (err) {
@@ -2776,6 +2676,7 @@ function updateCurrentLocale (key) {
     dispatch(actions.showLoadingIndication())
     return fetchLocale(key)
       .then((localeMessages) => {
+        log.debug(`background.setCurrentLocale`)
         background.setCurrentLocale(key, (err) => {
           dispatch(actions.hideLoadingIndication())
           if (err) {
@@ -2791,6 +2692,7 @@ function updateCurrentLocale (key) {
 function setDProvider (val) {
   return (dispatch) => {
     dispatch(actions.showLoadingIndication())
+    log.debug(`background.setDProvider`)
     background.setDProvider(val, (err) => {
       dispatch(actions.hideLoadingIndication())
       if (err) {
@@ -2846,6 +2748,23 @@ function showDeleteRPC (RPC_URL, transitionForward = true) {
     type: actions.SHOW_DELETE_RPC,
     value: transitionForward,
     RPC_URL,
+  }
+}
+
+function getGasPrice () {
+  return (dispatch) => {
+    dispatch(actions.showLoadingIndication())
+    return new Promise((resolve, reject) => {
+      background.getGasPrice((err, gasPrice) => {
+        dispatch(actions.hideLoadingIndication())
+        if (err) {
+          dispatch(actions.displayWarning(err.message))
+          reject(err)
+        } else {
+          resolve(gasPrice)
+        }
+      })
+    })
   }
 }
 

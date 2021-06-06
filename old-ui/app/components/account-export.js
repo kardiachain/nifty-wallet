@@ -1,7 +1,7 @@
 const Component = require('react').Component
 const h = require('react-hyperscript')
 const inherits = require('util').inherits
-const exportAsFile = require('../util').exportAsFile
+const { exportAsFile, getDPath } = require('../util')
 const actions = require('../../../ui/app/actions')
 const ethUtil = require('ethereumjs-util')
 const connect = require('react-redux').connect
@@ -18,6 +18,7 @@ function mapStateToProps (state) {
   return {
     warning: state.appState.warning,
     dPath: state.metamask.dPath,
+    provider: state.metamask.provider,
   }
 }
 
@@ -59,7 +60,7 @@ ExportAccountView.prototype.render = function () {
                 marginTop: '30px',
               },
             }, warning),
-            h('input.large-input#exportAccount', {
+            h('input#exportAccount.sizing-input', {
               type: 'password',
               placeholder: 'Confirm Password',
               onKeyPress: this.onExportKeyPress.bind(this),
@@ -115,30 +116,25 @@ ExportAccountView.prototype.render = function () {
           fontFamily: 'Nunito Semibold',
         },
       }, 'Your private key'),
-      h('div', [
+      h('div.flex-row', [
         h('p', {
           style: {
             paddingTop: '25px',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
-            webkitUserSelect: 'text',
+            WebkitUserSelect: 'text',
             maxWidth: '275px',
             color: '#333333',
             textAlign: 'center',
             marginBottom: '0px',
-            wordBreak: 'break-word',
           },
         }, plainKey),
         h('div', {
             style: {
               paddingTop: '25px',
-              margin: '0 auto',
             },
           }, h(CopyButton, {
             value: accountDetail.privateKey,
-            style: {
-              display: 'block',
-            },
           }),
         ),
       ]),
@@ -171,5 +167,7 @@ ExportAccountView.prototype.onExportKeyPress = function (event) {
   event.preventDefault()
 
   const input = document.getElementById('exportAccount').value
-  this.props.dispatch(actions.exportAccount(input, this.props.address, this.props.dPath))
+  const isCreatedWithCorrectDPath = this.props.dispatch(actions.isCreatedWithCorrectDPath())
+  const dPath = getDPath(this.props.provider.type, isCreatedWithCorrectDPath)
+  this.props.dispatch(actions.exportAccount(input, this.props.address, dPath))
 }

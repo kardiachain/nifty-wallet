@@ -1,6 +1,6 @@
 import log from 'loglevel'
 import BigNumber from 'bignumber.js'
-import contractMapETH from 'eth-contract-metadata'
+import contractMapETH from '@metamask/contract-metadata'
 import contractMapPOA from 'poa-contract-metadata'
 import contractMapRSK from '@rsksmart/rsk-contract-metadata'
 import contractMapRSKTest from '@rsksmart/rsk-testnet-contract-metadata'
@@ -40,41 +40,25 @@ const DEFAULT_SYMBOL = ''
 const DEFAULT_DECIMALS = '0'
 
 async function getSymbolFromContract (tokenAddress) {
-  // const token = util.getContractAtAddress(tokenAddress)
-  const token = await util.getKardiaContract(tokenAddress)
+  const token = util.getContractAtAddress(tokenAddress)
+
   try {
-    const result = token.symbol()
-    return result
-    // return result[0]
+    const result = await token.symbol()
+    return result[0]
   } catch (error) {
     log.warn(`symbol() call for token at address ${tokenAddress} resulted in error:`, error)
   }
 }
 
 async function getDecimalsFromContract (tokenAddress) {
-  // const token = util.getContractAtAddress(tokenAddress)
-  const token = await util.getKardiaContract(tokenAddress)
+  const token = util.getContractAtAddress(tokenAddress)
 
   try {
     const result = await token.decimals()
-    // const decimalsBN = result[0]
-    const decimalsBN = result
+    const decimalsBN = result[0]
     return decimalsBN && decimalsBN.toString()
   } catch (error) {
     log.warn(`decimals() call for token at address ${tokenAddress} resulted in error:`, error)
-  }
-}
-
-export async function getRawBalanceOf (address, tokenAddress) {
-  const token = await util.getKardiaContract(tokenAddress)
-
-  try {
-    const result = await token.balanceOf(address)
-    // const decimalsBN = result[0]
-    const decimalsBN = result
-    return decimalsBN && decimalsBN.toLocaleString('fullwide', {useGrouping: false})
-  } catch (error) {
-    log.warn(`balanceOf() call for token at address ${tokenAddress} resulted in error:`, error)
   }
 }
 

@@ -180,7 +180,7 @@ function getGasFeeErrorObject ({
 
 function calcTokenBalance ({ selectedToken, usersToken }) {
   const { decimals } = selectedToken || {}
-  return calcTokenAmount(usersToken.balance.toString(), Number(decimals)) + ''
+  return calcTokenAmount(usersToken.balance.toString(), decimals) + ''
 }
 
 function doesAmountErrorRequireUpdate ({

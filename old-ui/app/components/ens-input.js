@@ -112,6 +112,7 @@ class EnsInput extends Component {
     const recipient = document.querySelector('input[name="address"]').value
     const { ensResolution } = this.state
 
+    log.info(`${nameService} attempting to resolve name: ${recipient}`)
     this.ens.lookup(recipient.trim())
     .then((address) => {
       if (address === ZERO_ADDRESS) throw new Error('No address has been set for this name.')

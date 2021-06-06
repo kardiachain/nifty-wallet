@@ -16,7 +16,6 @@ class ToastComponent extends Component {
 		type: PropTypes.string,
 		hideToast: PropTypes.func,
 		hideManually: PropTypes.bool,
-		onClick: PropTypes.func,
 	}
 
 	constructor (props) {
@@ -57,10 +56,7 @@ class ToastComponent extends Component {
 		return toastMsg ? (
 			<div
 				className={classnames('toast', this._getClass(this.props.type))}
-				onClick={(e) => {
-					this.props.onClick && this.props.onClick()
-					this.props.hideToast()
-				}}
+				onClick={(e) => this.props.hideToast()}
 			>{toastMsg}</div>
 		) : null
 	}
@@ -69,8 +65,6 @@ class ToastComponent extends Component {
 function mapStateToProps (state) {
 	return {
 		toastMsg: state.appState.toastMsg,
-		type: state.appState.toastType,
-		onClick: state.appState.toastClickHandler,
 	}
 }
 

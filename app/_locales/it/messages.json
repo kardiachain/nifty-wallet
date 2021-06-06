@@ -48,7 +48,7 @@
     "message": "Importo + Gas"
   },
   "appDescription": {
-    "message": "KardiaChain Web3 Extension",
+    "message": "KardiaChain Browser Extension",
     "description": "La descrizione dell'applicazione"
   },
   "appName": {
@@ -277,7 +277,7 @@
     "message": "La rete predefinita per transazioni in Ether è la Rete Ethereum Principale."
   },
   "denExplainer": {
-    "message": "Il Seed Phrase è il tuo archivio crittato con password dentro KardiaChain Wallet."
+    "message": "Il DEN è il tuo archivio crittato con password dentro KardiaChain Wallet."
   },
   "deposit": {
     "message": "Deposita"
@@ -347,7 +347,7 @@
     "message": "Mandaci una mail!"
   },
   "encryptNewDen": {
-    "message": "Cripta il tuo nuovo Seed Phrase"
+    "message": "Cripta il tuo nuovo DEN"
   },
   "ensNameNotFound": {
     "message": "Nome ENS non trovato"
@@ -513,7 +513,7 @@
     "message": "Importa un account"
   },
   "importDen": {
-    "message": "Importa un Seed Phrase Esistente"
+    "message": "Importa un DEN Esistente"
   },
   "imported": {
     "message": "Importato",

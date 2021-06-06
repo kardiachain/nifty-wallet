@@ -190,7 +190,7 @@
     "message": "預設 Ether 交易網路為主網路（Main Net）。"
   },
   "denExplainer": {
-    "message": "你的 Seed Phrase 是在你的 KardiaChain Wallet 中的加密密碼儲存庫。"
+    "message": "你的 DEN 是在你的 KardiaChain Wallet 中的加密密碼儲存庫。"
   },
   "deposit": {
     "message": "存入"
@@ -251,7 +251,7 @@
     "message": "寄 Email 給我們!"
   },
   "encryptNewDen": {
-    "message": "加密你的新 Seed Phrase"
+    "message": "加密你的新 DEN"
   },
   "enterPassword": {
     "message": "請輸入密碼"
@@ -378,7 +378,7 @@
     "message": "導入一個帳戶"
   },
   "importDen": {
-    "message": "導入現成的 Seed Phrase"
+    "message": "導入現成的 DEN"
   },
   "imported": {
     "message": "已導入私鑰",

@@ -1,6 +1,5 @@
 const extend = require('xtend')
 const actions = require('../actions')
-const MetamascaraPlatform = require('../../../app/scripts/platforms/window')
 const { getEnvironmentType } = require('../../../app/scripts/lib/util')
 const { ENVIRONMENT_TYPE_POPUP } = require('../../../app/scripts/lib/enums')
 const { OLD_UI_NETWORK_TYPE } = require('../../../app/scripts/controllers/network/enums')
@@ -15,7 +14,6 @@ function reduceMetamask (state, action) {
     isInitialized: false,
     isUnlocked: false,
     isAccountMenuOpen: false,
-    isMascara: window.platform instanceof MetamascaraPlatform,
     isPopup: getEnvironmentType(window.location.href) === ENVIRONMENT_TYPE_POPUP,
     rpcTarget: 'https://rawtestrpc.metamask.io/',
     identities: {},
@@ -54,8 +52,8 @@ function reduceMetamask (state, action) {
     preferences: {
       useETHAsPrimaryCurrency: true,
     },
-    kardiaTxList: [],
     dPath: `m/44'/60'/0'/0`,
+    network: '0'
   }, state.metamask)
 
   switch (action.type) {
@@ -131,15 +129,6 @@ function reduceMetamask (state, action) {
       }
       return newState
 
-    case actions.CLEAR_UNAPPROVED_TX:
-      newState = extend(metamaskState, {
-        unapprovedTxs: {},
-        unapprovedMsgs: {},
-        unapprovedPersonalMsgs: {},
-        unapprovedTypedMessages: {},
-      })
-      return newState
-
     case actions.EDIT_TX:
       return extend(metamaskState, {
         send: {
@@ -176,11 +165,6 @@ function reduceMetamask (state, action) {
     case actions.SET_SELECTED_TOKEN:
       return extend(metamaskState, {
         selectedTokenAddress: action.value,
-      })
-
-    case actions.UPDATE_KARDIA_TX_LIST:
-      return extend(metamaskState, {
-        kardiaTxList: action.value,
       })
 
     case actions.SET_ACCOUNT_LABEL:

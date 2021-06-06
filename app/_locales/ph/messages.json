@@ -24,7 +24,7 @@
     "message": "Halaga + Gas"
   },
   "appDescription": {
-    "message": "KardiaChain Web3 Extension",
+    "message": "KardiaChain Browser Extension",
     "description": "Ang deskripsyon ng application"
   },
   "appName": {
@@ -139,7 +139,7 @@
     "message": "Ang default network para sa Ether transactions ay ang Main Net."
   },
   "denExplainer": {
-    "message": "Ang iyong Seed Phrase ang nagsisilbing password-encrypted storage mo sa loob ng KardiaChain Wallet."
+    "message": "Ang iyong DEN ang nagsisilbing password-encrypted storage mo sa loob ng KardiaChain Wallet."
   },
   "deposit": {
     "message": "Deposito"
@@ -191,7 +191,7 @@
     "message": "I-edit ang Pangalang ng Account"
   },
   "encryptNewDen": {
-    "message": "I-encrypt ang iyong bagong Seed Phrase"
+    "message": "I-encrypt ang iyong bagong DEN"
   },
   "enterPassword": {
     "message": "I-enter ang password"
@@ -291,7 +291,7 @@
     "message": "I-import ang account"
   },
   "importDen": {
-    "message": "I-import ang Existing Seed Phrase"
+    "message": "I-import ang Existing DEN"
   },
   "imported": {
     "message": "Na-import na",

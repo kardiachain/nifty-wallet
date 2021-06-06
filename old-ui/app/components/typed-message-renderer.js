@@ -20,8 +20,8 @@ class TypedMessageRenderer extends Component {
         <div key={ind}>
           <strong style={{display: 'block', fontWeight: 'bold'}}>{String(value.name) + ':'}</strong>
           <div>{v}</div>
-        </div>
-      )
+        </div
+        >)
     })
   }
 

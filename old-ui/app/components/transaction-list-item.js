@@ -8,13 +8,27 @@ const addressSummary = require('../util').addressSummary
 const CopyButton = require('./copy/copy-button')
 const vreme = new (require('vreme'))()
 const Tooltip = require('./tooltip')
+const numberToBN = require('number-to-bn')
 const actions = require('../../../ui/app/actions')
-const ShiftListItem = require('./shift-list-item')
+// const ethNetProps = require('eth-net-props')
+const ethNetProps = require('../../../kardia-libs/kai-net-props')
 
-const {
-  KARDIA_MAINNET_CODE,
+const TransactionIcon = require('./transaction-list-item-icon')
+const ShiftListItem = require('./shift-list-item')
+const { ifRSK } = require('../util')
+
+const { POA_CODE,
+  DAI_CODE,
+  POA_SOKOL_CODE,
+  MAINNET_CODE,
+  ROPSTEN_CODE,
+  RINKEBY_CODE,
+  KOVAN_CODE,
+  GOERLI_TESTNET_CODE,
+  CLASSIC_CODE,
+  RSK_CODE,
+  RSK_TESTNET_CODE,
 } = require('../../../app/scripts/controllers/network/enums')
-const { EXPLORER_ENDPOINT } = require('../../../constant')
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -29,31 +43,66 @@ function TransactionListItem () {
   Component.call(this)
 }
 
+TransactionListItem.prototype.showRetryButton = function () {
+  const { transaction = {}, transactions } = this.props
+  const { submittedTime, txParams } = transaction
+
+  if (!txParams) {
+    return false
+  }
+
+  let currentTxSharesEarliestNonce = false
+  const currentNonce = txParams.nonce
+  const currentNonceTxs = transactions.filter(tx => tx.txParams.nonce === currentNonce)
+  const currentNonceSubmittedTxs = currentNonceTxs.filter(tx => tx.status === 'submitted')
+  const currentSubmittedTxs = transactions.filter(tx => tx.status === 'submitted')
+  const lastSubmittedTxWithCurrentNonce = currentNonceSubmittedTxs[0]
+  const currentTxIsLatestWithNonce = lastSubmittedTxWithCurrentNonce &&
+    lastSubmittedTxWithCurrentNonce.id === transaction.id
+  if (currentSubmittedTxs.length > 0) {
+    const earliestSubmitted = currentSubmittedTxs.reduce((tx1, tx2) => {
+      if (tx1.submittedTime < tx2.submittedTime) return tx1
+      return tx2
+    })
+    currentTxSharesEarliestNonce = currentNonce === earliestSubmitted.txParams.nonce
+  }
+
+  return currentTxSharesEarliestNonce && currentTxIsLatestWithNonce && Date.now() - submittedTime > 30000
+}
+
 TransactionListItem.prototype.render = function () {
   const { transaction, network, conversionRate, currentCurrency } = this.props
-  const yourAddress = this.props.address
-  const incoming = this.props.address.toLowerCase() === transaction.to.toLowerCase()
   const { status } = transaction
   if (transaction.key === 'shapeshift') {
-    if (Number(network) === KARDIA_MAINNET_CODE) return h(ShiftListItem, transaction)
+    if (Number(network) === MAINNET_CODE) return h(ShiftListItem, transaction)
   }
   const date = formatDate(transaction.time)
 
   let isLinkable = false
   const numericNet = isNaN(network) ? network : parseInt(network)
-  isLinkable = numericNet === KARDIA_MAINNET_CODE
+  isLinkable = numericNet === MAINNET_CODE ||
+    numericNet === ROPSTEN_CODE ||
+    numericNet === RINKEBY_CODE ||
+    numericNet === KOVAN_CODE ||
+    numericNet === POA_SOKOL_CODE ||
+    numericNet === POA_CODE ||
+    numericNet === DAI_CODE ||
+    numericNet === GOERLI_TESTNET_CODE ||
+    numericNet === CLASSIC_CODE ||
+    numericNet === RSK_CODE ||
+    numericNet === RSK_TESTNET_CODE
 
   const isMsg = ('msgParams' in transaction)
-  const isTx = (transaction.contractAddress === '0x')
+  const isTx = ('txParams' in transaction)
   const isPending = status === 'unapproved'
-  const txParams = transaction
-  // if (isTx) {
-  //   txParams = transaction
-  // } else if (isMsg) {
-  //   txParams = transaction.msgParams
-  // }
+  let txParams
+  if (isTx) {
+    txParams = transaction.txParams
+  } else if (isMsg) {
+    txParams = transaction.msgParams
+  }
 
-  // const nonce = txParams.nonce ? numberToBN(txParams.nonce).toString(10) : ''
+  const nonce = txParams.nonce ? numberToBN(txParams.nonce).toString(10) : ''
 
   const isClickable = ('hash' in transaction && isLinkable) || isPending
   const valueStyle = {
@@ -78,27 +127,51 @@ TransactionListItem.prototype.render = function () {
         }
         event.stopPropagation()
         if (!transaction.hash || !isLinkable) return
-        const url = `${EXPLORER_ENDPOINT}/tx/${transaction.hash}`
-        window.open(url)
+        const url = ethNetProps.explorerLinks.getExplorerTxLinkFor(transaction.hash, numericNet)
+        global.platform.openWindow({ url })
       },
       style: {
-        padding: '15px 0 5px 0',
+        padding: '20px 0',
         alignItems: 'center',
       },
     }, [
       h(`.flex-row.flex-space-between${isClickable ? '.pointer' : ''}`, {
         style: {
           width: '100%',
-          alignItems: 'center',
         },
       }, [
+        // h('.identicon-wrapper.flex-column.flex-center.select-none', [
+        //   h(TransactionIcon, { txParams, transaction, isTx, isMsg }),
+        // ]),
+
+        // h(Tooltip, {
+        //   title: 'Transaction Number',
+        //   position: 'right',
+        //   id: 'transactionListItem',
+        // }, [
+        //   h('span', {
+        //     style: {
+        //       fontFamily: 'Nunito Bold',
+        //       display: 'flex',
+        //       cursor: 'normal',
+        //       flexDirection: 'column',
+        //       alignItems: 'center',
+        //       justifyContent: 'center',
+        //       padding: '10px',
+        //     },
+        //     'data-tip': '',
+        //     'data-for': 'transactionListItem',
+        //   }, nonce),
+        // ]),
+
         h('.flex-column', {
           style: {
             textAlign: 'left',
           },
         }, [
+          domainField(txParams),
           h('div.flex-row', [
-            recipientField(txParams, transaction, isTx, isMsg, network, yourAddress),
+            recipientField(txParams, transaction, isTx, isMsg, network),
           ]),
           h('div', {
             style: {
@@ -107,20 +180,48 @@ TransactionListItem.prototype.render = function () {
             },
           }, date),
         ]),
-        h(EthBalance, {
+
+        isTx ? h(EthBalance, {
           valueStyle,
           dimStyle,
-          value: txParams.value ? txParams.value : 0,
+          value: txParams.value,
           conversionRate,
           currentCurrency,
           width: '55px',
           shorten: true,
           showFiat: false,
           network,
-          incoming: incoming,
+          // style: {
+          //   margin: '0px auto 0px 5px',
+          // },
+        }) : h('.flex-column'),
+      ]),
+
+      this.showRetryButton() && h('.transition-list-item__retry.grow-on-hover.error', {
+        onClick: event => {
+          event.stopPropagation()
+          this.resubmit()
+        },
+        style: {
+          height: '22px',
+          display: 'flex',
+          alignItems: 'center',
+          fontSize: '8px',
+          cursor: 'pointer',
+          width: 'auto',
+          backgroundPosition: '10px center',
+        },
+      }, [
+        h('div', {
           style: {
+            paddingRight: '2px',
           },
-        }),
+        }, 'Taking too long?'),
+        h('div', {
+          style: {
+            textDecoration: 'underline',
+          },
+        }, 'Retry with a higher gas price here'),
       ]),
     ])
   )
@@ -131,18 +232,30 @@ TransactionListItem.prototype.resubmit = function () {
   this.props.retryTransaction(transaction.id)
 }
 
-function recipientField (txParams, transaction, isTx, isMsg, network, yourAddress) {
-  const message = addressSummary(network, transaction.hash)
+function domainField (txParams) {
+  return h('div', {
+    style: {
+      fontSize: 'x-small',
+      color: '#ABA9AA',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      width: '100%',
+    },
+  }, [
+    txParams.origin,
+  ])
+}
 
-  // if (transaction.to === '0x' && transaction.toName === '') {
-  //   message = 'Contract creation'
-  // // } else if (txParams.to) {
-  // } else if (transaction.to) {
-  //   // message = addressSummary(network, txParams.to)
-  //   message = addressSummary(network, transaction.to)
-  // } else {
-  //   message = 'Contract Deployment'
-  // }
+function recipientField (txParams, transaction, isTx, isMsg, network) {
+  let message
+
+  if (isMsg) {
+    message = 'Signature Requested'
+  } else if (txParams.to) {
+    message = addressSummary(network, txParams.to)
+  } else {
+    message = 'Contract Deployment'
+  }
 
   return h('div', {
     style: {
@@ -150,8 +263,7 @@ function recipientField (txParams, transaction, isTx, isMsg, network, yourAddres
       color: '#333333',
     },
   }, [
-    h('span', (!transaction.hash ? {style: {whiteSpace: 'nowrap'}} : null), message),
-    // h('span', (!transaction.hash ? {style: {whiteSpace: 'nowrap'}} : null), transaction.hash),
+    h('span', (!txParams.to ? {style: {whiteSpace: 'nowrap'}} : null), message),
     // Places a copy button if tx is successful, else places a placeholder empty div.
     transaction.hash ? h(CopyButton, { value: transaction.hash, display: 'inline' }) : h('div', {style: { display: 'flex', alignItems: 'center', width: '26px' }}),
     renderErrorOrWarning(transaction, network),
@@ -163,6 +275,7 @@ function formatDate (date) {
 }
 
 function renderErrorOrWarning (transaction, network) {
+  console.log('transaction', transaction)
   const { status, err, warning } = transaction
 
   // show dropped
@@ -193,12 +306,15 @@ function renderErrorOrWarning (transaction, network) {
   }
 
   // show warning
-  if (warning || (
+  const isRSK = ifRSK(network)
+  if (warning && !isRSK || (
+      isRSK &&
       warning &&
       !warning.error.includes('[ethjs-rpc] rpc error with payload') &&
       !warning.error.includes('[ethjs-query] while formatting outputs from rpc')
       )
     ) {
+    console.log('warning', warning)
     const message = warning.message
     return h(Tooltip, {
       title: message,

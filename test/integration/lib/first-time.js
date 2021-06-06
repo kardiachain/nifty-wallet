@@ -1,6 +1,5 @@
 const reactTriggerChange = require('react-trigger-change')
 const PASSWORD = 'password123'
-const runMascaraFirstTimeTest = require('./mascara-first-time')
 const {
   timeout,
   findAsync,
@@ -17,10 +16,6 @@ QUnit.test('render init screen', (assert) => {
 })
 
 async function runFirstTimeUsageTest(assert, done) {
-  if (window.METAMASK_PLATFORM_TYPE === 'mascara') {
-    return runMascaraFirstTimeTest(assert, done)
-  }
-
   const selectState = $('select')
   selectState.val('first time')
   reactTriggerChange(selectState[0])
@@ -47,7 +42,7 @@ async function runFirstTimeUsageTest(assert, done) {
 
   // Scroll through terms
   const title = (await findAsync(app, 'h1'))[0]
-  assert.equal(title.textContent, 'Nifty Wallet', 'title screen')
+  assert.equal(title.textContent, 'KardiaChain Wallet', 'title screen')
 
   // enter password
   const pwBox = (await findAsync(app, '#password-box'))[0]

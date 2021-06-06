@@ -40,7 +40,7 @@ export default class PendingMsgDetails extends Component {
         }}>
           <label className="font-small" style={{
             display: 'block',
-            color: '#333333',
+            color: 'white',
             margin: '10px 0',
           }}>YOU ARE SIGNING</label>
           <TypedMessageRenderer
