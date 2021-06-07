@@ -18,7 +18,8 @@ const {
   GOERLI_TESTNET_CODE,
   RSK_CODE,
   RSK_TESTNET_CODE,
-  KARDIA_CODE} = require('../controllers/network/enums')
+  KARDIA_CODE,
+  KARDIA_TESTNET_CODE} = require('../controllers/network/enums')
 
 /**
  * Gives the caller a url at which the user can acquire coin, depending on the network they are in
@@ -51,8 +52,10 @@ function getBuyEthUrl ({ network, amount, address, ind }) {
       url = getFaucets(network)[ind]
       break
     case KARDIA_CODE:
-      url = 'https://buy.chainbits.com/?crypto=KAI';
+      url = getExchanges({network, amount, address})[ind].link
       break
+    case KARDIA_TESTNET_CODE:
+      url = getFaucets(network)[ind]
   }
   return url
 }
@@ -132,6 +135,17 @@ function getExchanges ({network, amount, address}) {
           name: 'Bitso',
           link: 'https://bitso.com/',
         },
+      ]
+    case KARDIA_CODE:
+      return [
+        {
+          name: 'KuCoin',
+          link: 'https://trade.kucoin.com/KAI-USDT/',
+        },
+        {
+          name: 'Simplex',
+          link: 'https://buy.chainbits.com/?crypto=KAI'
+        }
       ]
     default:
       return []

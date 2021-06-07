@@ -283,10 +283,10 @@ AccountDetailScreen.prototype.render = function () {
 
           h('.flex-grow'),
 
-          // !ifContractAcc(currentKeyring) ? h('button', {
-          //   onClick: () => props.actions.buyEthView(selected),
-          //   style: { marginRight: '10px' },
-          // }, 'Buy') : null,
+          !ifContractAcc(currentKeyring) ? h('button', {
+            onClick: () => props.actions.buyEthView(selected),
+            style: { marginRight: '10px' },
+          }, 'Buy') : null,
 
           h('button', {
             onClick: () => {

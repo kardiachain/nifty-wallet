@@ -111,10 +111,13 @@ class NetworksMenu extends Component {
         <DropdownMenuItem
           key={networkObj.providerName}
           closeMenu={() => props.updateNetworksMenuOpenState(!isOpen)}
-          onClick={() => props.setProviderType(networkObj.providerName)}
+          onClick={() => {
+            console.log('new provider name', networkObj.providerName)
+            props.setProviderType(networkObj.providerName)
+          }}
           style={{
             paddingLeft: '20px',
-            color: providerType === networkObj.providerName ? 'white' : '',
+            color: providerType === networkObj.providerName ? '#60db97' : '#000000',
           }}
         >
           {providerType === networkObj.providerName ? <div className="selected-network" /> : null}

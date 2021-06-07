@@ -45,6 +45,9 @@ const {
   RSK_TESTNET,
   RSK_TICK,
   customDPaths,
+  KARDIA_TESTNET,
+  KARDIA_TESTNET_CODE,
+  KARDIA_TESTNET_CHAINID,
 } = require('../../app/scripts/controllers/network/enums')
 
 const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN]
@@ -512,7 +515,8 @@ function isKnownProvider (type) {
   type === CLASSIC ||
   type === RSK ||
   type === RSK_TESTNET ||
-  type === KARDIA
+  type === KARDIA ||
+  type === KARDIA_TESTNET
 }
 
 function getNetworkID ({ network }) {
@@ -521,9 +525,13 @@ function getNetworkID ({ network }) {
   let ticker
   switch (network) {
     case KARDIA:
-      console.log('here get getNetworkID correct')
       netId = KARDIA_CODE.toString()
       chainId = KARDIA_CHAINID
+      ticker = KARDIA_TICK
+      break
+    case KARDIA_TESTNET:
+      netId = KARDIA_TESTNET_CODE.toString()
+      chainId = KARDIA_TESTNET_CHAINID
       ticker = KARDIA_TICK
       break
     case MAINNET:

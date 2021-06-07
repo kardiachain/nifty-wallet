@@ -10,7 +10,8 @@ const networkIDs = {
 	XDAI_CODE: 100,
 	RSK_CODE: 30,
 	RSK_TESTNET_CODE: 31,
-	KARDIA_CODE: 0
+	KARDIA_CODE: 0,
+	KARDIA_TESTNET_CODE: 69
 }
 
 module.exports = {

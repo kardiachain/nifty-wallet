@@ -11,7 +11,8 @@ const {
 	RSK_CODE,
 	RSK_TESTNET_CODE,
 	CLASSIC_CODE,
-	KARDIA_CODE
+	KARDIA_CODE,
+	KARDIA_TESTNET_CODE
 } = networkIDs
 
 function getRPCEndpoints(network) {
@@ -45,6 +46,8 @@ function getRPCEndpoints(network) {
 		// return ['https://rpc-dev.kardiachain.io']
 		// return ['https://dev-1.kardiachain.io/']
 		return ['https://kai-test.kardiachain.io']
+	case KARDIA_TESTNET_CODE:
+		return ['https://dev-1.kardiachain.io/']
 	default:
 		return []
 	}

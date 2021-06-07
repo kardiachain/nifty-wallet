@@ -17,7 +17,8 @@ const { POA,
   RSK,
   RSK_TESTNET,
   CLASSIC, 
-  KARDIA} = require('../../app/scripts/controllers/network/enums')
+  KARDIA,
+  KARDIA_TESTNET} = require('../../app/scripts/controllers/network/enums')
 const { hasUnconfirmedTransactions } = require('./helpers/confirm-transaction/util')
 const WebcamUtils = require('../lib/webcam-utils')
 import { getEnvironmentType } from '../../app/scripts/lib/util'
@@ -2026,7 +2027,7 @@ function setProviderType (type) {
                     'poa' : type === DAI ?
                     'dai' : type === CLASSIC ?
                     'etc' : type === RSK || type === RSK_TESTNET ?
-                    'rbtc' : type === KARDIA ? 
+                    'rbtc' : type === KARDIA || type === KARDIA_TESTNET ? 
                     'KAI' : 'eth'
     
     background.setCurrentCoin(newCoin, (err, data) => {

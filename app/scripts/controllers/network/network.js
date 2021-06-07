@@ -19,6 +19,8 @@ const { isKnownProvider } = require('../../../../old-ui/app/util')
 import {
   KARDIA,
   KARDIA_CODE,
+  KARDIA_TESTNET,
+  KARDIA_TESTNET_CODE,
   KARDIA_TICK,
   NETWORK_TYPE_TO_ID_MAP,
 } from './enums'
@@ -145,7 +147,11 @@ module.exports = class NetworkController extends EventEmitter {
     if (!type) {
       return
     }
+    console.log('setNetworkState before', network)
+    console.log('setNetworkState type', type)
+    console.log(networks.networkList)
     network = networks.networkList[type] && networks.networkList[type].chainId ? networks.networkList[type].chainId : network
+    console.log('setNetworkState', network)
     return this.networkStore.putState(network)
   }
 
@@ -192,6 +198,7 @@ module.exports = class NetworkController extends EventEmitter {
       nickname,
       rpcPrefs,
     }
+    console.log('new provider config', providerConfig)
     this.providerConfig = providerConfig
   }
 
@@ -207,7 +214,16 @@ module.exports = class NetworkController extends EventEmitter {
       ticker = ethNetProps.props.getNetworkCoinName(KARDIA_CODE)
     }
 
+    if (type === KARDIA) {
+      rpcTarget = ethNetProps.RPCEndpoints(KARDIA_CODE)[0]
+      ticker = ethNetProps.props.getNetworkCoinName(KARDIA_CODE)
+    } else if (type === KARDIA_TESTNET) {
+      rpcTarget = ethNetProps.RPCEndpoints(KARDIA_TESTNET_CODE)[0]
+      ticker = ethNetProps.props.getNetworkCoinName(KARDIA_TESTNET_CODE)
+    }
+
     const providerConfig = { type, rpcTarget, ticker, nickname }
+    console.log('background providerConfig', providerConfig)
     this.providerConfig = providerConfig
   }
 
@@ -281,6 +297,8 @@ module.exports = class NetworkController extends EventEmitter {
       this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(RSK_TESTNET_CODE)[0], chainId, ticker, nickname })
     } else if (type === KARDIA) {
       this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(KARDIA_CODE)[0], chainId, ticker, nickname })
+    } else if (type === KARDIA_TESTNET) {
+      this._configureStandardProvider({ rpcUrl: ethNetProps.RPCEndpoints(KARDIA_TESTNET_CODE)[0], chainId, ticker, nickname })
     } else if (type === LOCALHOST) {
       this._configureLocalhostProvider()
     // url-based rpc endpoints

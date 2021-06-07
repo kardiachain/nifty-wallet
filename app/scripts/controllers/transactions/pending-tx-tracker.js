@@ -148,7 +148,6 @@ class PendingTransactionTracker extends EventEmitter {
 
     // get latest transaction status
     try {
-      console.log('here background', txHash)
       const txParams = await this.query.getTransactionByHash(txHash)
       if (!txParams) return
       if (txParams.blockNumber) {

@@ -12,6 +12,7 @@ const {
 	RSK_TESTNET_CODE,
 	CLASSIC_CODE,
 	KARDIA_CODE,
+	KARDIA_TESTNET_CODE
 } = networkIDs
 
 function getNetworkDisplayName(network) {
@@ -41,6 +42,8 @@ function getNetworkDisplayName(network) {
 		return 'Ethereum Classic'
 	case KARDIA_CODE:
 		return 'KardiaChain Mainnet'
+	case KARDIA_TESTNET_CODE:
+		return 'KardiaChain Testnet'
 	default:
 		return 'Unknown Private Network'
 	}
@@ -62,6 +65,7 @@ function getNetworkCoinName(network) {
 	case CLASSIC_CODE:
 		return 'ETC'
 	case KARDIA_CODE:
+	case KARDIA_TESTNET_CODE:
 		return 'KAI'
 	default:
 		return 'ETH'

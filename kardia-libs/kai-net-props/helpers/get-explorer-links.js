@@ -11,7 +11,8 @@ const {
 	RSK_CODE,
 	RSK_TESTNET_CODE,
 	CLASSIC_CODE,
-	KARDIA_CODE
+	KARDIA_CODE,
+	KARDIA_TESTNET_CODE
 } = networkIDs
 
 const blockScoutLink = (net, prefix) => `https://blockscout.com/${net}/${prefix}`
@@ -36,6 +37,8 @@ const explorerLink = (networkCode, net, prefix) => {
 		return etherscanLink(prefix)
 	case KARDIA_CODE:
 		return 'https://explorer.kardiachain.io'
+	case KARDIA_TESTNET_CODE:
+		return 'https://explorer-dev.kardiachain.io'
 	default:
 		return blockScoutLink(net, prefix)
 	}
@@ -104,6 +107,10 @@ function getExplorerChain (networkCode) {
 		break
 	case RSK_CODE: // RSK mainnet
 		chain = 'rsk'
+		break
+	case KARDIA_CODE:
+	case KARDIA_TESTNET_CODE:
+		chain = 'kardiachain'
 		break
 	default:
 		chain = ''
