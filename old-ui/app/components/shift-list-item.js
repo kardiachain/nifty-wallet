@@ -3,7 +3,8 @@ const Component = require('react').Component
 const h = require('react-hyperscript')
 const connect = require('react-redux').connect
 const vreme = new (require('vreme'))()
-const ethNetProps = require('eth-net-props')
+// const ethNetProps = require('eth-net-props')
+const ethNetProps = require('../../../kardia-libs/kai-net-props')
 const actions = require('../../../ui/app/actions')
 const addressSummary = require('../util').addressSummary
 
@@ -31,8 +32,8 @@ ShiftListItem.prototype.render = function () {
   return (
     h('.transaction-list-item.flex-row', {
       style: {
-        paddingTop: '12px',
-        paddingBottom: '12px',
+        paddingTop: '20px',
+        paddingBottom: '20px',
         justifyContent: 'space-around',
         alignItems: 'center',
       },

@@ -225,7 +225,7 @@ hr.horizontal-line {
 .keyring-label {
   z-index: 1;
   font-size: 11px;
-  background: #60db97;
+  background: #000000;
   color: white;
   border-radius: 3px;
   height: 20px;
@@ -242,11 +242,10 @@ hr.horizontal-line {
 .ether-balance {
   display: flex;
   align-items: center;
-  margin-top: 10px;
 }
 
 .tabSection {
-  /* min-width: 350px; */
+  min-width: 350px;
 }
 
 .menu-icon {

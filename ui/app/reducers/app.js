@@ -1,4 +1,5 @@
 import extend from 'xtend'
+import log from 'loglevel'
 const actions = require('../actions')
 const txHelper = require('../../lib/tx-helper')
 const { customHdPaths } = require('../../../old-ui/app/components/connect-hardware/util.js')
@@ -7,6 +8,7 @@ module.exports = reduceApp
 
 
 function reduceApp (state, action) {
+  log.debug('App Reducer got ' + action.type)
   // clone and defaults
   const selectedAddress = state.metamask.selectedAddress
   const hasUnconfActions = checkUnconfActions(state)
@@ -16,6 +18,7 @@ function reduceApp (state, action) {
   }
 
   if (hasUnconfActions) {
+    log.debug('pending txs detected, defaulting to conf-tx view.')
     name = 'confTx'
   }
 
@@ -525,11 +528,13 @@ function reduceApp (state, action) {
       })
 
     case actions.COMPLETED_TX:
+      log.debug('reducing COMPLETED_TX for tx ' + action.value)
       const otherUnconfActions = getUnconfActionList(state)
         .filter(tx => tx.id !== action.value)
       const hasOtherUnconfActions = otherUnconfActions.length > 0
 
       if (hasOtherUnconfActions) {
+        log.debug('reducer detected txs - rendering confTx view')
         return extend(appState, {
           transForward: false,
           currentView: {
@@ -539,6 +544,7 @@ function reduceApp (state, action) {
           warning: null,
         })
       } else {
+        log.debug('attempting to close popup')
         return extend(appState, {
           // indicate notification should close
           shouldClose: true,
@@ -640,9 +646,7 @@ function reduceApp (state, action) {
 
     case actions.DISPLAY_TOAST:
       return extend(appState, {
-        toastMsg: action.value.text,
-        toastType: action.value.type,
-        toastClickHandler: action.value.onClick,
+        toastMsg: action.value,
         isLoading: false,
       })
 

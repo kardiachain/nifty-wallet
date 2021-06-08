@@ -2,6 +2,19 @@ import React, { Component } from 'react'
 import { formatBalance, countSignificantDecimals } from '../util'
 import PropTypes from 'prop-types'
 import { DAI_CODE, POA_SOKOL_CODE, RSK_TESTNET_CODE, GOERLI_TESTNET_CODE } from '../../../app/scripts/controllers/network/enums'
+const BigNumber = require('bignumber.js').default
+
+const fmt = {
+  prefix: '',
+  decimalSeparator: '.',
+  groupSeparator: ',',
+  groupSize: 3,
+  secondaryGroupSize: 0,
+  fractionGroupSeparator: ' ',
+  fractionGroupSize: 0,
+  suffix: ''
+}
+BigNumber.config({ FORMAT: fmt })
 
 class FiatValue extends Component {
   static propTypes = {
@@ -21,6 +34,7 @@ class FiatValue extends Component {
       conversionRate = 1
     }
     const renderedCurrency = currentCurrency || ''
+
     const value = formatBalance(props.value, 6, undefined, props.network)
 
     if (value === 'None') return value
@@ -30,10 +44,10 @@ class FiatValue extends Component {
     const fiatDisplayNumber = fiatTooltipNumber.toFixed(countSignificantDecimals(fiatTooltipNumber, 2))
 
     const valueStyle = props.valueStyle ? props.valueStyle : {
-      width: '100%',
-      textAlign: 'right',
+      // width: '100%',
+      // textAlign: 'right',
       fontSize: '14px',
-      color: '#333333',
+      color: '#ffffff',
     }
 
     const dimStyle = props.dimStyle ? props.dimStyle : {
@@ -48,6 +62,7 @@ class FiatValue extends Component {
   fiatDisplay = (fiatDisplayNumber, valueStyle, dimStyle, fiatSuffix) => {
 
     if (fiatDisplayNumber !== 'N/A') {
+      const formattedFiat = new BigNumber(fiatDisplayNumber).toFormat()
       return (
         <div
           className="flex-row"
@@ -57,7 +72,7 @@ class FiatValue extends Component {
             textRendering: 'geometricPrecision',
           }}
         >
-          <div className="fiat-val" style={valueStyle}>{fiatDisplayNumber}</div>
+          <div className="fiat-val" style={valueStyle}>{formattedFiat}</div>
           <div className="fiat-dim" style={dimStyle}>{fiatSuffix}</div>
         </div>
       )

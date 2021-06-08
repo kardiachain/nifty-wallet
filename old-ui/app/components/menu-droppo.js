@@ -35,7 +35,7 @@ export default class MenuDroppo extends Component {
       style.position = 'fixed'
     }
     style.zIndex = zIndex
-    // style.overflow = 'hidden'
+    style.overflow = 'hidden'
 
     return (
       h('.menu-droppo-container', {

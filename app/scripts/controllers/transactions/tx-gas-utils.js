@@ -1,9 +1,8 @@
-import KardiaQuery from '../../kardiaScript/kardia-query'
+import EthQuery from 'ethjs-query'
 import { hexToBn, BnMultiplyByFraction, bnToHex } from '../../lib/util'
 import { addHexPrefix } from 'ethereumjs-util'
 import { MIN_GAS_LIMIT_HEX } from '../../../../ui/app/components/send/send.constants'
 import log from 'loglevel'
-import pify from 'pify'
 
 /**
 tx-gas-utils are gas utility methods for Transaction manager
@@ -15,7 +14,7 @@ and used to do things like calculate gas of a tx.
 export default class TxGasUtil {
 
   constructor (provider) {
-    this.query = new KardiaQuery(provider)
+    this.query = new EthQuery(provider)
   }
 
   /**
@@ -23,7 +22,8 @@ export default class TxGasUtil {
     @returns {GasAnalysisResult} The result of the gas analysis
   */
   async analyzeGasUsage (txMeta) {
-    const block = await pify(this.query.getBlockByNumber).call(this.query, 'latest')
+    const block = await this.query.getBlockByNumber('latest', false)
+
     // fallback to block gasLimit
     const blockGasLimitBN = hexToBn(block.gasLimit)
     const saferGasLimitBN = BnMultiplyByFraction(blockGasLimitBN, 19, 20)
@@ -111,9 +111,9 @@ export default class TxGasUtil {
     @param {string} blockGasLimitHex - the block gas limit
     @returns {string} - the buffered gas limit as a hex string
   */
-  addGasBuffer (initialGasLimitBn, blockGasLimitBn) {
-    // const initialGasLimitBn = hexToBn(initialGasLimitHex)
-    // const blockGasLimitBn = hexToBn(blockGasLimitHex)
+  addGasBuffer (initialGasLimitHex, blockGasLimitHex) {
+    const initialGasLimitBn = hexToBn(initialGasLimitHex)
+    const blockGasLimitBn = hexToBn(blockGasLimitHex)
     const upperGasLimitBn = blockGasLimitBn.muln(0.9)
     const bufferedGasLimitBn = initialGasLimitBn.muln(1.5)
 

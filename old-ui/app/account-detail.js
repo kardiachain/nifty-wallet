@@ -4,7 +4,7 @@ const Component = require('react').Component
 const h = require('react-hyperscript')
 const connect = require('react-redux').connect
 const actions = require('../../ui/app/actions')
-const { getCurrentKeyring, ifContractAcc, valuesFor, toChecksumAddress, ifLooseAcc } = require('./util')
+const { getCurrentKeyring, ifContractAcc, valuesFor, toChecksumAddress, ifLooseAcc, ifRSK, ifETC } = require('./util')
 const Identicon = require('./components/identicon')
 const EthBalance = require('./components/eth-balance')
 const TransactionList = require('./components/transaction-list')
@@ -39,7 +39,6 @@ function mapStateToProps (state) {
     tokens: state.metamask.tokens,
     suggestedTokens: state.metamask.suggestedTokens,
     computedBalances: state.metamask.computedBalances,
-    kardiaTxList: state.metamask.kardiaTxList,
   }
 }
 
@@ -57,7 +56,6 @@ function mapDispatchToProps (dispatch) {
       setCurrentAccountTab: (key) => dispatch(actions.setCurrentAccountTab(key)),
       displayToast: (msg) => dispatch(actions.displayToast(msg)),
       isCreatedWithCorrectDPath: () => dispatch(actions.isCreatedWithCorrectDPath()),
-      getKardiaTxHistory: (address) => dispatch(actions.getKardiaTxHistory(address)),
     },
   }
 }
@@ -70,29 +68,15 @@ function AccountDetailScreen () {
 AccountDetailScreen.prototype.componentDidMount = function () {
   const props = this.props
   const { address, network, keyrings, identities } = props
-
-  const getTx = () => {
-    const selected = props.address || Object.keys(props.accounts)[0]
-    const checksumAddress = selected && toChecksumAddress(network, selected)
-    props.actions.getKardiaTxHistory(checksumAddress)
-  }
-
-  getTx()
-
-  this.txInterval = setInterval(getTx, 10000)
   props.actions.isCreatedWithCorrectDPath()
   .then(isCreatedWithCorrectDPath => {
     if (!isCreatedWithCorrectDPath) {
       const currentKeyring = getCurrentKeyring(address, network, keyrings, identities)
-      if (!ifLooseAcc(currentKeyring) && !ifContractAcc(currentKeyring)) {
+      if (!ifLooseAcc(currentKeyring) && !ifContractAcc(currentKeyring) && (ifRSK(network) || ifETC(network))) {
         props.actions.displayToast(Toast.ERROR_ON_INCORRECT_DPATH)
       }
     }
   })
-}
-
-AccountDetailScreen.prototype.componentWillUnmount = function () {
-  clearInterval(this.txInterval)
 }
 
 AccountDetailScreen.prototype.componentWillUpdate = function (nextProps) {
@@ -110,7 +94,7 @@ AccountDetailScreen.prototype.componentWillUpdate = function (nextProps) {
     .then(isCreatedWithCorrectDPath => {
       if (!isCreatedWithCorrectDPath) {
         const currentKeyring = getCurrentKeyring(address, newNet, keyrings, identities)
-        if (!ifLooseAcc(currentKeyring) && !ifContractAcc(currentKeyring)) {
+        if (!ifLooseAcc(currentKeyring) && !ifContractAcc(currentKeyring) && (ifRSK(newNet) || ifETC(newNet))) {
           props.actions.displayToast(Toast.ERROR_ON_INCORRECT_DPATH)
         }
       }
@@ -139,15 +123,15 @@ AccountDetailScreen.prototype.render = function () {
       h(Toast.ToastComponent, {
         type: Toast.TOAST_TYPE_ERROR,
         hideManually: true,
-        hideToast: true,
       }),
 
     // identicon, label, balance, etc
       h('.account-data-subsection', {
         style: {
-          // padding: '30px 0px',
+          padding: '20px',
           flex: '1 0 auto',
-          background: '#F7F7F8',
+          // background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
+          background: 'rgb(247, 247, 248)',
           width: '100%',
         },
       }, [
@@ -157,15 +141,14 @@ AccountDetailScreen.prototype.render = function () {
           style: {
             display: 'flex',
             justifyContent: 'flex-start',
-            alignItems: 'center',
-            margin: '16px 0px',
+            alignItems: 'flex-start',
           },
         }, [
 
           // large identicon and addresses
           h('.identicon-wrapper.select-none', [
             h(Identicon, {
-              diameter: 40,
+              diameter: 60,
               address: selected,
             }),
           ]),
@@ -213,8 +196,7 @@ AccountDetailScreen.prototype.render = function () {
                           textOverflow: 'ellipsis',
                           padding: '5px 0px',
                           lineHeight: '25px',
-                          color: '#333333',
-                          fontWeight: 600,
+                          color: '#000000',
                         },
                       }, [
                         identity && identity.name,
@@ -265,11 +247,11 @@ AccountDetailScreen.prototype.render = function () {
                   fontSize: '14px',
                   fontFamily: 'Nunito Bold',
                   textRendering: 'geometricPrecision',
-                  color: '#333333',
+                  color: 'rgb(51, 51, 51)',
                 }}, checksumAddress),
                 h(CopyButton, {
                   value: checksumAddress,
-                  isWhite: true,
+                  isWhite: false,
                 }),
               ]),
             ]),
@@ -281,12 +263,11 @@ AccountDetailScreen.prototype.render = function () {
         h('.flex-row', {
           style: {
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             background: '#FFFFFF',
             boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
             borderRadius: '8px',
-            padding: '16px 12px',
-            marginBottom: '16px',
+            padding: 12
           },
         }, [
 
@@ -297,16 +278,15 @@ AccountDetailScreen.prototype.render = function () {
             network,
             style: {
               lineHeight: '7px',
-              color: '#1C1C28',
             },
           }),
 
           h('.flex-grow'),
 
-          // !ifContractAcc(currentKeyring) ? h('button', {
-          //   onClick: () => props.actions.buyEthView(selected),
-          //   style: { marginRight: '10px' },
-          // }, 'Buy') : null,
+          !ifContractAcc(currentKeyring) ? h('button.btn-link', {
+            onClick: () => props.actions.buyEthView(selected),
+            style: { marginRight: '10px' },
+          }, 'Buy') : null,
 
           h('button', {
             onClick: () => {
@@ -387,11 +367,11 @@ AccountDetailScreen.prototype.tabSwitchView = function () {
 }
 
 AccountDetailScreen.prototype.transactionList = function () {
-  const {unapprovedMsgs, address,
-    network, shapeShiftTxList, conversionRate, kardiaTxList } = this.props
+  const {transactions, unapprovedMsgs, address,
+    network, shapeShiftTxList, conversionRate } = this.props
 
   return h(TransactionList, {
-    transactions: kardiaTxList.sort((a, b) => b.time - a.time),
+    transactions: transactions.sort((a, b) => b.time - a.time),
     network,
     unapprovedMsgs,
     conversionRate,

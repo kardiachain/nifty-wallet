@@ -16,7 +16,6 @@ module.exports = class AppBar extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     frequentRpcList: PropTypes.array.isRequired,
-    isMascara: PropTypes.bool.isRequired,
     isOnboarding: PropTypes.bool.isRequired,
     identities: PropTypes.any.isRequired,
     selectedAddress: PropTypes.string,
@@ -56,10 +55,7 @@ module.exports = class AppBar extends Component {
     const state = this.state || {}
     const isNetworkMenuOpen = state.isNetworkMenuOpen || false
     const {
-      isMascara,
-      isOnboarding,
       isUnlocked,
-      currentView,
       network,
       provider,
       identities,
@@ -67,52 +63,40 @@ module.exports = class AppBar extends Component {
       keyrings,
     } = this.props
 
-    // Do not render header if user is in mascara onboarding
-    if (isMascara && isOnboarding) {
-      return null
-    }
-
-    // Do not render header if user is in mascara buy ether
-    if (isMascara && currentView.name === 'buyEth') {
-      return null
-    }
-
     return (
 
       <div
         className="full-width"
-        height="38px"
+        height="52px"
       >
         <div className="app-header flex-row flex-space-between"
           style={{
+            boxShadow: '0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16)',
             alignItems: 'center',
             visibility: isUnlocked ? 'visible' : 'none',
             background: 'white',
-            height: '52px',
+            height: '38px',
             position: 'relative',
             zIndex: 12,
-            boxShadow: '0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16)',
           }}
         >
           <div className="app-bar-left-menu-section">
             <img
-              height={40}
-              width={40}
-              src={'./images/kardia_logo.png'}
-            /> <span>{!isUnlocked ? 'Kardia Wallet' : ''}</span>
-            {
-              isUnlocked ?
-              <NetworkIndicator
-                network={network}
-                provider={provider}
-                isUnlocked={isUnlocked}
-                onClick={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  this.setState({ isNetworkMenuOpen: !isNetworkMenuOpen })
-                }}
-              /> : <></>
-            }
+              height={24}
+              width={26.31}
+              // src={'./images/icon-128.png'}
+              src={'./images/kardia/logo.png'}
+            />
+            <NetworkIndicator
+              network={network}
+              provider={provider}
+              isUnlocked={isUnlocked}
+              onClick={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                this.setState({ isNetworkMenuOpen: !isNetworkMenuOpen })
+              }}
+            />
           </div>
           {isUnlocked && (
             <div className="app-bar-right-menus-section">
@@ -153,6 +137,7 @@ module.exports = class AppBar extends Component {
         <div
           className="app-header flex-row flex-space-between"
           style={{
+            boxShadow: '0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16)',
             alignItems: 'center',
             visibility: isUnlocked ? 'visible' : 'none',
             background: isUnlocked ? 'white' : 'none',
@@ -164,8 +149,9 @@ module.exports = class AppBar extends Component {
           <div className="app-bar-left-menu-section">
             <img
               height={24}
-              width={24}
-              src={'./images/icon-128.png'}
+              width={26.31}
+              // src={'./images/icon-128.png'}
+              src={'./images/kardia/logo.png'}
             />
             <NetworkIndicator
               network={network}

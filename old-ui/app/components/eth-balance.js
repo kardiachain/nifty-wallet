@@ -3,15 +3,30 @@ const h = require('react-hyperscript')
 const inherits = require('util').inherits
 const formatBalance = require('../util').formatBalance
 const generateBalanceObject = require('../util').generateBalanceObject
+const Tooltip = require('./tooltip.js')
+const FiatValue = require('./fiat-value.js')
+const BigNumber = require('bignumber.js').default
 
-module.exports = KAIBalanceComponent
+const fmt = {
+  prefix: '',
+  decimalSeparator: '.',
+  groupSeparator: ',',
+  groupSize: 3,
+  secondaryGroupSize: 0,
+  fractionGroupSeparator: ' ',
+  fractionGroupSize: 0,
+  suffix: ''
+}
+BigNumber.config({ FORMAT: fmt })
 
-inherits(KAIBalanceComponent, Component)
-function KAIBalanceComponent () {
+module.exports = EthBalanceComponent
+
+inherits(EthBalanceComponent, Component)
+function EthBalanceComponent () {
   Component.call(this)
 }
 
-KAIBalanceComponent.prototype.render = function () {
+EthBalanceComponent.prototype.render = function () {
   const props = this.props
   let { value } = props
   const { style, width, network, isToken, tokenSymbol } = props
@@ -20,7 +35,7 @@ KAIBalanceComponent.prototype.render = function () {
 
   return (
 
-    h('.ether-balance-amount', {
+    h('.ether-balance.ether-balance-amount', {
       style,
     }, [
       h('div', {
@@ -33,14 +48,17 @@ KAIBalanceComponent.prototype.render = function () {
 
   )
 }
-KAIBalanceComponent.prototype.renderBalance = function (value) {
+EthBalanceComponent.prototype.renderBalance = function (value) {
   const props = this.props
-  const { shorten, incoming } = props
-  const tokenSymbol = props.tokenSymbol || 'KAI'
+  const { conversionRate, shorten, incoming, currentCurrency } = props
   if (value === 'None') return value
   if (value === '...') return value
   const balanceObj = generateBalanceObject(value, shorten ? 1 : 3)
   let balance
+  const splitBalance = value.split(' ')
+  const ethNumber = splitBalance[0]
+  const ethSuffix = splitBalance[1]
+  const showFiat = 'showFiat' in props ? props.showFiat : true
 
   if (shorten) {
     balance = balanceObj.shortBalance
@@ -48,44 +66,46 @@ KAIBalanceComponent.prototype.renderBalance = function (value) {
     balance = balanceObj.balance
   }
 
-  // const { label } = balanceObj
+  const { label } = balanceObj
   const valueStyle = props.valueStyle ? props.valueStyle : {
-    width: '100%',
+    color: 'rgba(28, 28, 40, 1)',
     fontWeight: '600',
+    width: '100%',
+    fontSize: props.fontSize || '15px',
+    textAlign: 'right',
   }
-  // const dimStyle = props.dimStyle ? props.dimStyle : {
-  //   marginLeft: '5px',
-  // }
+  const dimStyle = props.dimStyle ? props.dimStyle : {
+    color: 'rgba(28, 28, 40, 1)',
+    fontSize: props.fontSize || '15px',
+    marginLeft: '5px',
+  }
 
-  // const totalAmount = {
-  //   fontSize:'14px',
-  //   fontWeight: 600,
-  //   lineHeight: '16px',
-  //   color: 'rgba(28, 28, 40, 0.54)'
-  // }
+  const formattedBalance = new BigNumber(balance).toFormat()
 
   return (
-    h('div.flex-column', [
+    h(Tooltip, {
+      title: `${ethNumber} ${ethSuffix}`,
+      position: 'bottom',
+      id: 'ethBalance',
+    }, h('div.flex-column', [
       h('.flex-row', {
         style: {
-          textRendering: 'geometricPrecision',
-          fontSize: '15px',
+          alignItems: 'flex-end',
           lineHeight: '20px',
-          color: '#1C1C28',
-          flexDirection: 'column',
+          textRendering: 'geometricPrecision',
         },
         'data-tip': '',
         'data-for': 'ethBalance',
       }, [
-        // h('div',
-        // {
-        //   style: totalAmount
-        // },
-        //   'Total Amount'
-        // ),
         h('div', {
           style: valueStyle,
-        }, incoming === true ? `+${balance} ${tokenSymbol}` : (incoming === false ? `-${balance} ${tokenSymbol}` : `${balance} ${tokenSymbol}`)),
+        }, incoming ? `+${formattedBalance}` : formattedBalance),
+        h('div', {
+          style: dimStyle,
+        }, label),
       ]),
+
+      showFiat ? h(FiatValue, { valueStyle, dimStyle, value: props.value, conversionRate, currentCurrency, network: props.network }) : null,
     ]))
+  )
 }

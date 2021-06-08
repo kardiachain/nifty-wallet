@@ -37,11 +37,14 @@ RestoreVaultScreen.prototype.render = function () {
       }}),
       h('.initialize-screen.flex-column.flex-center.flex-grow', {
         style: {
+          paddingLeft: '30px',
+          paddingRight: '30px',
         },
       }, [
         h('h3.flex-center', {
           style: {
             fontFamily: 'Nunito SemiBold',
+            background: '#ffffff',
             color: '#333333',
             width: '100%',
             fontSize: '16px',
@@ -115,7 +118,7 @@ RestoreVaultScreen.prototype.render = function () {
         }, [
 
           // cancel
-          h('button.btn-kai-light', {
+          h('button.btn-violet', {
             onClick: this.showInitializeMenu.bind(this),
           }, 'Cancel'),
 

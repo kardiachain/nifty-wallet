@@ -24,7 +24,7 @@ class ChromeDriver {
     }
     const driver = builder.build()
     const chromeDriver = new ChromeDriver(driver)
-    const extensionId = await chromeDriver.getExtensionIdByName('Nifty Wallet')
+    const extensionId = await chromeDriver.getExtensionIdByName('KardiaChain Wallet')
 
     return {
       driver,

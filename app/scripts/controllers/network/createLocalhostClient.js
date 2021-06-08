@@ -1,11 +1,9 @@
-import mergeMiddleware from 'json-rpc-engine/src/mergeMiddleware'
+import { createAsyncMiddleware, mergeMiddleware } from 'json-rpc-engine'
 import createFetchMiddleware from 'eth-json-rpc-middleware/fetch'
 import createBlockRefRewriteMiddleware from 'eth-json-rpc-middleware/block-ref-rewrite'
 import createBlockTrackerInspectorMiddleware from 'eth-json-rpc-middleware/block-tracker-inspector'
-import createAsyncMiddleware from 'json-rpc-engine/src/createAsyncMiddleware'
 import providerFromMiddleware from 'eth-json-rpc-middleware/providerFromMiddleware'
-// import BlockTracker from 'eth-block-tracker'
-import BlockTracker from '../../kardiaScript/kardia-block-tracker/kardia-block-tracker'
+import BlockTracker from 'eth-block-tracker'
 
 const inTest = process.env.IN_TEST === 'true'
 

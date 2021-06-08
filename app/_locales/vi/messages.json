@@ -139,7 +139,7 @@
     "message": "Mạng lưới mặc định dùng cho các giao dịch Ether là Main Net (tiền ETH thật)."
   },
   "denExplainer": {
-    "message": "Số  Seed Phrase của bạn là mật khẩu đã được mã hóa và lưu trữ trong KardiaChain Wallet"
+    "message": "Số Seed Phrase của bạn là mật khẩu đã được mã hóa và lưu trữ trong KardiaChain Wallet"
   },
   "deposit": {
     "message": "Ký gửi/nạp tiền"
@@ -191,7 +191,7 @@
     "message": "Chỉnh sửa tên tài khoản"
   },
   "encryptNewDen": {
-    "message": "Mã hóa Seed Phrase mới của bạn"
+    "message": "Mã hóa số Seed Phrase mới của bạn"
   },
   "enterPassword": {
     "message": "Nhập mật khẩu"
@@ -291,7 +291,7 @@
     "message": "Nhập một tài khoản"
   },
   "importDen": {
-    "message": "Nhập mã Seed Phrase"
+    "message": "Nhập mã Seed Phrase hiện hành"
   },
   "imported": {
     "description": "Trạng thái hiển thị cho một tài khoản đã được tải toàn bộ vào chùm chìa khóa",

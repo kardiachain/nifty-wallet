@@ -5,25 +5,25 @@ import { connect } from 'react-redux'
 import { Dropdown, DropdownMenuItem } from '../dropdown'
 import copyToClipboard from 'copy-to-clipboard'
 // import ethNetProps from 'eth-net-props'
+import ethNetProps from '../../../../kardia-libs/kai-net-props'
 import { getCurrentKeyring, ifContractAcc, ifHardwareAcc, getAllKeyRingsAccounts, toChecksumAddress } from '../../util'
 import { importTypes } from '../../accounts/import/enums'
 import { getFullABI } from '../../accounts/import/helpers'
 import log from 'loglevel'
 import Web3 from 'web3'
 import { AccountsDropdownItemView } from './accounts-dropdown-item-view'
-import { EXPLORER_ENDPOINT } from '../../../../constant'
 
 class AccountsDropdownItemWrapper extends DropdownMenuItem {
   render () {
     return (
       <DropdownMenuItem
         style={{
-          padding: '12px',
+          padding: '8px 0px',
         }}
         closeMenu={() => {}}
         onClick={() => this.props.onClick()}
       >
-        <span>{this.props.label}</span>
+        <span className="acc-dd-menu-item-text">{this.props.label}</span>
       </DropdownMenuItem>
     )
   }
@@ -138,7 +138,7 @@ class AccountDropdowns extends Component {
           width: '265px',
         }}
         innerStyle={{
-          padding: '12px 8px',
+          padding: '8px 25px',
         }}
         isOpen={accountSelectorActive}
         onClickOutside={(event) => {
@@ -167,7 +167,7 @@ class AccountDropdowns extends Component {
           marginLeft: '-234px',
           minWidth: '180px',
           top: '30px',
-          // width: '280px',
+          width: '280px',
         }}
         isOpen={optionsMenuActive}
         onClickOutside={(event) => {
@@ -207,14 +207,10 @@ class AccountDropdowns extends Component {
   }
 
   viewOnBlockExplorer = () => {
-    // const { selected, network } = this.props
-    // const networkCode = parseInt(network, 10)
-    // const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
     const { selected, network } = this.props
-    const checkSumAddress = selected && toChecksumAddress(network, selected)
-    const url = `${EXPLORER_ENDPOINT}/address/${checkSumAddress}`
-    // global.platform.openWindow({ url })
-    window.open(url)
+    const networkCode = parseInt(network, 10)
+    const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
+    global.platform.openWindow({ url })
   }
 
   showQRCode = () => {

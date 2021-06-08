@@ -88,7 +88,6 @@ ConfirmChangePassword.prototype.render = function () {
     h('.flex-row.flex-right', {
       style: {
         marginRight: '30px',
-        marginBottom: '20px',
       },
     }, [
       h('button.btn-violet',

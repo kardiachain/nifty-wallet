@@ -6,7 +6,6 @@ const configureStore = require('./app/store')
 const txHelper = require('./lib/tx-helper')
 const { fetchLocale } = require('./i18n-helper')
 const log = require('loglevel')
-const constant = require('../constant')
 
 module.exports = launchMetamaskUi
 
@@ -37,7 +36,7 @@ async function startApp (metamaskState, accountManager, opts) {
   const store = configureStore({
 
     // metamaskState represents the cross-tab state
-    metamask: {...metamaskState, ...{network: 'kardia_mainnet'}},
+    metamask: metamaskState,
 
     // appState represents the current tab's popup state
     appState: {},
@@ -72,7 +71,6 @@ async function startApp (metamaskState, accountManager, opts) {
     setProviderType: (type) => {
       store.dispatch(actions.setProviderType(type))
     },
-    rpcTarget: metamaskState.provider.rpcTarget || constant.RPC_ENDPOINT
   }
 
   // start app

@@ -117,50 +117,6 @@ NetworkDropdown.prototype.render = function () {
     h(
       DropdownMenuItem,
       {
-        key: 'kardia_mainnet',
-        closeMenu: () => this.props.hideNetworkDropdown(),
-        onClick: () => props.setProviderType('kardia_mainnet'),
-        style: dropdownMenuItemStyle,
-      },
-      [
-        providerType === 'kardia_mainnet' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
-        h(NetworkDropdownIcon, {
-          backgroundColor: '#ff4a8d', // $wild-strawberry
-          isSelected: providerType === 'kardia_mainnet',
-        }),
-        h('span.network-name-item', {
-          style: {
-            color: providerType === 'kardia_mainnet' ? '#ffffff' : '#9b9b9b',
-          },
-        }, this.context.t('kardia_mainnet')),
-      ],
-    ),
-
-    h(
-      DropdownMenuItem,
-      {
-        key: 'kardia_testnet',
-        closeMenu: () => this.props.hideNetworkDropdown(),
-        onClick: () => props.setProviderType('kardia_testnet'),
-        style: dropdownMenuItemStyle,
-      },
-      [
-        providerType === 'kardia_testnet' ? h('i.fa.fa-check') : h('.network-check__transparent', '✓'),
-        h(NetworkDropdownIcon, {
-          backgroundColor: '#7057ff', // $cornflower-blue
-          isSelected: providerType === 'kardia_testnet',
-        }),
-        h('span.network-name-item', {
-          style: {
-            color: providerType === 'kardia_testnet' ? '#ffffff' : '#9b9b9b',
-          },
-        }, this.context.t('kardia_testnet')),
-      ],
-    ),
-
-    h(
-      DropdownMenuItem,
-      {
         key: 'default',
         closeMenu: () => this.props.hideNetworkDropdown(),
         onClick: () => props.setProviderType('localhost'),
@@ -211,9 +167,19 @@ NetworkDropdown.prototype.render = function () {
 NetworkDropdown.prototype.getNetworkName = function () {
   const { provider } = this.props
   const providerName = provider.type
+
   let name
-  if (providerName === 'kardia_mainnet') {
-    name = 'Kardia Mainnet'
+
+  if (providerName === 'mainnet') {
+    name = this.context.t('mainnet')
+  } else if (providerName === 'ropsten') {
+    name = this.context.t('ropsten')
+  } else if (providerName === 'kovan') {
+    name = this.context.t('kovan')
+  } else if (providerName === 'rinkeby') {
+    name = this.context.t('rinkeby')
+  } else if (providerName === 'poa') {
+    name = this.context.t('poa')
   } else {
     name = this.context.t('unknownNetwork')
   }

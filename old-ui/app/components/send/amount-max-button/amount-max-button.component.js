@@ -18,7 +18,7 @@ export default class AmountMaxButton extends Component {
     address: PropTypes.string,
     amount: PropTypes.string,
     to: PropTypes.string,
-    blockGasLimit: PropTypes.number,
+    blockGasLimit: PropTypes.string,
     data: PropTypes.string,
   }
 

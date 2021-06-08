@@ -5,9 +5,14 @@ const h = require('react-hyperscript')
 const actions = require('../../ui/app/actions')
 const LoadingIndicator = require('./components/loading')
 const txHelper = require('../lib/tx-helper')
+import log from 'loglevel'
 const { getCurrentKeyring, ifContractAcc } = require('./util')
 
 const PendingTx = require('./components/pending-tx')
+import PendingMsg from './components/pending-msg'
+import PendingPersonalMsg from './components/pending-personal-msg'
+import PendingTypedMsg from './components/pending-typed-msg'
+const Loading = require('./components/loading')
 const { DAI_CODE, POA_SOKOL_CODE, RSK_TESTNET_CODE, GOERLI_TESTNET_CODE } = require('../../app/scripts/controllers/network/enums')
 const { getMetaMaskAccounts } = require('../../ui/app/selectors')
 import BigNumber from 'bignumber.js'
@@ -36,14 +41,12 @@ class ConfirmTxScreen extends Component {
     tokenSymbol: PropTypes.string,
     tokensToSend: PropTypes.objectOf(BigNumber),
     tokensTransferTo: PropTypes.string,
-    txData: PropTypes.object,
-    txId: PropTypes.string,
   }
 
   render () {
     const props = this.props
     const { network, unapprovedTxs, currentCurrency, computedBalances,
-      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit, txData } = props
+      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit } = props
     let { conversionRate } = props
 
     const isTestnet = parseInt(network) === POA_SOKOL_CODE || parseInt(network) === RSK_TESTNET_CODE || parseInt(network) === GOERLI_TESTNET_CODE
@@ -55,14 +58,14 @@ class ConfirmTxScreen extends Component {
     }
 
     const unconfTxList = txHelper(unapprovedTxs, unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, network)
-    // const ind = props.pendingTxIndex || 0
-    // const txData = unconfTxList[ind] || {}
-    const txParams = txData && txData.params ? txData.params : {}
+    const ind = props.pendingTxIndex || 0
+    const txData = unconfTxList[ind] || {}
+    const txParams = txData.params || {}
 
-    // if (unconfTxList.length === 0) return h(Loading, { isLoading: true })
+    // log.info(`rendering a combined ${unconfTxList.length} unconf msg & txs`)
+    if (unconfTxList.length === 0) return h(Loading, { isLoading: true })
 
     const unconfTxListLength = unconfTxList.length
-
     return (
 
       h('.flex-column.flex-grow', {
@@ -71,14 +74,14 @@ class ConfirmTxScreen extends Component {
         },
       }, [
 
-        h(LoadingIndicator, {
-          isLoading: this.state ? !this.state.bypassLoadingScreen : txData.loadingDefaults,
-          loadingMessage: 'Estimating transaction cost…',
-          canBypass: true,
-          bypass: () => {
-            this.setState({bypassLoadingScreen: true})
-          },
-        }),
+        // h(LoadingIndicator, {
+        //   isLoading: this.state ? !this.state.bypassLoadingScreen : txData.loadingDefaults,
+        //   loadingMessage: 'Estimating transaction cost…',
+        //   canBypass: true,
+        //   bypass: () => {
+        //     this.setState({bypassLoadingScreen: true})
+        //   },
+        // }),
 
         // subtitle and nav
 
@@ -124,8 +127,7 @@ class ConfirmTxScreen extends Component {
 
   sendTransaction (txData, event) {
     this.stopPropagation(event)
-    // this.props.actions.updateAndApproveTx(txData)
-    this.props.actions.signKardiaTx(txData, this.props.txId)
+    this.props.actions.updateAndApproveTx(txData)
     this._checkIfContractExecutionAndUnlockContract(txData)
   }
 
@@ -144,6 +146,7 @@ class ConfirmTxScreen extends Component {
   }
 
   signMessage (msgData, event) {
+    log.info('conf-tx.js: signing message')
     const params = msgData.msgParams
     params.metamaskId = msgData.id
     this.stopPropagation(event)
@@ -157,6 +160,7 @@ class ConfirmTxScreen extends Component {
   }
 
   signPersonalMessage (msgData, event) {
+    log.info('conf-tx.js: signing personal message')
     const params = msgData.msgParams
     params.metamaskId = msgData.id
     this.stopPropagation(event)
@@ -164,6 +168,7 @@ class ConfirmTxScreen extends Component {
   }
 
   signTypedMessage (msgData, event) {
+    log.info('conf-tx.js: signing typed message')
     const params = msgData.msgParams
     params.metamaskId = msgData.id
     this.stopPropagation(event)
@@ -171,16 +176,19 @@ class ConfirmTxScreen extends Component {
   }
 
   cancelMessage (msgData, event) {
+    log.info('canceling message')
     this.stopPropagation(event)
     this.props.actions.cancelMsg(msgData)
   }
 
   cancelPersonalMessage (msgData, event) {
+    log.info('canceling personal message')
     this.stopPropagation(event)
     this.props.actions.cancelPersonalMsg(msgData)
   }
 
   cancelTypedMessage (msgData, event) {
+    log.info('canceling typed message')
     this.stopPropagation(event)
     this.props.actions.cancelTypedMsg(msgData)
   }
@@ -227,41 +235,44 @@ class ConfirmTxScreen extends Component {
 }
 
 function currentTxView (opts) {
-  return h(PendingTx, opts)
+  log.info('rendering current tx view')
+  const { txData } = opts
+  const { txParams, msgParams, type } = txData
+
+  if (txParams) {
+    log.debug('txParams detected, rendering pending tx')
+    return h(PendingTx, opts)
+  } else if (msgParams) {
+    log.debug('msgParams detected, rendering pending msg')
+
+    if (type === 'eth_sign') {
+      log.debug('rendering eth_sign message')
+      return h(PendingMsg, opts)
+    } else if (type === 'personal_sign') {
+      log.debug('rendering personal_sign message')
+      return h(PendingPersonalMsg, opts)
+    } else if (type === 'eth_signTypedData') {
+      log.debug('rendering eth_signTypedData message')
+      return h(PendingTypedMsg, opts)
+    }
+  }
 }
 
 function warningIfExists (warning) {
-  if (!warning) return
-  let message = ''
-  if (typeof warning === 'string') {
-    message = warning
-  } else if (warning.data && warning.data.message) {
-    message = warning.data.message
-  }
-
-  if (message &&
+  if (warning &&
      // Do not display user rejections on this screen:
-     message.indexOf('User denied transaction signature') === -1) {
+     warning.indexOf('User denied transaction signature') === -1) {
     return h('.error', {
       style: {
         margin: 'auto',
       },
-    }, message)
+    }, warning)
   }
 }
 
 function mapStateToProps (state) {
   const { metamask, appState } = state
   const { screenParams, pendingTxIndex } = appState.currentView
-
-  let txId = ''
-
-  if (state.metamask.unapprovedTxs && Object.keys(state.metamask.unapprovedTxs).length > 0) {
-    const keyArr = Object.keys(state.metamask.unapprovedTxs)
-    const latestKey = keyArr[keyArr.length - 1]
-    txId = latestKey
-  }
-
   return {
     identities: metamask.identities,
     accounts: getMetaMaskAccounts(state),
@@ -284,8 +295,6 @@ function mapStateToProps (state) {
     tokensToSend: (screenParams && screenParams.tokensToSend),
     tokensTransferTo: (screenParams && screenParams.tokensTransferTo),
     isContractExecutionByUser: (screenParams && screenParams.isContractExecutionByUser),
-    txData: screenParams && screenParams.txData ? screenParams.txData : {},
-    txId,
   }
 }
 
@@ -303,7 +312,6 @@ function mapDispatchToProps (dispatch) {
       cancelPersonalMsg: (msgData) => dispatch(actions.cancelPersonalMsg(msgData)),
       cancelTypedMsg: (msgData) => dispatch(actions.cancelTypedMsg(msgData)),
       showAccountDetail: (to) => dispatch(actions.showAccountDetail(to)),
-      signKardiaTx: (txData) => dispatch(actions.signKardiaTx(txData)),
     },
   }
 }

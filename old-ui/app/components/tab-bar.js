@@ -18,14 +18,16 @@ TabBar.prototype.render = function () {
   return (
     h('.flex-row.space-around', {
       style: {
-        // background: '#E5E5E5',
-        paddingTop: (style && style.paddingTop),
-        minHeight: '44px',
         background: '#F7F8F9',
-        border: '1px solid #F1F2F4', 
-        boxShadow: 'inset 0px 1px 2px rgba(0, 0, 0, 0.12)', 
-        borderRadius: '12px', 
-        padding: '4px',
+        border: '1px solid #F1F2F4',
+        boxSizing: 'border-box',
+        boxShadow: 'inset 0px 1px 2px rgba(0, 0, 0, 0.12)',
+        borderRadius: '12px',
+        padding: '6px',
+        minHeight: '45px',
+        lineHeight: '45px',
+        marginLeft: '16px',
+        marginRight: '16px'
       },
     }, tabs.map((tab, ind) => {
       const { key, content, id } = tab

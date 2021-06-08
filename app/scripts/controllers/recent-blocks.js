@@ -1,6 +1,6 @@
-const ObservableStore = require('obs-store')
+import { ObservableStore } from '@metamask/obs-store'
 const extend = require('xtend')
-const KardiaQuery = require('../kardiaScript/kardia-query')
+const EthQuery = require('eth-query')
 const log = require('loglevel')
 const pify = require('pify')
 const { isKnownProvider, ifRSKByProviderType } = require('../../../old-ui/app/util')
@@ -19,7 +19,7 @@ class RecentBlocksController {
    * @param {BlockTracker} opts.provider The provider used to create a new EthQuery instance.
    * @property {BlockTracker} blockTracker Points to the passed BlockTracker. On RecentBlocksController construction,
    * listens for 'latest' events so that new blocks can be processed and added to storage.
-   * @property {KardiaQuery} kardiaQuery Points to the EthQuery instance created with the passed provider
+   * @property {EthQuery} ethQuery Points to the EthQuery instance created with the passed provider
    * @property {number} historyLength The maximum length of blocks to track
    * @property {object} store Stores the recentBlocks
    * @property {array} store.recentBlocks Contains all recent blocks, up to a total that is equal to this.historyLength
@@ -29,7 +29,7 @@ class RecentBlocksController {
     const { blockTracker, provider, networkController } = opts
     const { type } = networkController.getProviderConfig()
     this.blockTracker = blockTracker
-    this.kardiaQuery = new KardiaQuery(provider)
+    this.ethQuery = new EthQuery(provider)
     this.setHistoryLength(type, opts)
 
     const initState = extend({
@@ -71,7 +71,11 @@ class RecentBlocksController {
    *
    */
   setHistoryLength (type, opts) {
-    this.historyLength = opts.historyLength || 40
+    if (ifRSKByProviderType(type)) {
+      this.historyLength = 1
+    } else {
+      this.historyLength = opts.historyLength || 40
+    }
   }
 
   /**
@@ -139,11 +143,11 @@ class RecentBlocksController {
    */
   mapTransactionsToPrices (newBlock) {
     const block = extend(newBlock, {
-      gasPrices: newBlock.txs.map((tx) => {
+      gasPrices: newBlock.transactions.map((tx) => {
         return tx.gasPrice
       }),
     })
-    delete block.txs
+    delete block.transactions
     return block
   }
 
@@ -158,7 +162,8 @@ class RecentBlocksController {
    * @returns {Promise<void>} Promises undefined
    */
   async backfill () {
-    this.blockTracker.once('latest', async (currentBlockNumber) => {
+    this.blockTracker.once('latest', async (blockNumberHex) => {
+      const currentBlockNumber = Number.parseInt(blockNumberHex, 16)
       const blocksToFetch = Math.min(currentBlockNumber, this.historyLength)
       const prevBlockNumber = currentBlockNumber - 1
       const targetBlockNumbers = Array(blocksToFetch).fill().map((_, index) => prevBlockNumber - index)
@@ -176,14 +181,15 @@ class RecentBlocksController {
   }
 
   /**
-   * Uses KardiaQuery to get a block that has a given block number.
+   * Uses EthQuery to get a block that has a given block number.
    *
    * @param {number} number The number of the block to get
    * @returns {Promise<object>} Promises A block with the passed number
    *
    */
   async getBlockByNumber (number) {
-    return await pify(this.kardiaQuery.getBlockByNumber).call(this.kardiaQuery, number)
+    const blockNumberHex = '0x' + number.toString(16)
+    return await pify(this.ethQuery.getBlockByNumber).call(this.ethQuery, blockNumberHex, true)
   }
 
 }

@@ -1,7 +1,9 @@
 const Component = require('react').Component
 const h = require('react-hyperscript')
 const inherits = require('util').inherits
-const { networks, getNetworkDisplayName } = require('../../../app/scripts/controllers/network/util')
+// const ethNetProps = require('eth-net-props')
+const ethNetProps = require('../../../kardia-libs/kai-net-props')
+const { networks } = require('../../../app/scripts/controllers/network/util')
 
 module.exports = Network
 
@@ -15,7 +17,6 @@ Network.prototype.render = function () {
   const props = this.props
   const { provider, network: networkNumber } = props
   let displayName, hoverText
-
   if (networkNumber === 'loading') {
     return h('span.pointer', {
       className: props.onClick && 'pointer',
@@ -35,13 +36,10 @@ Network.prototype.render = function () {
       }),
       h('i.fa.fa-caret-down'),
     ])
-  } else if (provider.type === 'rpc') {
-    displayName = 'Custom RPC'
-    hoverText = provider.rpcTarget
   } else {
-    if (networkNumber && networks[networkNumber]) {
+    if (networkNumber !== undefined && networkNumber !== null && networks[networkNumber]) {
       displayName = networks[networkNumber].displayNameDropdown
-      hoverText = getNetworkDisplayName(networkNumber)
+      hoverText = ethNetProps.props.getNetworkDisplayName(networkNumber)
     } else {
       displayName = 'Private Network'
       hoverText = `Private Network (${provider.rpcTarget})`

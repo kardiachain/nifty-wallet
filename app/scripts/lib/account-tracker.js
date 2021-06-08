@@ -7,11 +7,10 @@
  * on each new block.
  */
 
-// const EthQuery = require('eth-query')
-const ObservableStore = require('obs-store')
+const EthQuery = require('eth-query')
+import { ObservableStore } from '@metamask/obs-store'
 const log = require('loglevel')
 const pify = require('pify')
-const KardiaQuery = require('../kardiaScript/kardia-query')
 
 
 class AccountTracker {
@@ -28,7 +27,7 @@ class AccountTracker {
    * @property {Object} store.accounts The accounts currently stored in this AccountTracker
    * @property {string} store.currentBlockGasLimit A hex string indicating the gas limit of the current block
    * @property {Object} _provider A provider needed to create the EthQuery instance used within this AccountTracker.
-   * @property {KardiaQuery} _query An EthQuery instance used to access account information from the blockchain
+   * @property {EthQuery} _query An EthQuery instance used to access account information from the blockchain
    * @property {BlockTracker} _blockTracker A BlockTracker instance. Needed to ensure that accounts and their info updates
    * when a new block is created.
    * @property {Object} _currentBlockNumber Reference to a property on the _blockTracker: the number (i.e. an id) of the the current block
@@ -42,7 +41,7 @@ class AccountTracker {
     this.store = new ObservableStore(initState)
 
     this._provider = opts.provider
-    this._query = pify(new KardiaQuery(this._provider))
+    this._query = pify(new EthQuery(this._provider))
     this._blockTracker = opts.blockTracker
     // blockTracker.currentBlock may be null
     this._currentBlockNumber = this._blockTracker.getCurrentBlock()
@@ -149,7 +148,7 @@ class AccountTracker {
     this._currentBlockNumber = blockNumber
 
     // block gasLimit polling shouldn't be in account-tracker shouldn't be here...
-    const currentBlock = await this._query.getBlockByNumber(blockNumber)
+    const currentBlock = await this._query.getBlockByNumber(blockNumber, false)
     if (!currentBlock) return
     const currentBlockGasLimit = currentBlock.gasLimit
     this.store.updateState({ currentBlockGasLimit })

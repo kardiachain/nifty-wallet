@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import Identicon from '../identicon'
 import { addressSummary } from '../../util'
@@ -32,60 +32,70 @@ class SendProfile extends Component {
 			token,
 		} = props
 		return (
-			<div className="account-data-subsection">
-				<div style={{display: 'flex'}}>
-					<div
+			<div
+				className="account-data-subsection"
+				style={{
+					// background: 'linear-gradient(rgb(84, 36, 147), rgb(104, 45, 182))',
+					background: 'transparent',
+					paddingLeft: '14px',
+					paddingRight: '14px'
+				}}
+			>
+				{/* header - identicon + nav */}
+				<div className="flex-row">
+					<div className="flex-column flex-center" style={{marginRight: 12}}>
+						{/* large identicon*/}
+						<div
 						className="identicon-wrapper flex-column flex-center select-none"
-					>
-						<Identicon diameter={40} address={address} />
+						style={{ display: 'inline-block' }}
+						>
+							<Identicon diameter={44} address={address} />
+						</div>
+						{/* invisible place holder */}
+						{/* <i className="fa fa-users fa-lg invisible" style={{ marginTop: '28px' }} /> */}
 					</div>
-
-					{/* address */}
-					<div className="address" style={{marginLeft: '12px'}}>
-					<h2
-						className="send-profile-identity-name"
-						style={{
-							fontWeight: '600',
-							lineHeight: '24px',
-							color: '#1C1C28',
-						}}
-					>{identity && identity.name}</h2>
-					<div
-						className="flex-row flex-center"
-						style={{
-							color: '#333333',
-						}}
-					>
-						<div className="send-profile-address" style={{
-							fontSize: '14px',
-							fontWeight: '600',
-							lineHeight: '20px',
-							color: 'rgba(28, 28, 40, 0.26)',
-							}}>
-							{addressSummary(network, address)}
+					{/* account label */}
+					<div className="flex-column" style={{ alignItems: 'flex-start' }} >
+						<h2
+							className="send-profile-identity-name font-medium flex-center"
+							style={{
+								// color: '#ffffff',
+								paddingTop: '8px',
+								marginBottom: '8px',
+								fontWeight: '600'
+							}}
+						>{identity && identity.name}</h2>
+						{/* address and getter actions */}
+						<div
+							className="flex-row flex-center"
+							style={{
+								color: 'rgba(28, 28, 40, 0.26)',
+								// marginBottom: '30px',
+							}}
+						>
+							<div className="send-profile-address" style={{ lineHeight: '16px', fontSize: '14px' }}>
+								{addressSummary(network, address)}
+							</div>
 						</div>
 					</div>
-					</div>
-
-
 				</div>
-
 				{/* balance */}
-				<div
-				style={{
-					background: '#FFFFFF',
-					boxShadow: '0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16)',
-					borderRadius: '8px',
-					padding: '12px',
-					display: 'flex',
-					margin: '16px 0px',
-				}}
+				<div 
+					className="flex-row flex-start"
+					style={{
+						background: 'rgb(255, 255, 255)',
+						boxShadow: 'rgb(40 41 61 / 4%) 0px 0px 2px, rgb(96 97 112 / 16%) 0px 4px 8px',
+						borderRadius: 8,
+						padding: 12,
+						marginTop: 8
+					}}
 				>
 					{isToken ? <TokenBalance token={token} /> : <EthBalance {...{
 						value: account && account.balance,
 						conversionRate,
 						currentCurrency,
 						network,
+						showFiat: false
 					}} />}
 				</div>
 			</div>

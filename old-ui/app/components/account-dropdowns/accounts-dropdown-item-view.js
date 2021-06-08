@@ -4,7 +4,7 @@ import actions from '../../../../ui/app/actions'
 import { connect } from 'react-redux'
 import { DropdownMenuItem } from '../dropdown'
 import Identicon from '../identicon'
-import { ifLooseAcc, ifContractAcc, ifHardwareAcc } from '../../util'
+import { ifLooseAcc, ifContractAcc, ifHardwareAcc, ifRSK, ifETC } from '../../util'
 import { getHdPaths, isLedger } from '../connect-hardware/util'
 import { LEDGER } from '../connect-hardware/enum'
 import { importTypes, labels } from '../../accounts/import/enums'
@@ -44,7 +44,7 @@ class AccountsDropdownItemView extends Component {
     const accountName = (
       <span
         className="accs-dd-menu-item-account-name"
-        style={{ color: isSelected ? '' : '' }}
+        style={{ color: isSelected ? '#000000' : '#C4C4C4' }}
       >{name || ''}
       </span>
     )
@@ -64,8 +64,7 @@ class AccountsDropdownItemView extends Component {
         closeMenu={() => {}}
         onClick={() => this.accountOnClick(keyring, address)}
         style={{
-          padding: '12px',
-          display: 'flex',
+          padding: '8px 0px',
         }}
       >
         {leftBorder}
@@ -140,7 +139,7 @@ class AccountsDropdownItemView extends Component {
       } else {
         this.preventToast()
       }
-    } else if (!ifLooseAcc(keyring) && !ifContractAcc(keyring)) {
+    } else if (!ifLooseAcc(keyring) && !ifContractAcc(keyring) && (ifRSK(this.props.network) || ifETC(this.props.network))) {
       this.props.actions.isCreatedWithCorrectDPath()
       .then(isCreatedWithCorrectDPath => {
         if (isCreatedWithCorrectDPath) {

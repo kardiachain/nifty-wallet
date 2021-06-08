@@ -25,6 +25,7 @@ class CreateVaultCompleteScreen extends Component {
 
         h('h3.flex-center.section-title', {
           style: {
+            background: '#ffffff',
             color: '#333333',
             marginBottom: 8,
             width: '100%',

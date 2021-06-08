@@ -8,8 +8,9 @@ import AccountPanel from './account-panel'
 import RadioList from './custom-radio-list'
 import { getNetworkDisplayName } from '../../../app/scripts/controllers/network/util'
 import { getFaucets, getExchanges } from '../../../app/scripts/lib/buy-eth-url'
-import { MAINNET_CODE, getNetworkCoinName } from '../../../app/scripts/controllers/network/enums'
-import ethNetProps from 'eth-net-props'
+import { MAINNET_CODE } from '../../../app/scripts/controllers/network/enums'
+// import ethNetProps from 'eth-net-props'
+import ethNetProps from '../../../kardia-libs/kai-net-props'
 import PropTypes from 'prop-types'
 import { getMetaMaskAccounts } from '../../../ui/app/selectors'
 
@@ -32,7 +33,7 @@ class BuyButtonSubview extends Component {
     const props = this.props
     const { network } = props
     const isLoading = props.isSubLoading
-    const coinName = getNetworkCoinName(network)
+    const coinName = ethNetProps.props.getNetworkCoinName(network)
     return (
       <div className="flex-column">
         { /* loading indication*/ }

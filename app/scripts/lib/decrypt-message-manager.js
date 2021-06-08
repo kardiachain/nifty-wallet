@@ -1,5 +1,5 @@
 import EventEmitter from 'events'
-import ObservableStore from 'obs-store'
+import { ObservableStore } from '@metamask/obs-store'
 import ethUtil from 'ethereumjs-util'
 import { ethErrors } from 'eth-json-rpc-errors'
 import log from 'loglevel'
@@ -128,6 +128,11 @@ export default class DecryptMessageManager extends EventEmitter {
    *
    */
   addUnapprovedMessage (msgParams, req) {
+    log.debug(
+      `DecryptMessageManager addUnapprovedMessage: ${JSON.stringify(
+        msgParams,
+      )}`,
+    )
     // add origin from request
     if (req) {
       msgParams.origin = req.origin
