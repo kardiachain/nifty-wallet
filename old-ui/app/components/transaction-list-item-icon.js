@@ -41,14 +41,14 @@ TransactionIcon.prototype.render = function () {
   if (isMsg) {
     return h('i.fa.fa-certificate.fa-lg', {
       style: {
-        width: '40px',
+        width: '32px',
       },
     })
   }
 
   if (txParams.to) {
     return h(Identicon, {
-      diameter: 40,
+      diameter: 32,
       address: txParams.to || transaction.hash,
     })
   } else {

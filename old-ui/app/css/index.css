@@ -137,6 +137,11 @@ button, input[type="submit"] {
   border: 1.5px solid #E2E5E9;
 }
 
+.btn-link {
+  color:rgba(2, 58, 255, 1);
+  background: transparent;
+}
+
 button[disabled], input[type="submit"][disabled] {
   cursor: not-allowed;
   background: rgba(197, 197, 197, 1);
@@ -682,9 +687,9 @@ input.large-input {
 }
 
 .tx-warning {
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
   background: #6729a8;
   background-image: url('../images/invalid-name.svg');
   background-size: 2px 18px;

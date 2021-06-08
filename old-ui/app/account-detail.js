@@ -283,7 +283,7 @@ AccountDetailScreen.prototype.render = function () {
 
           h('.flex-grow'),
 
-          !ifContractAcc(currentKeyring) ? h('button', {
+          !ifContractAcc(currentKeyring) ? h('button.btn-link', {
             onClick: () => props.actions.buyEthView(selected),
             style: { marginRight: '10px' },
           }, 'Buy') : null,
