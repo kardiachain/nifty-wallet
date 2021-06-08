@@ -75,7 +75,7 @@ class ChooseContractExecutor extends Component {
 				<SendHeader title="Choose contract executor" back={() => this.back()} />
 				<SendProfile />
 				<ErrorComponent error={error} />
-				<div style={{ padding: '0 30px' }}>
+				<div style={{ padding: '10px 30px' }}>
 					<span className="hw-connect__header__msg">Contract transaction will be executed from selected account</span>
 				</div>
 				<div style={{

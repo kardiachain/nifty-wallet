@@ -1,13 +1,15 @@
 .executor-cell-container {
   padding: 5px;
   cursor: pointer;
-  border: 3px solid white;
+  border: 2px solid #c4c4c4;
   border-radius: 5px;
+  margin-top: 4px;
 }
 
 .executor-cell-container-selected {
   padding: 5px;
   cursor: pointer;
-  border: 3px solid #60db97;
+  border: 2px solid #60db97;
   border-radius: 5px;
+  margin-top: 4px;
 }

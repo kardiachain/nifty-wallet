@@ -165,7 +165,7 @@ class SendTransactionScreen extends PersistentForm {
 				<SendProfile />
 				<ErrorComponent error={error} />
 				<Toast.ToastComponent type={Toast.TOAST_TYPE_SUCCESS} />
-				<div style={{ padding: '0 30px' }}>
+				<div style={{ padding: '10px 30px' }}>
 					<Select
 						clearable={false}
 						value={this.state.methodSelected}

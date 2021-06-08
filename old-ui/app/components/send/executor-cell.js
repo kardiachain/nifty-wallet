@@ -63,14 +63,14 @@ class ExecutorCell extends Component {
 						<h2
 							className="font-medium flex-center"
 							style={{
-								color: '#ffffff',
+								color: '#000000',
 								marginBottom: '8px',
 							}}
 						>{identity && identity.name}</h2>
 						{/* address and getter actions */}
 						<div
 							className="flex-row flex-center"
-							style={{ color: 'rgba(255, 255, 255, 0.7)' }}
+							style={{ color: '#000000' }}
 						>
 							<div style={{ lineHeight: '16px', fontSize: '14px' }}>
 								{addressSummary(network, address)}
