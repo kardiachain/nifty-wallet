@@ -205,7 +205,7 @@
     "message": "La red por defecto para las transacciones de Ether es MainNet (red principal)"
   },
   "denExplainer": {
-    "message": "El DEN es tu contraseña encriptada almacenada dentro de KardiaChain Wallet"
+    "message": "El Seed Phrase es tu contraseña encriptada almacenada dentro de KardiaChain Wallet"
   },
   "deposit": {
     "message": "Depositar"
@@ -266,7 +266,7 @@
     "message": "¡Envíanos un correo!"
   },
   "encryptNewDen": {
-    "message": "Encriptar tu nuevo DEN"
+    "message": "Encriptar tu nuevo Seed Phrase"
   },
   "enterPassword": {
     "message": "Ingresa contraseña"
@@ -384,7 +384,7 @@
     "message": "Importar una cuenta"
   },
   "importDen": {
-    "message": "Importar DEN existente"
+    "message": "Importar Seed Phrase existente"
   },
   "imported": {
     "message": "Importado",
