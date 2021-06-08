@@ -93,7 +93,7 @@ export default class AddTokenScreen extends Component {
   }
 
   render () {
-    const { network } = this.props
+    const { network, goHome } = this.props
     const networkID = parseInt(network)
     let views = []
     const isProdNetworkWithKnownTokens = networkID === MAINNET_CODE ||
@@ -120,17 +120,25 @@ export default class AddTokenScreen extends Component {
         },
       }, [
         // subtitle and nav
-        h('.section-title.flex-row.flex-center', {
+        h('h3.flex-center.send-header', {
           style: {
-            background: '#60269c',
-            borderTop: 'none',
+            // background: '#60269c',
+            // borderTop: 'none',
+            marginTop: '18px',
+					  marginBottom: '14px',
           },
         }, [
-          h('h2.page-subtitle', {
+          h('i.fa.fa-arrow-left.fa-lg.cursor-pointer', {
             style: {
-              color: '#ffffff',
+              color: '#000000',
+              position: 'absolute',
+						  left: '14px',
             },
-          }, 'Add Token'),
+            onClick: () => {
+              goHome()
+            }
+          }),
+          'Add Token'
         ]),
 
         ...views,

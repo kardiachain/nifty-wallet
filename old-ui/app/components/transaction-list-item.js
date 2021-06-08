@@ -28,6 +28,8 @@ const { POA_CODE,
   CLASSIC_CODE,
   RSK_CODE,
   RSK_TESTNET_CODE,
+  KARDIA_CODE,
+  KARDIA_TESTNET_CODE,
 } = require('../../../app/scripts/controllers/network/enums')
 
 const mapDispatchToProps = dispatch => {
@@ -90,7 +92,9 @@ TransactionListItem.prototype.render = function () {
     numericNet === GOERLI_TESTNET_CODE ||
     numericNet === CLASSIC_CODE ||
     numericNet === RSK_CODE ||
-    numericNet === RSK_TESTNET_CODE
+    numericNet === RSK_TESTNET_CODE ||
+    numericNet === KARDIA_CODE ||
+    numericNet === KARDIA_TESTNET_CODE
 
   const isMsg = ('msgParams' in transaction)
   const isTx = ('txParams' in transaction)
@@ -140,29 +144,29 @@ TransactionListItem.prototype.render = function () {
           width: '100%',
         },
       }, [
-        // h('.identicon-wrapper.flex-column.flex-center.select-none', [
-        //   h(TransactionIcon, { txParams, transaction, isTx, isMsg }),
-        // ]),
+        h('.identicon-wrapper.flex-column.flex-center.select-none', [
+          h(TransactionIcon, { txParams, transaction, isTx, isMsg }),
+        ]),
 
-        // h(Tooltip, {
-        //   title: 'Transaction Number',
-        //   position: 'right',
-        //   id: 'transactionListItem',
-        // }, [
-        //   h('span', {
-        //     style: {
-        //       fontFamily: 'Nunito Bold',
-        //       display: 'flex',
-        //       cursor: 'normal',
-        //       flexDirection: 'column',
-        //       alignItems: 'center',
-        //       justifyContent: 'center',
-        //       padding: '10px',
-        //     },
-        //     'data-tip': '',
-        //     'data-for': 'transactionListItem',
-        //   }, nonce),
-        // ]),
+        h(Tooltip, {
+          title: 'Transaction Number',
+          position: 'right',
+          id: 'transactionListItem',
+        }, [
+          h('span', {
+            style: {
+              fontFamily: 'Nunito Bold',
+              display: 'flex',
+              cursor: 'normal',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px',
+            },
+            'data-tip': '',
+            'data-for': 'transactionListItem',
+          }, nonce),
+        ]),
 
         h('.flex-column', {
           style: {

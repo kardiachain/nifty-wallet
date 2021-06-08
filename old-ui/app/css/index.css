@@ -131,8 +131,10 @@ button, input[type="submit"] {
 }
 
 .btn-violet {
-  background: #6729a8;
+  background: #FFFFFF;
   margin-right: 10px;
+  color: #000000;
+  border: 1.5px solid #E2E5E9;
 }
 
 button[disabled], input[type="submit"][disabled] {
