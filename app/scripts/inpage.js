@@ -71,6 +71,7 @@ const proxiedInpageProvider = new Proxy(inpageProvider, {
 // end deprecate:Q1-2020
 //
 
-window.ethereum = proxiedInpageProvider
+// Remove to avoid overide meta mask
+// window.ethereum = proxiedInpageProvider
 
 window.kardiachain = proxiedInpageProvider
