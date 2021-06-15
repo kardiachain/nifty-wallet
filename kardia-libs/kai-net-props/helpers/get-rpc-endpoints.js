@@ -41,11 +41,7 @@ function getRPCEndpoints(network) {
 	case CLASSIC_CODE:
 		return ['https://www.ethercluster.com/etc']
 	case KARDIA_CODE:
-		// CHANGE FOR PRODUCTION
-		// return ['https://rpc.kardiachain.io/']
-		// return ['https://rpc-dev.kardiachain.io']
-		// return ['https://dev-1.kardiachain.io/']
-		return ['https://kai-test.kardiachain.io']
+		return ['https://rpc.kardiachain.io']
 	case KARDIA_TESTNET_CODE:
 		return ['https://dev-1.kardiachain.io/']
 	default:

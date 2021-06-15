@@ -21,7 +21,8 @@ class AccountQrScreen extends PureComponent {
   render () {
     const {Qr, warning, network} = this.props
     const addressChecksum = toChecksumAddress(network, Qr.data)
-    const address = ifRSK ? addressChecksum : `${isHexPrefixed(Qr.data) ? 'ethereum:' : ''}${Qr.data}`
+    // const address = ifRSK ? addressChecksum : `${isHexPrefixed(Qr.data) ? 'ethereum:' : ''}${Qr.data}`
+    const address = addressChecksum
     const qrImage = qrCode(4, 'M')
 
     qrImage.addData(address)
