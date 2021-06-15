@@ -50,7 +50,8 @@ import percentile from 'percentile'
 import seedPhraseVerifier from './lib/seed-phrase-verifier'
 import log from 'loglevel'
 const TrezorKeyring = require('eth-trezor-keyring')
-const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
+// const LedgerBridgeKeyring = require('eth-ledger-bridge-keyring')
+const LedgerBridgeKeyring = require('../../kardia-libs/kardia-ledger-bridge-keyring')
 import EthQuery from 'eth-query'
 import nanoid from 'nanoid'
 const { importTypes } = require('../../old-ui/app/accounts/import/enums')
@@ -533,6 +534,7 @@ module.exports = class MetamaskController extends EventEmitter {
       setAccountLabel: nodeify(preferencesController.setAccountLabel, preferencesController),
       setFeatureFlag: nodeify(preferencesController.setFeatureFlag, preferencesController),
       setPreference: nodeify(preferencesController.setPreference, preferencesController),
+      setLedgerLivePreference: nodeify(this.setLedgerLivePreference.bind(this), this),
 
       // BlacklistController
       // whitelistPhishingDomain: this.whitelistPhishingDomain.bind(this),
@@ -725,6 +727,16 @@ module.exports = class MetamaskController extends EventEmitter {
     await this.preferencesController.syncAddresses(accounts)
     await this.balancesController.updateAllBalances()
     await this.txController.pendingTxTracker.updatePendingTxs()
+
+    // This must be set as soon as possible to communicate to the
+    // keyring's iframe and have the setting initialized properly
+    // Optimistically called to not block Metamask login due to
+    // Ledger Keyring GitHub downtime
+    const currentLedgerLivePreference = this.preferencesController.getLedgerLivePreference();
+    // TODO: update to using setting
+    // this.setLedgerLivePreference(currentLedgerLivePreference);
+    this.setLedgerLivePreference(true);
+
     return this.keyringController.fullUpdate()
   }
 
@@ -767,20 +779,29 @@ module.exports = class MetamaskController extends EventEmitter {
 
   async getKeyringForDevice (deviceName, hdPath = null) {
     let keyringName = null
+    let isLedger = false
     switch (deviceName) {
       case TREZOR:
         keyringName = TrezorKeyring.type
         break
       case LEDGER:
         keyringName = LedgerBridgeKeyring.type
+        isLedger = true
         break
       default:
         throw new Error('MetamaskController:getKeyringForDevice - Unknown device')
     }
     let keyring = await this.keyringController.getKeyringsByType(keyringName)[0]
+    console.log('getKeyringForDevice', keyring, isLedger)
     if (!keyring) {
-      keyring = await this.keyringController.addNewKeyring(keyringName)
+      const opts = isLedger ? {updateTransportMethod: this.preferencesController.getLedgerLivePreference()} : {}
+      keyring = await this.keyringController.addNewKeyring(keyringName, opts)
     }
+
+    if (isLedger) {
+      keyring.updateTransportMethod(this.preferencesController.getLedgerLivePreference())
+    }
+
     if (hdPath && keyring.setHdPath) {
       keyring.setHdPath(hdPath)
     }
@@ -2350,5 +2371,26 @@ module.exports = class MetamaskController extends EventEmitter {
    */
   whitelistPhishingDomain (hostname) {
     return this.phishingController.bypass(hostname)
+  }
+
+  /**
+   * Sets the Ledger Live preference to use for Ledger hardware wallet support
+   * @param {bool} bool - the value representing if the users wants to use Ledger Live
+   */
+  async setLedgerLivePreference(bool) {
+    const currentValue = this.preferencesController.getLedgerLivePreference();
+    this.preferencesController.setLedgerLivePreference(bool);
+
+    const keyring = await this.getKeyringForDevice('ledger');
+    if (keyring?.updateTransportMethod) {
+      return keyring.updateTransportMethod(bool).catch((e) => {
+        // If there was an error updating the transport, we should
+        // fall back to the original value
+        this.preferencesController.setLedgerLivePreference(currentValue);
+        throw e;
+      });
+    }
+
+    return undefined;
   }
 }
