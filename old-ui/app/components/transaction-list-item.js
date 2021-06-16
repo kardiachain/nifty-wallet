@@ -132,7 +132,7 @@ TransactionListItem.prototype.render = function () {
         event.stopPropagation()
         if (!transaction.hash || !isLinkable) return
         const url = ethNetProps.explorerLinks.getExplorerTxLinkFor(transaction.hash, numericNet)
-        global.platform.openWindow({ url })
+        global.platform.openTab({ url })
       },
       style: {
         padding: '20px 0',

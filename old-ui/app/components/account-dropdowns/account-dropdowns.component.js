@@ -210,7 +210,7 @@ class AccountDropdowns extends Component {
     const { selected, network } = this.props
     const networkCode = parseInt(network, 10)
     const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, networkCode)
-    global.platform.openWindow({ url })
+    global.platform.openTab({ url })
   }
 
   showQRCode = () => {

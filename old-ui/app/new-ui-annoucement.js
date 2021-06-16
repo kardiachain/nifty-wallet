@@ -61,7 +61,7 @@ module.exports = class NewUiAnnouncement extends PureComponent {
               href: 'https://medium.com/metamask/74dba32cc7f7',
               onClick ({target}) {
                 const url = target.href
-                global.platform.openWindow({
+                global.platform.openTab({
                   url,
                 })
               },

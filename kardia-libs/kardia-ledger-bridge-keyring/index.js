@@ -2,27 +2,28 @@ const {EventEmitter} = require('events')
 const HDKey = require('hdkey')
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
+// const Transaction = require('ethereumjs-tx')
+const Transaction = require('../kardia-tx')
 
 const hdPathString = `m/44'/60'/0'`
 const type = 'Ledger Hardware'
-// const BRIDGE_URL = 'https://vbaranov.github.io/eth-ledger-bridge-keyring'
-const BRIDGE_URL = 'https://localhost:5000'
+const BRIDGE_URL = 'https://vbaranov.github.io/eth-ledger-bridge-keyring'
 const pathBase = 'm'
 const MAX_INDEX = 1000
 const NETWORK_API_URLS = {
-  ropsten: 'http://api-ropsten.etherscan.io',
-  kovan: 'http://api-kovan.etherscan.io',
-  rinkeby: 'https://api-rinkeby.etherscan.io',
-  mainnet: 'https://api.etherscan.io',
-  sokol: 'https://blockscout.com/poa/sokol/api',
-  poa: 'https://blockscout.com/poa/core/api',
-  xdai: 'https://blockscout.com/poa/dai/api',
+  // ropsten: 'http://api-ropsten.etherscan.io',
+  // kovan: 'http://api-kovan.etherscan.io',
+  // rinkeby: 'https://api-rinkeby.etherscan.io',
+  // mainnet: 'https://api.etherscan.io',
+  // sokol: 'https://blockscout.com/poa/sokol/api',
+  // poa: 'https://blockscout.com/poa/core/api',
+  // xdai: 'https://blockscout.com/poa/dai/api',
 }
 
 class LedgerBridgeKeyring extends EventEmitter {
   constructor (opts = {}) {
     super()
-    this.bridgeUrl = BRIDGE_URL
+    this.bridgeUrl = null
     this.type = type
     this.page = 0
     this.perPage = 5
@@ -51,11 +52,18 @@ class LedgerBridgeKeyring extends EventEmitter {
     this.bridgeUrl = opts.bridgeUrl || BRIDGE_URL
     this.accounts = opts.accounts || []
     this.implementFullBIP44 = opts.implementFullBIP44 || false
+
+    if (this._isBIP44()) {
+      // Remove accounts that don't have corresponding account indexes
+      this.accounts = this.accounts
+        .filter((account) => Object.keys(this.accountIndexes).includes(ethUtil.toChecksumAddress(account)))
+    }
+
     return Promise.resolve()
   }
 
   isUnlocked () {
-    return !!(this.hdk && this.hdk.publicKey)
+    return Boolean(this.hdk && this.hdk.publicKey)
   }
 
   setAccountToUnlock (index) {
@@ -151,10 +159,14 @@ class LedgerBridgeKeyring extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.unlock()
         .then(_ => {
-
-          tx.v = ethUtil.bufferToHex(tx.getChainId())
-          tx.r = '0x00'
-          tx.s = '0x00'
+          const rawTx = new Transaction({
+            nonce: this._normalize(tx.nonce),
+            gasPrice: tx.gasPrice,
+            gasLimit: this._normalize(tx.gas),
+            to: this._normalize(tx.to),
+            value: this._normalize(tx.value),
+            data: this._normalize(tx.data),
+          })
 
           let hdPath
           if (this._isBIP44()) {
@@ -166,7 +178,7 @@ class LedgerBridgeKeyring extends EventEmitter {
           this._sendMessage({
             action: 'ledger-sign-transaction',
             params: {
-              tx: tx.serialize().toString('hex'),
+              tx: rawTx.kardiaSerialize().toString('hex'),
               hdPath,
             },
           },
@@ -320,7 +332,6 @@ class LedgerBridgeKeyring extends EventEmitter {
     msg.target = 'LEDGER-IFRAME'
     this.iframe.contentWindow.postMessage(msg, '*')
     window.addEventListener('message', ({ origin, data }) => {
-      console.log('receive callback', data)
       if (origin !== this._getOrigin()) return false
       if (data && data.action && data.action === `${msg.action}-reply`) {
         cb(data)
@@ -339,7 +350,6 @@ class LedgerBridgeKeyring extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.unlock()
         .then(async _ => {
-          console.log('unlocked')
           let accounts
           if (this._isBIP44()) {
             accounts = await this._getAccountsBIP44(from, to)

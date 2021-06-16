@@ -90,7 +90,7 @@ class AccountList extends Component {
                   className="hw-account-list__item__balance"
                   onClick={(event) => {
                     event.preventDefault()
-                    global.platform.openWindow({
+                    global.platform.openTab({
                         url: ethNetProps.explorerLinks.getExplorerAccountLinkFor(a.address, this.props.network),
                     })
                   }}

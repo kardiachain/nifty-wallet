@@ -297,7 +297,7 @@ class AccountDropdowns extends Component {
             onClick: () => {
               const { selected, network } = this.props
               const url = ethNetProps.explorerLinks.getExplorerAccountLinkFor(selected, network)
-              global.platform.openWindow({ url })
+              global.platform.openTab({ url })
             },
             style: Object.assign(
               dropdownMenuItemStyle,
