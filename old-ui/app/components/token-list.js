@@ -85,7 +85,7 @@ TokenList.prototype.render = function () {
           cursor: 'pointer',
         },
         onClick: () => {
-          global.platform.openWindow({
+          global.platform.openTab({
           url: `https://ethplorer.io/address/${userAddress}`,
         })
         },

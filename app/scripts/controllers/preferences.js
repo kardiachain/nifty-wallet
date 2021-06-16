@@ -39,6 +39,7 @@ class PreferencesController {
       lostIdentities: {},
       seedWords: null,
       forgottenPassword: false,
+      useLedgerLive: false,
       preferences: {
         useETHAsPrimaryCurrency: true,
       },
@@ -517,6 +518,23 @@ class PreferencesController {
    */
   getPreferences () {
     return this.store.getState().preferences
+  }
+
+  /**
+   * Sets the Ledger Live preference to use for Ledger hardware wallet support
+   * @param {bool} bool - the value representing if the users wants to use Ledger Live
+   */
+  async setLedgerLivePreference(bool) {
+    this.store.updateState({ useLedgerLive: bool });
+    return bool;
+  }
+
+  /**
+   * A getter for the `useLedgerLive` property
+   * @returns {boolean} User preference of using Ledger Live
+   */
+  getLedgerLivePreference() {
+    return this.store.getState().useLedgerLive;
   }
 
   //

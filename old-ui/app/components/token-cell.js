@@ -127,7 +127,7 @@ class TokenCell extends Component {
             onClick={() => {
               const { network } = this.props
               const url = ethNetProps.explorerLinks.getExplorerTokenLinkFor(address, userAddress, network)
-              global.platform.openWindow({ url })
+              global.platform.openTab({ url })
             }}
         >
           View token on block explorer
@@ -169,7 +169,7 @@ class TokenCell extends Component {
 }
 
 function navigateTo (url) {
-  global.platform.openWindow({ url })
+  global.platform.openTab({ url })
 }
 
 function tokenFactoryFor (tokenAddress) {

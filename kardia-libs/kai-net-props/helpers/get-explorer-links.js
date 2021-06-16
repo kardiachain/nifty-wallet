@@ -1,3 +1,4 @@
+const { toChecksumAddress } = require('ethereumjs-util')
 const { networkIDs } = require('./enum')
 const {
 	MAINNET_CODE,
@@ -45,26 +46,31 @@ const explorerLink = (networkCode, net, prefix) => {
 }
 
 const tokenLink = (networkCode, chain, prefix, tokenAddress, holderAddress) => {
+	console.log('networkCode', networkCode)
 	const blockscoutLinkStr = `${blockScoutLink(chain, prefix)}/address/${holderAddress}/tokens/${tokenAddress}/token-transfers`
 	const etherscanLinkStr = `${etherscanLink(prefix)}/token/${tokenAddress}?a=${holderAddress}`
 	const rskTestnetExplorerLinkStr = `${rskTestnetExplorerLink}/address/${tokenAddress}`
-	switch (networkCode) {
-	case SOKOL_CODE: // POA Sokol testnet
-	case POA_CORE_CODE: // POA Core
-	case XDAI_CODE: // xDai chain
-	case CLASSIC_CODE: // ETC mainnet
-	case RSK_CODE: // RSK mainnet
-		return blockscoutLinkStr
-	case RSK_TESTNET_CODE: // RSK testnet
-		return rskTestnetExplorerLinkStr
-	case MAINNET_CODE: // main net
-	case ROPSTEN_CODE: // ropsten testnet
-	case RINKEBY_CODE: // rinkeby testnet
-	case KOVAN_CODE: // kovan testnet
-	case GOERLI_CODE: // Goerli testnet
-		return etherscanLinkStr
-	default:
-		return blockscoutLinkStr
+	const kardiaTokenLink = `${explorerLink(Number(networkCode))}/token/${toChecksumAddress(tokenAddress)}`
+	switch (Number(networkCode)) {
+		case SOKOL_CODE: // POA Sokol testnet
+		case POA_CORE_CODE: // POA Core
+		case XDAI_CODE: // xDai chain
+		case CLASSIC_CODE: // ETC mainnet
+		case RSK_CODE: // RSK mainnet
+			return blockscoutLinkStr
+		case RSK_TESTNET_CODE: // RSK testnet
+			return rskTestnetExplorerLinkStr
+		case MAINNET_CODE: // main net
+		case ROPSTEN_CODE: // ropsten testnet
+		case RINKEBY_CODE: // rinkeby testnet
+		case KOVAN_CODE: // kovan testnet
+		case GOERLI_CODE: // Goerli testnet
+			return etherscanLinkStr
+		case KARDIA_CODE:
+		case KARDIA_TESTNET_CODE:
+			return kardiaTokenLink
+		default:
+			return blockscoutLinkStr
 	}
 }
 
