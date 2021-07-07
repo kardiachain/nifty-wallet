@@ -28,6 +28,7 @@ import ethNetProps from '../../../kardia-libs/kai-net-props'
 import { getMetaMaskAccounts } from '../../../ui/app/selectors'
 import { MIN_GAS_LIMIT_DEC, MIN_GAS_PRICE_DEC } from '../../../ui/app/components/send/send.constants'
 import * as Toast from './toast'
+import { isNaN } from '../../../ui/app/util'
 
 const MIN_GAS_PRICE_BN = new BN(MIN_GAS_PRICE_DEC)
 const MIN_GAS_LIMIT_BN = new BN(MIN_GAS_LIMIT_DEC)
@@ -138,8 +139,11 @@ class PendingTx extends Component {
     const gasBn = txParams.gas ? hexToBn(txParams.gas) : MIN_GAS_LIMIT_BN
 
     // Gas Price
-    const gasPrice = txParams.gasPrice || this.state.hexOracleGasPrice
-    console.log('gasPrice hex', gasPrice)
+    let gasPrice = this.state.hexOracleGasPrice
+    if (txParams.gasPrice && !isNaN(txParams.gasPrice)) {
+      console.log('txParams.gasPrice from dapp', txParams.gasPrice)
+      gasPrice = txParams.gasPrice
+    }
     const gasPriceBn = hexToBn(gasPrice)
 
     const txFeeBn = gasBn.mul(gasPriceBn)

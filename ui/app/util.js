@@ -49,6 +49,7 @@ module.exports = {
   valueTable: valueTable,
   bnTable: bnTable,
   isHex: isHex,
+  isNaN: isNaN,
   formatDate,
   bnMultiplyByFraction,
   getTxFeeBn,
@@ -251,6 +252,12 @@ function readableDate (ms) {
 
 function isHex (str) {
   return Boolean(str.match(/^(0x)?[0-9a-fA-F]+$/))
+}
+
+function isNaN (val) {
+  if (typeof val === 'number') return Number.isNaN(val)
+  if (typeof val === 'string') return val.toLowerCase() === 'nan'
+  return true
 }
 
 function bnMultiplyByFraction (targetBN, numerator, denominator) {

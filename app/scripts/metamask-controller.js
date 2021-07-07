@@ -62,6 +62,7 @@ const { GasPriceOracle } = require('gas-price-oracle')
 import {
   PhishingController,
 } from 'gaba'
+import { MIN_GAS_PRICE_DEC } from '../../ui/app/components/send/send.constants'
 
 const {
   CLASSIC_CODE,
@@ -2024,7 +2025,8 @@ module.exports = class MetamaskController extends EventEmitter {
           }
         } catch (error) {
           log.error(error)
-          gasPrice = this.getGasPriceFromBlocks(networkId)
+          // gasPrice = this.getGasPriceFromBlocks(networkId) 
+          gasPrice = MIN_GAS_PRICE_DEC
           resolve(gasPrice)
         }
       } else if (isRSK) {
