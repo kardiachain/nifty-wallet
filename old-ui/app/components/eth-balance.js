@@ -80,8 +80,7 @@ EthBalanceComponent.prototype.renderBalance = function (value) {
     marginLeft: '5px',
   }
 
-  const formattedBalance = new BigNumber(balance).toFormat()
-
+  const formattedBalance = shorten ? balance : new BigNumber(balance).toFormat()
   return (
     h(Tooltip, {
       title: `${ethNumber} ${ethSuffix}`,
