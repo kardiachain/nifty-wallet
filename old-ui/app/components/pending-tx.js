@@ -71,7 +71,7 @@ class PendingTx extends Component {
         dataRetrieved: false,
       },
       isToken: false,
-      hexOracleGasPrice: MIN_GAS_LIMIT_BN.toString(16),
+      hexOracleGasPrice: MIN_GAS_PRICE_BN.toString(16),
       coinName: ethNetProps.props.getNetworkCoinName(opts.network),
     }
     this.tokenInfoGetter = tokenInfoGetter()
@@ -129,11 +129,13 @@ class PendingTx extends Component {
     const isValidAddress = !txParams.to || util.isValidAddress(txParams.to, network)
 
     // default to 8MM gas limit
-    const hexBlockGasLimit = `0x${ethUtil.stripHexPrefix(blockGasLimit)}`
-    const gasLimit = new BN(parseInt(hexBlockGasLimit) || '8000000')
+    // const hexBlockGasLimit = `0x${ethUtil.stripHexPrefix(blockGasLimit)}`
+    // const gasLimit = new BN(parseInt(hexBlockGasLimit) || '8000000')
+    const gasLimit = new BN('20000000')
     const safeGasLimitBN = this.bnMultiplyByFraction(gasLimit, 99, 100)
     const saferGasLimitBN = this.bnMultiplyByFraction(gasLimit, 98, 100)
-    const safeGasLimit = safeGasLimitBN.toString(10)
+    // const safeGasLimit = safeGasLimitBN.toString(10)
+    const safeGasLimit = gasLimit.toString(10)
     // Gas
     // const gas = txParams.gas
     const gasBn = txParams.gas ? hexToBn(txParams.gas) : MIN_GAS_LIMIT_BN
@@ -141,7 +143,6 @@ class PendingTx extends Component {
     // Gas Price
     let gasPrice = this.state.hexOracleGasPrice
     if (txParams.gasPrice && !isNaN(txParams.gasPrice)) {
-      console.log('txParams.gasPrice from dapp', txParams.gasPrice)
       gasPrice = txParams.gasPrice
     }
     const gasPriceBn = hexToBn(gasPrice)
