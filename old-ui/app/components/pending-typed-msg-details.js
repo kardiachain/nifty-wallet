@@ -31,7 +31,7 @@ export default class PendingMsgDetails extends Component {
           account={account}
           imageifyIdenticons={state.imageifyIdenticons}
           style={{
-            background: 'transparent',
+            background: 'rgb(84, 34, 137)',
           }}
         />
         <div style={{

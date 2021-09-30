@@ -18,7 +18,7 @@ export default class PendingMsg extends Component {
         <h3 style={{
           fontWeight: 'bold',
           textAlign: 'center',
-          color: 'white',
+          color: 'black',
           margin: '20px',
         }}>Sign message</h3>
         <PendingTxDetails {...state}/>
