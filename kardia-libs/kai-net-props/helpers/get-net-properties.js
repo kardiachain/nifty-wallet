@@ -68,7 +68,7 @@ function getNetworkCoinName(network) {
 	case KARDIA_TESTNET_CODE:
 		return 'KAI'
 	default:
-		return 'ETH'
+		return 'KAI'
 	}
 }
 
