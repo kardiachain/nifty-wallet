@@ -6,7 +6,8 @@ import ethNetProps from '../../../kardia-libs/kai-net-props'
 import { Dropdown, DropdownMenuItem } from './dropdown'
 import copyToClipboard from 'copy-to-clipboard'
 import { connect } from 'react-redux'
-import { countSignificantDecimals, toChecksumAddress } from '../util'
+import BigNumber from 'bignumber.js'
+import { countSignificantDecimals, toChecksumAddress, countStringSignificantDecimals } from '../util'
 import actions from '../../../ui/app/actions'
 const { MAINNET_CODE } = require('../../../app/scripts/controllers/network/enums')
 
@@ -39,8 +40,9 @@ class TokenCell extends Component {
     const { address, symbol, string, network, userAddress, isLastTokenCell, menuToTop, ind } = this.props
     const { optionsMenuActive } = this.state
 
-    const tokenBalanceRaw = Number.parseFloat(string)
-    const tokenBalance = tokenBalanceRaw.toFixed(countSignificantDecimals(tokenBalanceRaw, 2))
+    // const tokenBalanceRaw = Number.parseFloat(string)
+    const tokenBalanceRaw = new BigNumber(string)
+    const tokenBalance = tokenBalanceRaw.toFixed(countStringSignificantDecimals(tokenBalanceRaw.toFixed(), 2))
 
     return (
       <span
