@@ -367,6 +367,9 @@ function countStringSignificantDecimals (val, len) {
     return 0
   }
   const decimals = val.split('.')[1]
+  if (!decimals) {
+    return 0
+  }
   const decimalsArr = decimals.split('')
   let decimalsLen = decimalsArr.slice(0).reduce((res, val, ind, arr) => {
     if (Number(val) === 0) {
