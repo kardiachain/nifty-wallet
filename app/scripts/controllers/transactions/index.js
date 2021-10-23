@@ -166,7 +166,7 @@ class TransactionController extends EventEmitter {
               return reject(
                 cleanErrorStack(
                   ethErrors.provider.userRejectedRequest(
-                    'MetaMask Tx Signature: User denied transaction signature.',
+                    'KardiaChain Wallet Tx Signature: User denied transaction signature.',
                   ),
                 ),
               )
@@ -180,7 +180,7 @@ class TransactionController extends EventEmitter {
               return reject(
                 cleanErrorStack(
                   ethErrors.rpc.internal(
-                    `MetaMask Tx Signature: Unknown problem: ${JSON.stringify(
+                    `KardiaChain Wallet Tx Signature: Unknown problem: ${JSON.stringify(
                       finishedTxMeta.txParams,
                     )}`,
                   ),

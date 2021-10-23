@@ -85,7 +85,7 @@ export default class DecryptMessageManager extends EventEmitter {
   addUnapprovedMessageAsync (msgParams, req) {
     return new Promise((resolve, reject) => {
       if (!msgParams.from) {
-        reject(new Error('MetaMask Decryption: from field is required.'))
+        reject(new Error('KardiaChain Wallet Decryption: from field is required.'))
         return
       }
       const msgId = this.addUnapprovedMessage(msgParams, req)
@@ -97,7 +97,7 @@ export default class DecryptMessageManager extends EventEmitter {
           case 'rejected':
             reject(
               ethErrors.provider.userRejectedRequest(
-                'MetaMask Decryption: User denied message decryption.',
+                'KardiaChain Wallet Decryption: User denied message decryption.',
               ),
             )
             return
@@ -107,7 +107,7 @@ export default class DecryptMessageManager extends EventEmitter {
           default:
             reject(
               new Error(
-                `MetaMask Decryption: Unknown problem: ${JSON.stringify(
+                `KardiaChain Wallet Decryption: Unknown problem: ${JSON.stringify(
                   msgParams,
                 )}`,
               ),

@@ -137,7 +137,7 @@ function forwardTrafficBetweenMuxes (channelName, muxA, muxB) {
   const channelB = muxB.createStream(channelName)
   pump(channelA, channelB, channelA, (error) =>
     console.debug(
-      `MetaMask: Muxed traffic for channel "${channelName}" failed.`,
+      `KardiaChain Wallet: Muxed traffic for channel "${channelName}" failed.`,
       error,
     ),
   )
@@ -154,7 +154,7 @@ function forwardNamedTrafficBetweenMuxes (
   const channelB = muxB.createStream(channelBName)
   pump(channelA, channelB, channelA, (error) =>
     console.debug(
-      `MetaMask: Muxed traffic between channels "${channelAName}" and "${channelBName}" failed.`,
+      `KardiaChain Wallet: Muxed traffic between channels "${channelAName}" and "${channelBName}" failed.`,
       error,
     ),
   )
@@ -182,7 +182,7 @@ function getNotificationTransformStream () {
  */
 function logStreamDisconnectWarning (remoteLabel, error) {
   console.debug(
-    `MetaMask: Content script lost connection to "${remoteLabel}".`,
+    `KardiaChain Wallet: Content script lost connection to "${remoteLabel}".`,
     error,
   )
 }

@@ -193,7 +193,7 @@ export default class TypedMessageManager extends EventEmitter {
           const activeChainId = parseInt(this._getCurrentChainId(), 16)
           assert.ok(
             !Number.isNaN(activeChainId),
-            `Cannot sign messages for chainId "${chainId}", because MetaMask is switching networks.`,
+            `Cannot sign messages for chainId "${chainId}", because KardiaChain Wallet is switching networks.`,
           )
           assert.equal(
             chainId,
