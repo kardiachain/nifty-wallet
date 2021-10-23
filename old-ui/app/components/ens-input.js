@@ -27,11 +27,70 @@ class EnsInput extends Component {
     updateSendTo: PropTypes.func,
   }
 
+  constructor() {
+    super()
+    this.state = {
+      listData: [],
+      showAutocomplete: false
+    }
+  }
+
+  updateListData = (value) => {
+    const props = this.props
+    const _listData = [
+      // Corresponds to the addresses owned.
+      ...Object.keys(props.identities).map((key) => {
+        const identity = props.identities[key]
+        return {
+          value: identity.address,
+          label: identity.name,
+          key: identity.address,
+        }
+      }),
+      // Corresponds to previously sent-to addresses.
+      ...props.addressBook.map((identity) => {
+        return {
+          value: identity.address,
+          label: identity.name,
+          key: identity.address,
+        }
+      }),
+    ].filter((item) => {
+      if (!value) return true
+      if (item.value.includes(value)) return true
+      if (item.label.includes(value)) return true
+      return false
+    })
+
+    this.setState({
+      listData: _listData
+    })
+  }
+
   render () {
     const props = this.props
 
+    const autocompleteList = () => {
+      return this.state.listData.map((item) => {
+        return h('div.send-autocomplete-item', {
+          onClick: () => {
+            document.querySelector('input[name="address"]').value = item.value
+            this.setState({
+              showAutocomplete: false
+            })
+          }
+        }, [
+          h('strong', {}, item.label),
+          h('span', {}, item.value),
+        ]) 
+      })
+    } 
+
     function onInputChange () {
       const recipient = document.querySelector('input[name="address"]').value
+
+      this.updateListData(recipient)
+
       this.props.updateSendTo(recipient, ' ')
       const network = this.props.network
       const networkHasEnsSupport = getNetworkEnsSupport(network)
@@ -56,34 +115,38 @@ class EnsInput extends Component {
     return (
       h('div', {
         style: { width: '100%' },
+        onClick: (event) => {
+          if (event.target.id !== 'address_input') {
+            this.setState({
+              showAutocomplete: false
+            })
+          }
+        }
       }, [
-        h('input.large-input', {
+        h('input.large-input#address_input', {
           name: props.name,
           placeholder: props.placeholder,
-          list: 'addresses',
+          // list: 'addresses',
           onChange: onInputChange.bind(this),
+          onFocus: () => {
+            this.setState({
+              showAutocomplete: true
+            })
+          }
         }),
         // The address book functionality.
-        h('datalist#addresses',
-          [
-            // Corresponds to the addresses owned.
-            Object.keys(props.identities).map((key) => {
-              const identity = props.identities[key]
-              return h('option', {
-                value: identity.address,
-                label: identity.name,
-                key: identity.address,
-              })
-            }),
-            // Corresponds to previously sent-to addresses.
-            props.addressBook.map((identity) => {
-              return h('option', {
-                value: identity.address,
-                label: identity.name,
-                key: identity.address,
-              })
-            }),
-          ]),
+        this.state.showAutocomplete && h('div', {
+          style: {
+            display: 'block',
+            position: 'absolute',
+            backgroundColor: '#FFFFFF',
+            width: 329,
+            boxShadow: 'rgb(40 41 61 / 4%) 0px 0px 2px, rgb(96 97 112 / 16%) 0px 4px 8px',
+            borderRadius: 8,
+            maxHeight: 200,
+            overflow: 'scroll'
+          }
+        }, autocompleteList()),
         this.ensIcon(),
       ])
     )
@@ -106,6 +169,9 @@ class EnsInput extends Component {
       this.ens = new ENS({ provider, network, registryAddress })
       this.checkName = debounce(this.lookupEnsName.bind(this, 'RNS'), 200)
     }
+
+    this.updateListData()
+
   }
 
   lookupEnsName (nameService) {

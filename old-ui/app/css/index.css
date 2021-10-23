@@ -1238,3 +1238,15 @@ input[disabled],textarea[disabled] {
   width: 100%;
   margin-bottom: 20px;
 }
+
+.send-autocomplete-item {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.send-autocomplete-item:hover {
+  background-color: #33A4E7;
+  color: #FFFFFF;
+  cursor: pointer;
+}
