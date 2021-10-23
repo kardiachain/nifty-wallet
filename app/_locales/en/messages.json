@@ -929,26 +929,8 @@
   "rpc": {
     "message": "Custom RPC"
   },
-  "currentRpc": {
-    "message": "Current RPC"
-  },
-  "connectingToMainnet": {
-    "message": "Connecting to Main Ethereum Network"
-  },
-  "connectingToRopsten": {
-    "message": "Connecting to Ropsten Test Network"
-  },
-  "connectingToKovan": {
-    "message": "Connecting to Kovan Test Network"
-  },
-  "connectingToRinkeby": {
-    "message": "Connecting to Rinkeby Test Network"
-  },
   "connectingToPOA": {
     "message": "Connecting to POA Network"
-  },
-  "connectingToUnknown": {
-    "message": "Connecting to Unknown Network"
   },
   "sampleAccountName": {
     "message": "E.g. My new account",
