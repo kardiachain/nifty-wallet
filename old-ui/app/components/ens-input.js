@@ -75,6 +75,7 @@ class EnsInput extends Component {
         return h('div.send-autocomplete-item', {
           onClick: () => {
             document.querySelector('input[name="address"]').value = item.value
+            onInputChange.bind(this)()
             this.setState({
               showAutocomplete: false
             })
@@ -90,8 +91,9 @@ class EnsInput extends Component {
       const recipient = document.querySelector('input[name="address"]').value
 
       this.updateListData(recipient)
-
-      this.props.updateSendTo(recipient, ' ')
+      console.log('here 123', recipient)
+      // this.props.updateSendTo(recipient, ' ')
+      this.props.onChange(recipient, ' ')
       const network = this.props.network
       const networkHasEnsSupport = getNetworkEnsSupport(network)
       const networkHasRnsSupport = getNetworkRnsSupport(network)

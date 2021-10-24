@@ -173,6 +173,7 @@ class SendTransactionScreen extends PersistentForm {
   }
 
   recipientDidChange (recipient, nickname) {
+    console.log('recipient updated', recipient, nickname)
     this.setState({
       recipient: recipient,
       nickname: nickname,
@@ -183,6 +184,7 @@ class SendTransactionScreen extends PersistentForm {
   onSubmit () {
     const state = this.state || {}
     let recipient = state.recipient || document.querySelector('input[name="address"]').value.replace(/^[.\s]+|[.\s]+$/g, '')
+    console.log('submit recipient', recipient)
     let nickname = state.nickname || ' '
     if (typeof recipient === 'object') {
       if (recipient.toAddress) {
@@ -231,6 +233,7 @@ class SendTransactionScreen extends PersistentForm {
     }
 
     if ((!isValidAddress(recipient, this.props.network) && !txData) || (!recipient && !txData)) {
+      console.log('error receive', recipient)
       message = 'Recipient address is invalid.'
       return this.props.displayWarning(message)
     }
