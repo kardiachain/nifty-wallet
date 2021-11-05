@@ -279,7 +279,6 @@ function formatDate (date) {
 }
 
 function renderErrorOrWarning (transaction, network) {
-  console.log('transaction', transaction)
   const { status, err, warning } = transaction
 
   // show dropped
@@ -318,7 +317,10 @@ function renderErrorOrWarning (transaction, network) {
       !warning.error.includes('[ethjs-query] while formatting outputs from rpc')
       )
     ) {
-    console.log('warning', warning)
+
+    // Remove already known warning
+    if (warning.error.includes("already known")) return
+
     const message = warning.message
     return h(Tooltip, {
       title: message,
