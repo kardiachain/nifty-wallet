@@ -243,7 +243,7 @@ const buildJsFiles = [
 ]
 
 // bundle tasks
-createTasksForBuildJsExtension({ buildJsFiles, taskPrefix: 'dev:extension:js', devMode: true })
+createTasksForBuildJsExtension({ buildJsFiles, taskPrefix: 'dev:extension:js', devMode: false })
 createTasksForBuildJsExtension({ buildJsFiles, taskPrefix: 'build:extension:js' })
 
 function createTasksForBuildJsExtension ({ buildJsFiles, taskPrefix, devMode, bundleTaskOpts = {} }) {
@@ -254,9 +254,9 @@ function createTasksForBuildJsExtension ({ buildJsFiles, taskPrefix, devMode, bu
   const buildPhase2 = nonInpageFiles
   const destinations = browserPlatforms.map(platform => `./dist/${platform}`)
   bundleTaskOpts = Object.assign({
-    buildSourceMaps: true,
+    buildSourceMaps: false,
     sourceMapDir: devMode ? './' : '../sourcemaps',
-    minifyBuild: false,
+    minifyBuild: true,
     buildWithFullPaths: devMode,
     watch: devMode,
     devMode,
