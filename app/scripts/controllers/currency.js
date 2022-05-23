@@ -130,7 +130,7 @@ class CurrencyController {
       currentCurrency = this.getCurrentCurrency()
       currentCoin = this.getCurrentCoin()
       // const apiLink = `https://min-api.cryptocompare.com/data/price?fsym=${currentCoin.toUpperCase()}&tsyms=${currentCurrency.toUpperCase()}`
-      const apiLink = 'https://api.info.kaidex.io/api/tokens/0xAF984E23EAA3E7967F3C5E007fbe397D8566D23d'
+      const apiLink = 'https://api-info.kaidex.io/api/tokens/0xAF984E23EAA3E7967F3C5E007fbe397D8566D23d'
       const response = await fetch(apiLink)
       const parsedResponse = await response.json()
       // const conversionRate = Number(parsedResponse[currentCurrency.toUpperCase()])
