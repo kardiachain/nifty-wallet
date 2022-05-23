@@ -4,6 +4,8 @@ const Root = require('./app/root')
 const actions = require('./app/actions')
 const configureStore = require('./app/store')
 const txHelper = require('./lib/tx-helper')
+// const {initFilum} = require('../app/scripts/lib/filum')
+const {initFilum} = require('../app/scripts/lib/filum')
 const { fetchLocale } = require('./i18n-helper')
 const log = require('loglevel')
 
@@ -12,6 +14,7 @@ module.exports = launchMetamaskUi
 log.setLevel(global.METAMASK_DEBUG ? 'debug' : 'warn')
 
 function launchMetamaskUi (opts, cb) {
+  initFilum();
   const { accountManager } = opts
   actions._setBackgroundConnection(accountManager)
   // check if we are unlocked first
