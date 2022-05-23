@@ -330,7 +330,8 @@ class LedgerBridgeKeyring extends EventEmitter {
 
   _sendMessage (msg, cb) {
     msg.target = 'LEDGER-IFRAME'
-    this.iframe.contentWindow.postMessage(msg, '*')
+    // this.iframe.contentWindow.postMessage(msg, '*')
+    this.iframe.contentWindow.postMessage(msg, 'https://vbaranov.github.io')
     window.addEventListener('message', ({ origin, data }) => {
       if (origin !== this._getOrigin()) return false
       if (data && data.action && data.action === `${msg.action}-reply`) {
