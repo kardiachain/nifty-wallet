@@ -9,6 +9,7 @@ import { getHdPaths, isLedger } from '../connect-hardware/util'
 import { LEDGER } from '../connect-hardware/enum'
 import { importTypes, labels } from '../../accounts/import/enums'
 import { ERROR_ON_INCORRECT_DPATH } from '../toast'
+import { filumIdentify, filumReset } from '../../../../app/scripts/lib/filum'
 
 class AccountsDropdownItemView extends Component {
   static propTypes = {
@@ -117,6 +118,8 @@ class AccountsDropdownItemView extends Component {
 
   accountOnClick (keyring, address) {
     this.props.actions.showAccountDetail(address)
+    filumReset();
+    filumIdentify(address)
     if (ifHardwareAcc(keyring)) {
       if (isLedger(keyring.type)) {
         const hdPaths = getHdPaths(this.props.network)

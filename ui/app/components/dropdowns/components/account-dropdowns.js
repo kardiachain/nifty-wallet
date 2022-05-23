@@ -47,6 +47,8 @@ class AccountDropdowns extends Component {
         {
           closeMenu: () => {},
           onClick: () => {
+            filumReset();
+            filumIdentify(address)
             this.props.actions.showAccountDetail(identity.address)
           },
           style: Object.assign(

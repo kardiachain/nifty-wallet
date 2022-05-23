@@ -4,6 +4,43 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
     <title>KardiaChain Wallet</title>
+    <script type="text/javascript">
+      !(function () {
+        var t = window.filumanalytics || []
+        if (0 === t.length) {
+          ;(t.methods = [
+            'load',
+            'track',
+            'identify',
+            'ready',
+            'reset',
+            'getAnonymousId',
+            'setAnonymousId'
+          ]),
+            (t.factory = function (e) {
+              return function () {
+                var a = Array.prototype.slice.call(arguments)
+                return a.unshift(e), t.push(a), t
+              }
+            })
+          for (var e = 0; e < t.methods.length; e++) {
+            var a = t.methods[e]
+            t[a] = t.factory(a)
+          }
+          ;(t.loadJS = function (t, e) {
+            var a = document.createElement('script')
+            ;(a.type = 'text/javascript'),
+              (a.async = !0),
+              (a.src =
+                'https://filum-assets.sgp1.digitaloceanspaces.com/sdk/filum-analytics.min.js')
+            var n = document.getElementsByTagName('script')[0]
+            n.parentNode.insertBefore(a, n)
+          }),
+            t.loadJS(),
+            (window.filumanalytics = t)
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="app-content"></div>

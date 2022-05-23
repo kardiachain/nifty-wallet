@@ -12,6 +12,7 @@ import { getFullABI } from '../../accounts/import/helpers'
 import log from 'loglevel'
 import Web3 from 'web3'
 import { AccountsDropdownItemView } from './accounts-dropdown-item-view'
+import { filumIdentify, filumReset } from '../../../../app/scripts/lib/filum'
 
 class AccountsDropdownItemWrapper extends DropdownMenuItem {
   render () {
@@ -287,6 +288,8 @@ class AccountDropdowns extends Component {
         const firstKeyring = keyrings && keyrings[0]
         const firstKeyRingAcc = firstKeyring && firstKeyring.accounts && firstKeyring.accounts[0]
         if (!keyring || (ifContractAcc(keyring) && firstKeyRingAcc)) {
+          filumReset();
+          filumIdentify(address)
           return this.props.actions.showAccountDetail(firstKeyRingAcc)
         }
       }

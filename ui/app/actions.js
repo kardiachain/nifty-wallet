@@ -21,6 +21,7 @@ const { POA,
   KARDIA_TESTNET} = require('../../app/scripts/controllers/network/enums')
 const { hasUnconfirmedTransactions } = require('./helpers/confirm-transaction/util')
 const WebcamUtils = require('../lib/webcam-utils')
+import { filumIdentify, filumReset } from '../../app/scripts/lib/filum'
 import { getEnvironmentType } from '../../app/scripts/lib/util'
 
 const actions = {
@@ -417,6 +418,8 @@ function tryUnlockMetamask (password, dPath) {
         return updateMetamaskStateFromBackground()
         .then(newState => {
           newState = Object.assign(newState, {dPath: dPath})
+          filumReset();
+          filumIdentify(newState.selectedAddress);
           dispatch(actions.updateMetamaskState(newState))
           forceUpdateMetamaskState(dispatch)
         })
